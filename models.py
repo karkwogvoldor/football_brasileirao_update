@@ -9,6 +9,7 @@ class Jogador(Base):
     team_id = Column(Integer, ForeignKey('times.id'))
     team = relationship("Team", back_populates="players")
     position = relationship("Position", back_populates="players")
+    number = Column(Integer)
 
 class Team(Base):
     __tablename__ = 'times'
@@ -29,4 +30,7 @@ class EsquemaTatico (Base):
     id = Column(Integer, primary_key=True, index=True)
     esquema = Column(String, index=True)
     time_id = Column(Integer, ForeignKey('times.id'))
-    time = relationship("Team", back_populates="esquema_tatico")
+    time = relationship("Team", back_populates="esquema_tatico", uselist = False)
+    
+    
+    
