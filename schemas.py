@@ -1,38 +1,98 @@
 from typing import List, Optional
 from pydantic import BaseModel
+from enum import Enum
 
-class Jogador(BaseModel):
-    name: str
-    team_id: int
-    position: str
-    number: Optional[int] = None
-    
+# ─────────────────────────────────────────
+# JOGADOR
+# ─────────────────────────────────────────
+class JogadorBase(BaseModel):
+    name:   str
+    number: int
+
+class JogadorCreate(JogadorBase):
+    pass  # só nome e número na criação
+
+class JogadorUpdate(BaseModel):
+    name:    Optional[str] = None
+    number:  Optional[int] = None
+    team_id: Optional[int] = None  # linka ao time depois
+
+class Jogador(JogadorBase):
+    id:        int
+    team_id:   Optional[int] = None
+    positions: List["Position"] = []
+
     class Config:
         from_attributes = True
 
-class JogadorCreate(Jogador):
-    nome: str
-    time_id: int
-    posicao: str
-    numero: Optional[int] = None
 
-class Team(BaseModel):
-    name: str
+# ─────────────────────────────────────────
+# TEAM
+# ─────────────────────────────────────────
+class TeamBase(BaseModel):
+    name:   str
     titles: int
-    
-class TeamCreate(Team):
-    nome: str
-    titulos: int
-    
-class Position(BaseModel):
-    posicao: str
-    jogador_id: int
-    
-class PositionCreate(Position):
-    posicao: str
 
-class EsquemaTatico(BaseModel):
+class TeamCreate(TeamBase):
+    pass
+
+class TeamUpdate(BaseModel):
+    name:   Optional[str] = None
+    titles: Optional[int] = None
+
+class Team(TeamBase):
+    id:      int
+    players: List[Jogador] = []
+
+    class Config:
+        from_attributes = True
+
+
+# ─────────────────────────────────────────
+# POSITION
+# ─────────────────────────────────────────
+class PositionBase(BaseModel):
+    posicao:    str
+    tipo:       str            # "primaria" ou "secundaria"
+    parent_id:  Optional[int] = None  # None = é primária
+    jogador_id: Optional[int] = None  # linkado depois
+
+class PositionCreate(PositionBase):
+    pass
+
+class PositionUpdate(BaseModel):
+    posicao:    Optional[str] = None
+    jogador_id: Optional[int] = None
+
+class Position(PositionBase):
+    id:          int
+    secundarias: List["Position"] = []  # sub-posições
+
+    class Config:
+        from_attributes = True
+
+
+# ─────────────────────────────────────────
+# ESQUEMA TÁTICO
+# ─────────────────────────────────────────
+class EsquemaTaticoBase(BaseModel):
     esquema: str
-    
-class EsquemaTaticoCreate(EsquemaTatico):
-    esquema: str
+    time_id: Optional[int] = None
+
+class EsquemaTaticoCreate(EsquemaTaticoBase):
+    pass
+
+class EsquemaTaticoUpdate(BaseModel):
+    esquema: Optional[str] = None
+    time_id: Optional[int]         = None
+
+class EsquemaTatico(EsquemaTaticoBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+
+# necessário para resolver referências circulares (Jogador <-> Position)
+Jogador.model_rebuild()
+Position.model_rebuild()
