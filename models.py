@@ -6,7 +6,7 @@ class Jogador(Base):
     __tablename__ = 'jogadores'
 
     id     = Column(Integer, primary_key=True, index=True)  # gerado automaticamente
-    name   = Column(String, index=True)
+    nome   = Column(String, index=True)
     number = Column(Integer)
     posicao = Column(String(4))
 

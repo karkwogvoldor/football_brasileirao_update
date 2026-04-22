@@ -17,8 +17,10 @@ FORMATOS_ACEITOS = ["image/png", "image/webp", "image/jpeg"]
 @app.post("/jogadores/", response_model=schemas.Jogador)
 def create_jogador(jogador: schemas.JogadorCreate, db: Session = Depends(get_db)):
     db_jogador = models.Jogador(
-        name = jogador.name,
-        number = jogador.number,
+        nome    = jogador.nome,
+        number  = jogador.number,
+        posicao = jogador.posicao,
+        team_id = jogador.team_id,
     )
     db.add(db_jogador)
     db.commit()
@@ -47,7 +49,7 @@ def delete_jogador(jogador_id: int, db: Session = Depends(get_db)):
     
     db.delete(jogador)
     db.commit()
-    return {"message": f"O jogador {jogador.name} foi deletado com sucesso."}
+    return {"message": f"O jogador {jogador.nome} foi deletado com sucesso."}
     
     
     

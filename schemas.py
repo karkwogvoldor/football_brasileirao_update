@@ -11,9 +11,8 @@ class Posicao(str, Enum):
     LAE = "LAE"
     VOL = "VOL"
     MEI = "MEI"
+    PT = "PT"
     SA  = "SA"
-    PTD = "PTD"
-    PTE = "PTE"
     ATA = "ATA"
     TEC = "TEC"
 
@@ -23,7 +22,7 @@ class JogadorBase(BaseModel):
     posicao: Posicao
 
 class JogadorCreate(JogadorBase):
-    pass
+    team_id: Optional[int] = None
 
 class JogadorUpdate(BaseModel):
     nome:    Optional[str] = None
