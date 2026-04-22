@@ -5,9 +5,25 @@ from enum import Enum
 # ─────────────────────────────────────────
 # JOGADOR
 # ─────────────────────────────────────────
+class Posicao(str, Enum):
+    GOL = "GOL"
+    ZAG = "ZAG"
+    LAT = "LAT"
+    LAD = "LAD"
+    LAE = "LAE"
+    VOL = "VOL"
+    MEI = "MEI"
+    SA = "SA"
+    PTD = "PTD"
+    PTE = "PTE"
+    ATA = "ATA"
+    TEC = "TEC"
+    # adicione as que precisar
+
 class JogadorBase(BaseModel):
     name:   str
     number: int
+    posicao: Posicao
 
 class JogadorCreate(JogadorBase):
     pass  # só nome e número na criação
@@ -20,7 +36,6 @@ class JogadorUpdate(BaseModel):
 class Jogador(JogadorBase):
     id:        int
     team_id:   Optional[int] = None
-    positions: List["Position"] = []
 
     class Config:
         from_attributes = True
@@ -37,36 +52,15 @@ class TeamCreate(TeamBase):
     pass
 
 class TeamUpdate(BaseModel):
-    name:   Optional[str] = None
-    titles: Optional[int] = None
+    nome:        Optional[str] = None
+    escudo:      Optional[str] = None
+    foto_craque: Optional[str] = None
 
 class Team(TeamBase):
     id:      int
     players: List[Jogador] = []
-
-    class Config:
-        from_attributes = True
-
-
-# ─────────────────────────────────────────
-# POSITION
-# ─────────────────────────────────────────
-class PositionBase(BaseModel):
-    posicao:    str
-    tipo:       str            # "primaria" ou "secundaria"
-    parent_id:  Optional[int] = None  # None = é primária
-    jogador_id: Optional[int] = None  # linkado depois
-
-class PositionCreate(PositionBase):
-    pass
-
-class PositionUpdate(BaseModel):
-    posicao:    Optional[str] = None
-    jogador_id: Optional[int] = None
-
-class Position(PositionBase):
-    id:          int
-    secundarias: List["Position"] = []  # sub-posições
+    escudo: Optional[str] = None
+    foto_craque: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -95,4 +89,3 @@ class EsquemaTatico(EsquemaTaticoBase):
 
 # necessário para resolver referências circulares (Jogador <-> Position)
 Jogador.model_rebuild()
-Position.model_rebuild()
