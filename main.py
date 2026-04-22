@@ -14,7 +14,6 @@ app = FastAPI()
 FORMATOS_ACEITOS = ["image/png", "image/webp", "image/jpeg"]
 
 
-
 @app.post("/jogadores/", response_model=schemas.Jogador)
 def create_jogador(jogador: schemas.JogadorCreate, db: Session = Depends(get_db)):
     db_jogador = models.Jogador(
@@ -79,26 +78,27 @@ def get_team (team_id: int, db: Session = Depends(get_db)):
 
 @app.delete("/times/{team_id}", status_code=204)
 def delete_time(team_id: int, db: Session = Depends(get_db)):
-    team = db.query(models.Team).filter(models.Team.id == team_id).first()
-    if team is None:
-        raise HTTPException(status_code=404, detail="Jogador não encontrado")
+    time = db.query(models.Team).filter(models.Team.id == team_id).first()
+    if time is None:
+        raise HTTPException(status_code=404, detail="Time não encontrado")
     
-    db.delete(team)
+    db.delete(time)
     db.commit()
-    return {"message": f"O time {team.name} foi deletado com sucesso."}
+    return
 
-@app.post("/times/")
+
+@app.post("/times/", response_model=schemas.Team)
 async def criar_time(
-    nome:   str        = Form(...),
-    escudo: UploadFile = File(None),
-    foto_craque: UploadFile = File(None),
-    db:     Session    = Depends(get_db)
+    nome:        str                  = Form(...),
+    formacao:    Optional[str]        = Form(None),
+    escudo:      Optional[UploadFile] = File(None),
+    foto_craque: Optional[UploadFile] = File(None),
+    db:          Session              = Depends(get_db)
 ):
-    if escudo and escudo.content_type not in FORMATOS_ACEITOS:
-        raise HTTPException(status_code=400, detail="Formato de imagem inválido")
+    FORMATOS_ACEITOS = ["image/png", "image/webp", "image/jpeg"]
 
     caminho_escudo = None
-    if escudo:
+    if escudo and escudo.filename:
         if escudo.content_type not in FORMATOS_ACEITOS:
             raise HTTPException(status_code=400, detail="Formato de imagem inválido")
         os.makedirs("static/escudos", exist_ok=True)
@@ -106,9 +106,9 @@ async def criar_time(
         with open(caminho, "wb") as buffer:
             shutil.copyfileobj(escudo.file, buffer)
         caminho_escudo = caminho
-        
+
     caminho_craque = None
-    if foto_craque:
+    if foto_craque and foto_craque.filename:
         if foto_craque.content_type not in FORMATOS_ACEITOS:
             raise HTTPException(status_code=400, detail="Formato de imagem inválido")
         os.makedirs("static/craques", exist_ok=True)
@@ -117,17 +117,22 @@ async def criar_time(
             shutil.copyfileobj(foto_craque.file, buffer)
         caminho_craque = caminho
 
-    time = models.Team(nome=nome, escudo=caminho_escudo)
+    time = models.Team(
+        nome=nome,
+        formacao=formacao,
+        escudo=caminho_escudo,
+        foto_craque=caminho_craque
+    )
     db.add(time)
     db.commit()
     db.refresh(time)
     return time
 
-
 @app.patch("/times/{team_id}", response_model=schemas.Team)
 async def update_time(
     team_id:     int,
     nome:        Optional[str]        = Form(None),
+    formacao:    Optional[str]        = Form(None),  
     escudo:      Optional[UploadFile] = File(None),
     foto_craque: Optional[UploadFile] = File(None),
     db:          Session              = Depends(get_db)
@@ -138,11 +143,12 @@ async def update_time(
     if db_team is None:
         raise HTTPException(status_code=404, detail="Time não encontrado")
 
-    # atualiza nome se enviado
     if nome:
         db_team.nome = nome
 
-    # atualiza escudo se enviado
+    if formacao:          
+        db_team.formacao = formacao     
+
     if escudo and escudo.filename:
         if escudo.content_type not in FORMATOS_ACEITOS:
             raise HTTPException(status_code=400, detail="Formato de imagem inválido")
@@ -152,7 +158,6 @@ async def update_time(
             shutil.copyfileobj(escudo.file, buffer)
         db_team.escudo = caminho
 
-    # atualiza foto_craque se enviado
     if foto_craque and foto_craque.filename:
         if foto_craque.content_type not in FORMATOS_ACEITOS:
             raise HTTPException(status_code=400, detail="Formato de imagem inválido")

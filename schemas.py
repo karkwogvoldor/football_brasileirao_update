@@ -46,13 +46,14 @@ class Jogador(JogadorBase):
 # ─────────────────────────────────────────
 class TeamBase(BaseModel):
     name:   str
-    titles: int
+    formacao: Optional[str] = None
 
 class TeamCreate(TeamBase):
     pass
 
 class TeamUpdate(BaseModel):
     nome:        Optional[str] = None
+    formacao:    Optional[str] = None
     escudo:      Optional[str] = None
     foto_craque: Optional[str] = None
 

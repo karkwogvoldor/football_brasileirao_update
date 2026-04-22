@@ -13,18 +13,17 @@ class Jogador(Base):
     # Relacionamentos (opcionais, preenchidos depois)
     team_id   = Column(Integer, ForeignKey('times.id'), nullable=True)
     team      = relationship("Team", back_populates="players")
-    positions = relationship("Position", back_populates="jogador")  # 1:N
 
 
 class Team(Base):
     __tablename__ = 'times'
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
-    titles = Column(Integer)
     players = relationship("Jogador", back_populates="team", uselist = False)
     esquema_tatico = relationship("EsquemaTatico", back_populates="time")
     escudo = Column(String, nullable=True)
     foto_craque = Column(String, nullable = True)
+    formacao = Column(String(10), nullable=True)  # ex: "4-3-3", "4-4-2"
     
     
 class EsquemaTatico (Base):
