@@ -1,11 +1,11 @@
 from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, Form
 from fastapi.staticfiles import StaticFiles
 import shutil, os
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
+from sqlalchemy import text
 import models, schemas
 from database import engine, SessionLocal, get_db
 from typing import List, Optional
-from sqlalchemy.orm import joinedload
 
 models.Base.metadata.create_all(bind=engine)
 

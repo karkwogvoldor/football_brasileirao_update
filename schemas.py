@@ -2,9 +2,7 @@ from typing import List, Optional
 from pydantic import BaseModel
 from enum import Enum
 
-# ─────────────────────────────────────────
-# JOGADOR
-# ─────────────────────────────────────────
+# ─── JOGADOR ────────────────────────────────────────
 class Posicao(str, Enum):
     GOL = "GOL"
     ZAG = "ZAG"
@@ -13,39 +11,36 @@ class Posicao(str, Enum):
     LAE = "LAE"
     VOL = "VOL"
     MEI = "MEI"
-    SA = "SA"
+    SA  = "SA"
     PTD = "PTD"
     PTE = "PTE"
     ATA = "ATA"
     TEC = "TEC"
-    # adicione as que precisar
 
 class JogadorBase(BaseModel):
-    name:   str
+    nome:   str
     number: int
     posicao: Posicao
 
 class JogadorCreate(JogadorBase):
-    pass  # só nome e número na criação
+    pass
 
 class JogadorUpdate(BaseModel):
-    name:    Optional[str] = None
+    nome:    Optional[str] = None
     number:  Optional[int] = None
-    team_id: Optional[int] = None  # linka ao time depois
+    posicao: Optional[Posicao] = None  # ← estava sem o tipo Posicao
+    team_id: Optional[int] = None
 
 class Jogador(JogadorBase):
-    id:        int
-    team_id:   Optional[int] = None
+    id:      int
+    team_id: Optional[int] = None
 
     class Config:
         from_attributes = True
 
-
-# ─────────────────────────────────────────
-# TEAM
-# ─────────────────────────────────────────
+# ─── TEAM ────────────────────────────────────────────
 class TeamBase(BaseModel):
-    name:   str
+    nome:     str        # ← era name, corrigido para nome
     formacao: Optional[str] = None
 
 class TeamCreate(TeamBase):
@@ -58,35 +53,11 @@ class TeamUpdate(BaseModel):
     foto_craque: Optional[str] = None
 
 class Team(TeamBase):
-    id:      int
-    players: List[Jogador] = []
-    escudo: Optional[str] = None
+    id:          int
+    escudo:      Optional[str] = None
     foto_craque: Optional[str] = None
 
     class Config:
         from_attributes = True
 
-
-# ─────────────────────────────────────────
-# ESQUEMA TÁTICO
-# ─────────────────────────────────────────
-class EsquemaTaticoBase(BaseModel):
-    esquema: str
-    time_id: Optional[int] = None
-
-class EsquemaTaticoCreate(EsquemaTaticoBase):
-    pass
-
-class EsquemaTaticoUpdate(BaseModel):
-    esquema: Optional[str] = None
-    time_id: Optional[int]         = None
-
-class EsquemaTatico(EsquemaTaticoBase):
-    id: int
-
-    class Config:
-        from_attributes = True
-
-
-# necessário para resolver referências circulares (Jogador <-> Position)
 Jogador.model_rebuild()
