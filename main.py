@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, Form
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 import shutil, os
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import text
@@ -10,6 +11,12 @@ from typing import List, Optional
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
+
+@app.get("/")
+def root():
+    return FileResponse("frontend/index.html")
 
 FORMATOS_ACEITOS = ["image/png", "image/webp", "image/jpeg"]
 
