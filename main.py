@@ -1,6 +1,7 @@
-from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, Form
+from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, Form, Request
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.templating import Jinja2Templates
 import shutil, os
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import text
@@ -12,11 +13,17 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
-app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
+
+
+templates = Jinja2Templates(directory="templates") 
 
 @app.get("/")
 def root():
-    return FileResponse("frontend/index.html")
+    return FileResponse("templates/index.html")
+
+@app.get("/clube/{team_id}")
+def clube(team_id: int):
+    return FileResponse("templates/clube.html")
 
 FORMATOS_ACEITOS = ["image/png", "image/webp", "image/jpeg"]
 

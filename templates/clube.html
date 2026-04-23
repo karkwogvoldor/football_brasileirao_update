@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Escalação</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/clube.css"/>
+</head>
+<body>
+
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="/">← Brasileirão 2026</a>
+    <span>/</span>
+    <a id="nav-clube" href="#">—</a>
+  </nav>
+
+  <!-- HEADER -->
+  <div class="team-header">
+    <img class="escudo" id="escudo" src="" alt="Escudo"/>
+    <div class="team-info">
+      <h1 id="nomeTime">Carregando...</h1>
+      <div class="meta">
+        <span id="formacao-meta">—</span>
+        <span>Brasileirão 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAYOUT PRINCIPAL -->
+  <div class="main-layout">
+
+    <!-- CAMPO -->
+    <div class="campo-section">
+      <div class="campo-wrap" id="campo">
+        <!-- Linhas SVG do campo -->
+        <svg class="campo-linhas" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Borda -->
+          <rect x="2" y="2" width="96" height="96" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+          <!-- Meio campo -->
+          <line x1="2" y1="50" x2="98" y2="50" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+          <!-- Círculo central -->
+          <circle cx="50" cy="50" r="12" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+          <circle cx="50" cy="50" r="0.8" fill="rgba(255,255,255,0.3)"/>
+          <!-- Área grande ataque -->
+          <rect x="25" y="2" width="50" height="18" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+          <!-- Área pequena ataque -->
+          <rect x="36" y="2" width="28" height="8" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+          <!-- Área grande defesa -->
+          <rect x="25" y="80" width="50" height="18" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+          <!-- Área pequena defesa -->
+          <rect x="36" y="90" width="28" height="8" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+          <!-- Gol ataque -->
+          <rect x="40" y="0" width="20" height="2" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="0.5"/>
+          <!-- Gol defesa -->
+          <rect x="40" y="98" width="20" height="2" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="0.5"/>
+        </svg>
+        <!-- Jogadores injetados pelo JS -->
+      </div>
+
+      <div id="formacao-badge" style="font-family:'Bebas Neue',sans-serif;font-size:0.75rem;letter-spacing:0.15em;color:rgba(255,255,255,0.3);text-align:center;padding:4px 0;">
+        —
+      </div>
+
+      <div class="legenda">
+        <h4>Posições</h4>
+        <div class="legenda-grid">
+          <div class="legenda-item"><div class="legenda-dot"></div>GOL</div>
+          <div class="legenda-item"><div class="legenda-dot"></div>ZAG</div>
+          <div class="legenda-item"><div class="legenda-dot"></div>LAT</div>
+          <div class="legenda-item"><div class="legenda-dot"></div>VOL</div>
+          <div class="legenda-item"><div class="legenda-dot"></div>MEI</div>
+          <div class="legenda-item"><div class="legenda-dot"></div>ATA</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESERVAS -->
+    <div class="reservas-section">
+      <div class="section-title">Reservas</div>
+      <div class="reservas-lista" id="reservasLista">
+        <div style="color:rgba(255,255,255,0.2);font-size:0.75rem;padding:12px;">Carregando...</div>
+      </div>
+    </div>
+
+    <!-- CRAQUE -->
+    <div class="craque-section">
+      <div class="craque-card">
+        <div class="craque-header"><h3>Craque do Time</h3></div>
+        <div class="craque-foto-wrap">
+          <img id="craqueFoto" src="" alt="Craque" onerror="this.style.opacity='0.2'"/>
+        </div>
+        <div class="craque-body">
+          <div class="craque-nome" id="craqueNome">—</div>
+          <div class="craque-pos" id="craquePos">—</div>
+          <div class="craque-desc loading" id="craqueDesc">Gerando análise...</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="/static/clube.js"></script>
+</body>
+</html>

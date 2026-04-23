@@ -1,0 +1,492 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* ── VARIÁVEIS DO TIME (sobrescritas por cada time) ── */
+:root {
+    --cor1: #0d0d0d;
+    --cor2: #f0f0f0;
+    --cinza: #2a2a2a;
+    --cinza-claro: #444;
+    --accent: #ffffff;
+    --accent-dim: rgba(255, 255, 255, 0.12);
+    --sombra: rgba(0, 0, 0, 0.8);
+}
+
+body {
+    min-height: 100vh;
+    background-color: var(--cor1);
+    background-image:
+        radial-gradient(ellipse at 10% 10%, rgba(255, 255, 255, 0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 90% 90%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+        repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(255, 255, 255, 0.012) 60px, rgba(255, 255, 255, 0.012) 61px),
+        repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(255, 255, 255, 0.012) 60px, rgba(255, 255, 255, 0.012) 61px);
+    font-family: 'Barlow', sans-serif;
+    color: var(--cor2);
+}
+
+/* ── NAV ── */
+nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 32px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+nav a {
+    color: rgba(255, 255, 255, 0.4);
+    text-decoration: none;
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+}
+
+nav a:hover {
+    color: var(--cor2);
+}
+
+nav span {
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 0.7rem;
+}
+
+/* ── HEADER ── */
+.team-header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 32px 32px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.team-header img.escudo {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 16px rgba(255, 255, 255, 0.15));
+}
+
+.team-info h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    letter-spacing: 0.05em;
+    line-height: 1;
+    color: var(--cor2);
+}
+
+.team-info .meta {
+    display: flex;
+    gap: 16px;
+    margin-top: 6px;
+}
+
+.team-info .meta span {
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.06);
+    padding: 3px 10px;
+    border-radius: 2px;
+}
+
+/* ── LAYOUT PRINCIPAL ── */
+.main-layout {
+    display: grid;
+    grid-template-columns: 420px 1fr 280px;
+    gap: 24px;
+    padding: 24px 32px;
+    align-items: start;
+}
+
+/* ── CAMPO ── */
+.campo-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.campo-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 7/10;
+    background: linear-gradient(180deg, #1a5c2a 0%, #1e6b30 40%, #1a5c2a 100%);
+    border-radius: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+}
+
+.campo-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(180deg,
+            rgba(255, 255, 255, 0.03) 0px,
+            rgba(255, 255, 255, 0.03) 38px,
+            transparent 38px,
+            transparent 76px);
+}
+
+.campo-linhas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* ── JOGADORES NO CAMPO ── */
+.jogador-campo {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    cursor: grab;
+    z-index: 10;
+    transform: translate(-50%, -50%);
+    transition: filter 0.2s;
+}
+
+.jogador-campo.drag-over-target {
+    filter: brightness(1.4);
+    transform: translate(-50%, -50%) scale(1.15);
+}
+
+.bolinha {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--cor1);
+    border: 2.5px solid var(--cor2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.85rem;
+    color: var(--cor2);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    user-select: none;
+}
+
+.jogador-campo:hover .bolinha {
+    transform: scale(1.15);
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
+}
+
+.jogador-campo .nome-campo {
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--cor2);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+    white-space: nowrap;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 1px 5px;
+    border-radius: 2px;
+}
+
+.jogador-campo .pos-badge {
+    font-size: 0.42rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.campo-wrap.drag-active {
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6), 0 0 0 2px rgba(255, 255, 255, 0.15);
+}
+
+/* ── LEGENDA ── */
+.legenda {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 12px 16px;
+}
+
+.legenda h4 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    color: rgba(255, 255, 255, 0.4);
+    margin-bottom: 8px;
+}
+
+.legenda-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px 8px;
+}
+
+.legenda-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.62rem;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 0.05em;
+}
+
+.legenda-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--cor2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    flex-shrink: 0;
+}
+
+/* ── RESERVAS ── */
+.reservas-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.reservas-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 520px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.reservas-lista::-webkit-scrollbar {
+    width: 3px;
+}
+
+.reservas-lista::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.reservas-lista::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
+}
+
+.reserva-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 6px;
+    cursor: grab;
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    user-select: none;
+}
+
+.reserva-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(4px);
+}
+
+.reserva-card.dragging {
+    opacity: 0.4;
+    transform: scale(0.97);
+}
+
+.reserva-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.3);
+    min-width: 24px;
+    text-align: center;
+}
+
+.reserva-info {
+    flex: 1;
+}
+
+.reserva-nome {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--cor2);
+    letter-spacing: 0.03em;
+}
+
+.reserva-pos {
+    font-size: 0.62rem;
+    color: rgba(255, 255, 255, 0.35);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 1px;
+}
+
+.reserva-drag-hint {
+    font-size: 0.6rem;
+    color: rgba(255, 255, 255, 0.15);
+    letter-spacing: 0.05em;
+}
+
+/* ── CRAQUE ── */
+.craque-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.craque-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.craque-header {
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.craque-header h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.craque-foto-wrap {
+    width: 100%;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.03);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.craque-foto-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(20%);
+    transition: filter 0.3s, transform 0.3s;
+}
+
+.craque-foto-wrap:hover img {
+    filter: grayscale(0%);
+    transform: scale(1.04);
+}
+
+.craque-body {
+    padding: 14px 16px;
+}
+
+.craque-nome {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.05em;
+    color: var(--cor2);
+    margin-bottom: 4px;
+}
+
+.craque-pos {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.35);
+    margin-bottom: 12px;
+}
+
+.craque-desc {
+    font-size: 0.75rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.55);
+    font-style: italic;
+}
+
+.craque-desc.loading {
+    color: rgba(255, 255, 255, 0.25);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+/* ── TOAST ── */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--cor2);
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 100;
+    pointer-events: none;
+}
+
+.toast.show {
+    transform: translateX(-50%) translateY(0);
+}
+
+/* ── LOADING ── */
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--cor1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    transition: opacity 0.5s;
+}
+
+.loading-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-top-color: var(--cor2);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
