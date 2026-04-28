@@ -231,10 +231,10 @@ async function init() {
         const POSICOES_CAMPO = FORMACOES[time.formacao] || FORMACOES['4-4-2'];
 
         if (time.escudo)
-            document.getElementById('escudo').src = `/${time.escudo}`;
+            document.getElementById('escudo').src = `${time.escudo}`;
 
         if (time.foto_craque)
-            document.getElementById('craqueFoto').src = `/${time.foto_craque}`;
+            document.getElementById('craqueFoto').src = `${time.foto_craque}`;
 
         // ── Monta campo ──
         const idsTitulares = TITULARES[TEAM_ID];
