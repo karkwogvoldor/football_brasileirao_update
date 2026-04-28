@@ -48,36 +48,50 @@ football_brasileirao_update/
 ## ⚙️ How It Works
 
 ### 1. Home Page (`/`)
-- Displays a **5-column grid** of all 20 clubs with badge and name
-- Each card links to `/clube/{team_id}` on click
+- Displays a **5-column interactive grid** of all 20 Brasileirão clubs
+- Each card shows the club badge and name, with a hover animation
+- Clicking any card navigates to `/clube/{team_id}` — the club's dedicated lineup page
+- Club data (badges, names) are stored in a **PostgreSQL database** and served via FastAPI
 
-### 2. Club Page (`/clube/{id}`)
-- Fetches club data from `GET /times/`
-- Fetches all players from `GET /jogadores/`
-- Filters players by `team_id`
-- Reads the starting 11 from the `TITULARES` dictionary (keyed by `team_id`)
-- Maps each player to a **coordinate** on the field based on the club's tactical `formacao`
-- Remaining players go to the **bench**
+### 2. Database Structure
+The application uses **PostgreSQL** with two main tables managed by SQLAlchemy ORM:
 
-### 3. Tactical Formations (`FORMACOES`)
-- Each formation is an **ordered array of [x, y] coordinates** (percentage-based)
-- The order in `TITULARES[team_id]` maps 1-to-1 with the formation coordinates:
-  - Position 1 → GK
-  - Positions 2–3 → CB
-  - Positions 4–5 → FB
-  - Positions 6–7 → VOL/MF
-  - Positions 8–10 → AM/ATA
-  - Position 11 → ST
+- **`teams`** — stores each club: `id`, `nome`, `formacao`, `escudo` (badge path), `foto_craque` (star player photo path)
+- **`jogadores`** — stores each player: `id`, `nome`, `number`, `posicao`, `team_id` (foreign key → teams)
 
-### 4. Drag & Drop Substitutions
-- Bench players are **draggable**
-- Drop a bench player onto a starter → substitution is made
-- The outgoing player returns to the bench
-- Toast notification shows the swap
+All images (badges, player photos, field background) are stored locally in the `static/` folder and served by FastAPI's `StaticFiles`.
 
-### 5. Star Player Card
-- Name, position and description loaded from the `CRAQUES` dictionary in `clube.js`
-- Photo loaded from `/static/craques/{clube}.jpg`
+### 3. Club Page (`/clube/{id}`)
+When a club page loads, the JavaScript:
+1. Fetches **all clubs** from `GET /times/` and finds the current one by `team_id`
+2. Fetches **all players** from `GET /jogadores/` and filters by `team_id`
+3. Looks up the club's starting 11 in the `TITULARES` dictionary — a hand-curated list of **player IDs in tactical order**
+4. Matches each ID against the players returned from the database to get full player data (name, number, position)
+5. Reads the club's `formacao` field from the database and maps it to an ordered array of `[x, y]` coordinates in `FORMACOES`
+6. Each player is placed on the field at their coordinate — **no position is forced**, the order of IDs in `TITULARES` defines who plays where
+7. Players not in the starting 11 are automatically sent to the **bench**
+
+### 4. Tactical Formations (`FORMACOES`)
+- Each formation is an **ordered array of `[x, y]` percentage-based coordinates**
+- The order in `TITULARES[team_id]` maps 1-to-1 with the coordinates:
+  - Index `0` → Goalkeeper coordinate
+  - Index `1–2` → Defender coordinates
+  - Index `3–4` → Fullback coordinates
+  - And so on until all 11 slots are filled
+- This design is **position-agnostic** — the database position (`GOL`, `ZAG`, etc.) is only displayed as a label, never used to restrict placement
+
+### 5. Drag & Drop Substitutions
+- All bench players have `draggable="true"` enabled
+- Dragging a bench player and **dropping onto a starter** triggers a substitution:
+  1. The starter is removed from `titularesAtivos` and sent to the bench
+  2. The bench player takes the starter's `x, y` coordinates on the field
+  3. The field and bench re-render instantly
+  4. A **toast notification** appears showing `Outgoing Player → Incoming Player`
+- Substitutions are **session-only** — refreshing the page restores the original lineup
+
+### 6. Star Player Card
+- Name, position and scouting description are loaded from the `CRAQUES` dictionary in `clube.js`
+- Photo is fetched from the path stored in the `foto_craque` field of the `teams` table in the database
 
 ---
 
