@@ -7,6 +7,8 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-blue?logo=postgresql)
 ![License](https://img.shields.io/badge/license-MIT-brightgreen)
 
+🌐 **[Clique aqui para acessar](https://footballbrasileiraoupdate-production.up.railway.app)**
+
 ---
 
 ## 📸 Screenshots
