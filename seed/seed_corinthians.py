@@ -4,7 +4,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 import requests
 
-BASE_URL = "http://localhost:8000"
+BASE_URL = "https://footballbrasileiraoupdate-production.up.railway.app"
 
 def criar_jogador(nome, number, posicao, team_id):
     data = {"nome": nome, "number": number, "posicao": posicao, "team_id": team_id}
