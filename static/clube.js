@@ -230,11 +230,15 @@ async function init() {
         document.title = time.nome;
         const POSICOES_CAMPO = FORMACOES[time.formacao] || FORMACOES['4-4-2'];
 
-        if (time.escudo)
-            document.getElementById('escudo').src = time.escudo;
+        if (time.escudo) {
+            const caminhoEscudo = time.escudo.startsWith('/') ? time.escudo : `/${time.escudo}`;
+            document.getElementById('escudo').src = caminhoEscudo;
+        }
 
-        if (time.foto_craque)
-            document.getElementById('craqueFoto').src = time.foto_craque;
+        if (time.foto_craque) {
+            const caminhoFoto = time.foto_craque.startsWith('/') ? time.foto_craque : `/${time.foto_craque}`;
+            document.getElementById('craqueFoto').src = caminhoFoto;
+        }
 
         // ── Monta campo ──
         const idsTitulares = TITULARES[TEAM_ID];
