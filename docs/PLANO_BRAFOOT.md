@@ -113,12 +113,18 @@ As fases 2 a 5 podem usar dados manuais autorizados enquanto a negociação de f
 - Ambiente de homologação com dados separados da produção. Publicar a nova experiência inicialmente por rota/flag; acompanhar erros, importações, saves e latência antes de redirecionar a página principal.
 - Plano de reversão: desligar nova rota e jobs, manter o catálogo/snapshot anterior e restaurar backup se uma migração de dados falhar. Nunca rodar os seeds atuais contra produção como ensaio; eles enviam POSTs para a URL publicada.
 
-## 11. Decisões a fechar antes da implementação
+## 11. Decisões do MVP
 
-1. O MVP será público com contas ou primeiro um protótipo local/privado? Isso define autenticação e armazenamento de saves.
-2. O jogador controlará somente um clube ou poderá trocar de clube durante uma temporada?
-3. A simulação usará calendário real da temporada ou uma temporada fictícia com os clubes reais? Separar as duas opções evita confusão entre resultados reais e simulados.
-4. Qual grau de realismo e transparência desejado para os atributos iniciais, e quem revisará as estimativas?
-5. Qual fornecedor oferece direitos e cobertura suficientes para elenco, escalações, calendário e imagens dentro do orçamento?
+Decisões fechadas em 10/11/2026:
+
+1. O jogo roda no navegador e começa sem login obrigatório. Um cookie `HttpOnly` identifica uma sessão anônima, enquanto o conteúdo do save fica no banco. A estrutura permite vincular o save a uma conta futuramente.
+2. Cada save controla somente um clube durante a temporada. Um novo save poderá escolher outro clube, mas não haverá troca de clube dentro da temporada do MVP.
+3. A temporada usa o calendário real do Brasileirão Série A 2026: 20 clubes, 38 rodadas, datas, confrontos e mandos oficiais. Placares reais não são importados; todos os resultados pertencem à simulação do BRAFOOT.
+4. O calendário-base e o snapshot de elenco ficam congelados quando o save começa. Atualizações posteriores não reescrevem a temporada em andamento.
+
+Decisões ainda abertas:
+
+1. Qual grau de realismo e transparência será usado para os atributos iniciais, e quem revisará as estimativas?
+2. Qual fornecedor oferece direitos e cobertura suficientes para elenco, escalações e imagens dentro do orçamento quando o protótipo evoluir para produção?
 
 Ordem recomendada: começar pela fase 0 e por uma partida vertical com dados locais; validar diversão e consistência antes de investir em ingestão automática ou recursos de gestão mais amplos.

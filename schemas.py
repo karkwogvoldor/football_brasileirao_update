@@ -1,5 +1,7 @@
-from typing import List, Optional
-from pydantic import BaseModel
+from datetime import date, datetime, time
+from typing import Optional
+
+from pydantic import BaseModel, ConfigDict
 from enum import Enum
 
 # ─── JOGADOR ────────────────────────────────────────
@@ -34,8 +36,7 @@ class Jogador(JogadorBase):
     id:      int
     team_id: Optional[int] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # ─── TEAM ────────────────────────────────────────────
 class TeamBase(BaseModel):
@@ -56,7 +57,45 @@ class Team(TeamBase):
     escudo:      Optional[str] = None
     foto_craque: Optional[str] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
+
+
+class ClubRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    name: str
+    slug: str
+    state: str
+
+
+class FixtureRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    source_ref: str
+    round_number: int
+    scheduled_date: date
+    scheduled_time: Optional[time]
+    home_club: ClubRead
+    away_club: ClubRead
+
+
+class GameSaveCreate(BaseModel):
+    controlled_club_id: int
+    season_id: int
+
+
+class GameSaveRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    controlled_club_id: int
+    season_id: int
+    snapshot_version: str
+    ruleset_version: str
+    status: str
+    created_at: datetime
+    updated_at: datetime
 
 Jogador.model_rebuild()

@@ -1,0 +1,3070 @@
+{
+  "competition": "Campeonato Brasileiro Série A",
+  "season": 2026,
+  "source": "Confederação Brasileira de Futebol",
+  "source_url": "https://stcbfsiteprdimgbrs.blob.core.windows.net/img-site/cdn/Tabela_Detalhada_BSA_2026_09_11_053e1416ec.pdf",
+  "clubs": [
+    "Athletico Paranaense",
+    "Atlético Mineiro",
+    "Bahia",
+    "Botafogo",
+    "Chapecoense",
+    "Corinthians",
+    "Coritiba",
+    "Cruzeiro",
+    "Flamengo",
+    "Fluminense",
+    "Grêmio",
+    "Internacional",
+    "Mirassol",
+    "Palmeiras",
+    "Red Bull Bragantino",
+    "Remo",
+    "Santos",
+    "São Paulo",
+    "Vasco da Gama",
+    "Vitória"
+  ],
+  "fixtures": [
+    {
+      "source_ref": "001",
+      "round_number": 1,
+      "scheduled_date": "2026-01-28",
+      "scheduled_time": "19:30",
+      "home_club": "Fluminense",
+      "away_club": "Grêmio"
+    },
+    {
+      "source_ref": "002",
+      "round_number": 1,
+      "scheduled_date": "2026-01-29",
+      "scheduled_time": "21:30",
+      "home_club": "Botafogo",
+      "away_club": "Cruzeiro"
+    },
+    {
+      "source_ref": "003",
+      "round_number": 1,
+      "scheduled_date": "2026-01-28",
+      "scheduled_time": "21:30",
+      "home_club": "São Paulo",
+      "away_club": "Flamengo"
+    },
+    {
+      "source_ref": "004",
+      "round_number": 1,
+      "scheduled_date": "2026-01-28",
+      "scheduled_time": "20:00",
+      "home_club": "Corinthians",
+      "away_club": "Bahia"
+    },
+    {
+      "source_ref": "005",
+      "round_number": 1,
+      "scheduled_date": "2026-01-29",
+      "scheduled_time": "20:00",
+      "home_club": "Mirassol",
+      "away_club": "Vasco da Gama"
+    },
+    {
+      "source_ref": "006",
+      "round_number": 1,
+      "scheduled_date": "2026-01-28",
+      "scheduled_time": "19:00",
+      "home_club": "Atlético Mineiro",
+      "away_club": "Palmeiras"
+    },
+    {
+      "source_ref": "007",
+      "round_number": 1,
+      "scheduled_date": "2026-01-28",
+      "scheduled_time": "19:00",
+      "home_club": "Internacional",
+      "away_club": "Athletico Paranaense"
+    },
+    {
+      "source_ref": "008",
+      "round_number": 1,
+      "scheduled_date": "2026-01-28",
+      "scheduled_time": "19:00",
+      "home_club": "Coritiba",
+      "away_club": "Red Bull Bragantino"
+    },
+    {
+      "source_ref": "009",
+      "round_number": 1,
+      "scheduled_date": "2026-01-28",
+      "scheduled_time": "19:00",
+      "home_club": "Vitória",
+      "away_club": "Remo"
+    },
+    {
+      "source_ref": "010",
+      "round_number": 1,
+      "scheduled_date": "2026-01-28",
+      "scheduled_time": "20:00",
+      "home_club": "Chapecoense",
+      "away_club": "Santos"
+    },
+    {
+      "source_ref": "011",
+      "round_number": 2,
+      "scheduled_date": "2026-02-04",
+      "scheduled_time": "19:00",
+      "home_club": "Flamengo",
+      "away_club": "Internacional"
+    },
+    {
+      "source_ref": "012",
+      "round_number": 2,
+      "scheduled_date": "2026-02-05",
+      "scheduled_time": "20:00",
+      "home_club": "Vasco da Gama",
+      "away_club": "Chapecoense"
+    },
+    {
+      "source_ref": "013",
+      "round_number": 2,
+      "scheduled_date": "2026-02-04",
+      "scheduled_time": "20:00",
+      "home_club": "Santos",
+      "away_club": "São Paulo"
+    },
+    {
+      "source_ref": "014",
+      "round_number": 2,
+      "scheduled_date": "2026-02-04",
+      "scheduled_time": "21:30",
+      "home_club": "Palmeiras",
+      "away_club": "Vitória"
+    },
+    {
+      "source_ref": "015",
+      "round_number": 2,
+      "scheduled_date": "2026-02-04",
+      "scheduled_time": "19:00",
+      "home_club": "Red Bull Bragantino",
+      "away_club": "Atlético Mineiro"
+    },
+    {
+      "source_ref": "016",
+      "round_number": 2,
+      "scheduled_date": "2026-02-05",
+      "scheduled_time": "21:30",
+      "home_club": "Cruzeiro",
+      "away_club": "Coritiba"
+    },
+    {
+      "source_ref": "017",
+      "round_number": 2,
+      "scheduled_date": "2026-02-04",
+      "scheduled_time": "21:30",
+      "home_club": "Grêmio",
+      "away_club": "Botafogo"
+    },
+    {
+      "source_ref": "018",
+      "round_number": 2,
+      "scheduled_date": "2026-02-19",
+      "scheduled_time": null,
+      "home_club": "Athletico Paranaense",
+      "away_club": "Corinthians"
+    },
+    {
+      "source_ref": "019",
+      "round_number": 2,
+      "scheduled_date": "2026-02-05",
+      "scheduled_time": "19:00",
+      "home_club": "Bahia",
+      "away_club": "Fluminense"
+    },
+    {
+      "source_ref": "020",
+      "round_number": 2,
+      "scheduled_date": "2026-02-04",
+      "scheduled_time": "20:00",
+      "home_club": "Remo",
+      "away_club": "Mirassol"
+    },
+    {
+      "source_ref": "021",
+      "round_number": 3,
+      "scheduled_date": "2026-02-12",
+      "scheduled_time": null,
+      "home_club": "Fluminense",
+      "away_club": "Botafogo"
+    },
+    {
+      "source_ref": "022",
+      "round_number": 3,
+      "scheduled_date": "2026-02-11",
+      "scheduled_time": null,
+      "home_club": "Vasco da Gama",
+      "away_club": "Bahia"
+    },
+    {
+      "source_ref": "023",
+      "round_number": 3,
+      "scheduled_date": "2026-02-11",
+      "scheduled_time": null,
+      "home_club": "São Paulo",
+      "away_club": "Grêmio"
+    },
+    {
+      "source_ref": "024",
+      "round_number": 3,
+      "scheduled_date": "2026-02-12",
+      "scheduled_time": null,
+      "home_club": "Corinthians",
+      "away_club": "Red Bull Bragantino"
+    },
+    {
+      "source_ref": "025",
+      "round_number": 3,
+      "scheduled_date": "2026-02-11",
+      "scheduled_time": null,
+      "home_club": "Mirassol",
+      "away_club": "Cruzeiro"
+    },
+    {
+      "source_ref": "026",
+      "round_number": 3,
+      "scheduled_date": "2026-02-11",
+      "scheduled_time": null,
+      "home_club": "Atlético Mineiro",
+      "away_club": "Remo"
+    },
+    {
+      "source_ref": "027",
+      "round_number": 3,
+      "scheduled_date": "2026-02-12",
+      "scheduled_time": null,
+      "home_club": "Internacional",
+      "away_club": "Palmeiras"
+    },
+    {
+      "source_ref": "028",
+      "round_number": 3,
+      "scheduled_date": "2026-02-12",
+      "scheduled_time": null,
+      "home_club": "Athletico Paranaense",
+      "away_club": "Santos"
+    },
+    {
+      "source_ref": "029",
+      "round_number": 3,
+      "scheduled_date": "2026-02-10",
+      "scheduled_time": null,
+      "home_club": "Vitória",
+      "away_club": "Flamengo"
+    },
+    {
+      "source_ref": "030",
+      "round_number": 3,
+      "scheduled_date": "2026-02-11",
+      "scheduled_time": null,
+      "home_club": "Chapecoense",
+      "away_club": "Coritiba"
+    },
+    {
+      "source_ref": "031",
+      "round_number": 4,
+      "scheduled_date": "2026-09-02",
+      "scheduled_time": "19:30",
+      "home_club": "Flamengo",
+      "away_club": "Mirassol"
+    },
+    {
+      "source_ref": "032",
+      "round_number": 4,
+      "scheduled_date": "2026-07-23",
+      "scheduled_time": "19:30",
+      "home_club": "Botafogo",
+      "away_club": "Vitória"
+    },
+    {
+      "source_ref": "033",
+      "round_number": 4,
+      "scheduled_date": "2026-02-26",
+      "scheduled_time": "19:00",
+      "home_club": "Santos",
+      "away_club": "Vasco da Gama"
+    },
+    {
+      "source_ref": "034",
+      "round_number": 4,
+      "scheduled_date": "2026-02-25",
+      "scheduled_time": null,
+      "home_club": "Palmeiras",
+      "away_club": "Fluminense"
+    },
+    {
+      "source_ref": "035",
+      "round_number": 4,
+      "scheduled_date": "2026-02-25",
+      "scheduled_time": null,
+      "home_club": "Red Bull Bragantino",
+      "away_club": "Athletico Paranaense"
+    },
+    {
+      "source_ref": "036",
+      "round_number": 4,
+      "scheduled_date": "2026-02-25",
+      "scheduled_time": null,
+      "home_club": "Cruzeiro",
+      "away_club": "Corinthians"
+    },
+    {
+      "source_ref": "037",
+      "round_number": 4,
+      "scheduled_date": "2026-02-25",
+      "scheduled_time": null,
+      "home_club": "Grêmio",
+      "away_club": "Atlético Mineiro"
+    },
+    {
+      "source_ref": "038",
+      "round_number": 4,
+      "scheduled_date": "2026-02-25",
+      "scheduled_time": "19:30",
+      "home_club": "Coritiba",
+      "away_club": "São Paulo"
+    },
+    {
+      "source_ref": "039",
+      "round_number": 4,
+      "scheduled_date": "2026-07-17",
+      "scheduled_time": "19:30",
+      "home_club": "Bahia",
+      "away_club": "Chapecoense"
+    },
+    {
+      "source_ref": "040",
+      "round_number": 4,
+      "scheduled_date": "2026-02-25",
+      "scheduled_time": null,
+      "home_club": "Remo",
+      "away_club": "Internacional"
+    },
+    {
+      "source_ref": "041",
+      "round_number": 5,
+      "scheduled_date": "2026-03-11",
+      "scheduled_time": "21:30",
+      "home_club": "Flamengo",
+      "away_club": "Cruzeiro"
+    },
+    {
+      "source_ref": "042",
+      "round_number": 5,
+      "scheduled_date": "2026-03-12",
+      "scheduled_time": "19:30",
+      "home_club": "Vasco da Gama",
+      "away_club": "Palmeiras"
+    },
+    {
+      "source_ref": "043",
+      "round_number": 5,
+      "scheduled_date": "2026-03-12",
+      "scheduled_time": "20:00",
+      "home_club": "São Paulo",
+      "away_club": "Chapecoense"
+    },
+    {
+      "source_ref": "044",
+      "round_number": 5,
+      "scheduled_date": "2026-03-11",
+      "scheduled_time": "21:30",
+      "home_club": "Corinthians",
+      "away_club": "Coritiba"
+    },
+    {
+      "source_ref": "045",
+      "round_number": 5,
+      "scheduled_date": "2026-03-10",
+      "scheduled_time": "21:30",
+      "home_club": "Mirassol",
+      "away_club": "Santos"
+    },
+    {
+      "source_ref": "046",
+      "round_number": 5,
+      "scheduled_date": "2026-03-11",
+      "scheduled_time": "19:00",
+      "home_club": "Atlético Mineiro",
+      "away_club": "Internacional"
+    },
+    {
+      "source_ref": "047",
+      "round_number": 5,
+      "scheduled_date": "2026-03-12",
+      "scheduled_time": "21:30",
+      "home_club": "Grêmio",
+      "away_club": "Red Bull Bragantino"
+    },
+    {
+      "source_ref": "048",
+      "round_number": 5,
+      "scheduled_date": "2026-03-29",
+      "scheduled_time": "19:30",
+      "home_club": "Athletico Paranaense",
+      "away_club": "Botafogo"
+    },
+    {
+      "source_ref": "049",
+      "round_number": 5,
+      "scheduled_date": "2026-03-11",
+      "scheduled_time": "20:00",
+      "home_club": "Bahia",
+      "away_club": "Vitória"
+    },
+    {
+      "source_ref": "050",
+      "round_number": 5,
+      "scheduled_date": "2026-03-12",
+      "scheduled_time": "19:00",
+      "home_club": "Remo",
+      "away_club": "Fluminense"
+    },
+    {
+      "source_ref": "051",
+      "round_number": 6,
+      "scheduled_date": "2026-03-15",
+      "scheduled_time": "16:00",
+      "home_club": "Fluminense",
+      "away_club": "Athletico Paranaense"
+    },
+    {
+      "source_ref": "052",
+      "round_number": 6,
+      "scheduled_date": "2026-03-14",
+      "scheduled_time": "20:30",
+      "home_club": "Botafogo",
+      "away_club": "Flamengo"
+    },
+    {
+      "source_ref": "053",
+      "round_number": 6,
+      "scheduled_date": "2026-03-15",
+      "scheduled_time": "16:00",
+      "home_club": "Santos",
+      "away_club": "Corinthians"
+    },
+    {
+      "source_ref": "054",
+      "round_number": 6,
+      "scheduled_date": "2026-03-15",
+      "scheduled_time": "18:30",
+      "home_club": "Palmeiras",
+      "away_club": "Mirassol"
+    },
+    {
+      "source_ref": "055",
+      "round_number": 6,
+      "scheduled_date": "2026-03-15",
+      "scheduled_time": "20:30",
+      "home_club": "Red Bull Bragantino",
+      "away_club": "São Paulo"
+    },
+    {
+      "source_ref": "056",
+      "round_number": 6,
+      "scheduled_date": "2026-03-15",
+      "scheduled_time": "20:30",
+      "home_club": "Cruzeiro",
+      "away_club": "Vasco da Gama"
+    },
+    {
+      "source_ref": "057",
+      "round_number": 6,
+      "scheduled_date": "2026-03-15",
+      "scheduled_time": "16:00",
+      "home_club": "Internacional",
+      "away_club": "Bahia"
+    },
+    {
+      "source_ref": "058",
+      "round_number": 6,
+      "scheduled_date": "2026-03-15",
+      "scheduled_time": "18:30",
+      "home_club": "Coritiba",
+      "away_club": "Remo"
+    },
+    {
+      "source_ref": "059",
+      "round_number": 6,
+      "scheduled_date": "2026-03-14",
+      "scheduled_time": "18:30",
+      "home_club": "Vitória",
+      "away_club": "Atlético Mineiro"
+    },
+    {
+      "source_ref": "060",
+      "round_number": 6,
+      "scheduled_date": "2026-03-16",
+      "scheduled_time": "20:00",
+      "home_club": "Chapecoense",
+      "away_club": "Grêmio"
+    },
+    {
+      "source_ref": "061",
+      "round_number": 7,
+      "scheduled_date": "2026-03-19",
+      "scheduled_time": "20:00",
+      "home_club": "Flamengo",
+      "away_club": "Remo"
+    },
+    {
+      "source_ref": "062",
+      "round_number": 7,
+      "scheduled_date": "2026-03-18",
+      "scheduled_time": "21:30",
+      "home_club": "Vasco da Gama",
+      "away_club": "Fluminense"
+    },
+    {
+      "source_ref": "063",
+      "round_number": 7,
+      "scheduled_date": "2026-03-18",
+      "scheduled_time": "21:30",
+      "home_club": "Santos",
+      "away_club": "Internacional"
+    },
+    {
+      "source_ref": "064",
+      "round_number": 7,
+      "scheduled_date": "2026-03-18",
+      "scheduled_time": "19:00",
+      "home_club": "Palmeiras",
+      "away_club": "Botafogo"
+    },
+    {
+      "source_ref": "065",
+      "round_number": 7,
+      "scheduled_date": "2026-03-18",
+      "scheduled_time": "20:00",
+      "home_club": "Mirassol",
+      "away_club": "Coritiba"
+    },
+    {
+      "source_ref": "066",
+      "round_number": 7,
+      "scheduled_date": "2026-03-18",
+      "scheduled_time": "20:00",
+      "home_club": "Atlético Mineiro",
+      "away_club": "São Paulo"
+    },
+    {
+      "source_ref": "067",
+      "round_number": 7,
+      "scheduled_date": "2026-03-19",
+      "scheduled_time": "19:00",
+      "home_club": "Grêmio",
+      "away_club": "Vitória"
+    },
+    {
+      "source_ref": "068",
+      "round_number": 7,
+      "scheduled_date": "2026-03-18",
+      "scheduled_time": "19:30",
+      "home_club": "Athletico Paranaense",
+      "away_club": "Cruzeiro"
+    },
+    {
+      "source_ref": "069",
+      "round_number": 7,
+      "scheduled_date": "2026-03-18",
+      "scheduled_time": "19:00",
+      "home_club": "Bahia",
+      "away_club": "Red Bull Bragantino"
+    },
+    {
+      "source_ref": "070",
+      "round_number": 7,
+      "scheduled_date": "2026-03-19",
+      "scheduled_time": "21:30",
+      "home_club": "Chapecoense",
+      "away_club": "Corinthians"
+    },
+    {
+      "source_ref": "071",
+      "round_number": 8,
+      "scheduled_date": "2026-03-21",
+      "scheduled_time": "18:30",
+      "home_club": "Fluminense",
+      "away_club": "Atlético Mineiro"
+    },
+    {
+      "source_ref": "072",
+      "round_number": 8,
+      "scheduled_date": "2026-03-22",
+      "scheduled_time": "16:00",
+      "home_club": "Vasco da Gama",
+      "away_club": "Grêmio"
+    },
+    {
+      "source_ref": "073",
+      "round_number": 8,
+      "scheduled_date": "2026-03-21",
+      "scheduled_time": "21:00",
+      "home_club": "São Paulo",
+      "away_club": "Palmeiras"
+    },
+    {
+      "source_ref": "074",
+      "round_number": 8,
+      "scheduled_date": "2026-03-22",
+      "scheduled_time": "20:30",
+      "home_club": "Corinthians",
+      "away_club": "Flamengo"
+    },
+    {
+      "source_ref": "075",
+      "round_number": 8,
+      "scheduled_date": "2026-03-21",
+      "scheduled_time": "16:00",
+      "home_club": "Red Bull Bragantino",
+      "away_club": "Botafogo"
+    },
+    {
+      "source_ref": "076",
+      "round_number": 8,
+      "scheduled_date": "2026-03-22",
+      "scheduled_time": "16:00",
+      "home_club": "Cruzeiro",
+      "away_club": "Santos"
+    },
+    {
+      "source_ref": "077",
+      "round_number": 8,
+      "scheduled_date": "2026-03-22",
+      "scheduled_time": "18:30",
+      "home_club": "Internacional",
+      "away_club": "Chapecoense"
+    },
+    {
+      "source_ref": "078",
+      "round_number": 8,
+      "scheduled_date": "2026-03-22",
+      "scheduled_time": "16:00",
+      "home_club": "Athletico Paranaense",
+      "away_club": "Coritiba"
+    },
+    {
+      "source_ref": "079",
+      "round_number": 8,
+      "scheduled_date": "2026-03-22",
+      "scheduled_time": "18:30",
+      "home_club": "Vitória",
+      "away_club": "Mirassol"
+    },
+    {
+      "source_ref": "080",
+      "round_number": 8,
+      "scheduled_date": "2026-03-22",
+      "scheduled_time": "16:00",
+      "home_club": "Remo",
+      "away_club": "Bahia"
+    },
+    {
+      "source_ref": "081",
+      "round_number": 9,
+      "scheduled_date": "2026-04-01",
+      "scheduled_time": "21:30",
+      "home_club": "Fluminense",
+      "away_club": "Corinthians"
+    },
+    {
+      "source_ref": "082",
+      "round_number": 9,
+      "scheduled_date": "2026-04-01",
+      "scheduled_time": "19:30",
+      "home_club": "Botafogo",
+      "away_club": "Mirassol"
+    },
+    {
+      "source_ref": "083",
+      "round_number": 9,
+      "scheduled_date": "2026-04-02",
+      "scheduled_time": "20:40",
+      "home_club": "Santos",
+      "away_club": "Remo"
+    },
+    {
+      "source_ref": "084",
+      "round_number": 9,
+      "scheduled_date": "2026-04-02",
+      "scheduled_time": "21:30",
+      "home_club": "Palmeiras",
+      "away_club": "Grêmio"
+    },
+    {
+      "source_ref": "085",
+      "round_number": 9,
+      "scheduled_date": "2026-04-02",
+      "scheduled_time": "21:30",
+      "home_club": "Red Bull Bragantino",
+      "away_club": "Flamengo"
+    },
+    {
+      "source_ref": "086",
+      "round_number": 9,
+      "scheduled_date": "2026-04-01",
+      "scheduled_time": "20:00",
+      "home_club": "Cruzeiro",
+      "away_club": "Vitória"
+    },
+    {
+      "source_ref": "087",
+      "round_number": 9,
+      "scheduled_date": "2026-04-01",
+      "scheduled_time": "19:30",
+      "home_club": "Internacional",
+      "away_club": "São Paulo"
+    },
+    {
+      "source_ref": "088",
+      "round_number": 9,
+      "scheduled_date": "2026-04-01",
+      "scheduled_time": "20:30",
+      "home_club": "Coritiba",
+      "away_club": "Vasco da Gama"
+    },
+    {
+      "source_ref": "089",
+      "round_number": 9,
+      "scheduled_date": "2026-04-01",
+      "scheduled_time": "20:00",
+      "home_club": "Bahia",
+      "away_club": "Athletico Paranaense"
+    },
+    {
+      "source_ref": "090",
+      "round_number": 9,
+      "scheduled_date": "2026-04-02",
+      "scheduled_time": "19:00",
+      "home_club": "Chapecoense",
+      "away_club": "Atlético Mineiro"
+    },
+    {
+      "source_ref": "091",
+      "round_number": 10,
+      "scheduled_date": "2026-04-05",
+      "scheduled_time": "17:30",
+      "home_club": "Flamengo",
+      "away_club": "Santos"
+    },
+    {
+      "source_ref": "092",
+      "round_number": 10,
+      "scheduled_date": "2026-04-04",
+      "scheduled_time": "21:00",
+      "home_club": "Vasco da Gama",
+      "away_club": "Botafogo"
+    },
+    {
+      "source_ref": "093",
+      "round_number": 10,
+      "scheduled_date": "2026-04-04",
+      "scheduled_time": "18:30",
+      "home_club": "São Paulo",
+      "away_club": "Cruzeiro"
+    },
+    {
+      "source_ref": "094",
+      "round_number": 10,
+      "scheduled_date": "2026-04-05",
+      "scheduled_time": "19:30",
+      "home_club": "Corinthians",
+      "away_club": "Internacional"
+    },
+    {
+      "source_ref": "095",
+      "round_number": 10,
+      "scheduled_date": "2026-04-05",
+      "scheduled_time": "20:00",
+      "home_club": "Mirassol",
+      "away_club": "Red Bull Bragantino"
+    },
+    {
+      "source_ref": "096",
+      "round_number": 10,
+      "scheduled_date": "2026-04-05",
+      "scheduled_time": "17:30",
+      "home_club": "Atlético Mineiro",
+      "away_club": "Athletico Paranaense"
+    },
+    {
+      "source_ref": "097",
+      "round_number": 10,
+      "scheduled_date": "2026-04-05",
+      "scheduled_time": "20:30",
+      "home_club": "Grêmio",
+      "away_club": "Remo"
+    },
+    {
+      "source_ref": "098",
+      "round_number": 10,
+      "scheduled_date": "2026-04-04",
+      "scheduled_time": "20:30",
+      "home_club": "Coritiba",
+      "away_club": "Fluminense"
+    },
+    {
+      "source_ref": "099",
+      "round_number": 10,
+      "scheduled_date": "2026-04-05",
+      "scheduled_time": "19:30",
+      "home_club": "Bahia",
+      "away_club": "Palmeiras"
+    },
+    {
+      "source_ref": "100",
+      "round_number": 10,
+      "scheduled_date": "2026-04-05",
+      "scheduled_time": "16:00",
+      "home_club": "Chapecoense",
+      "away_club": "Vitória"
+    },
+    {
+      "source_ref": "101",
+      "round_number": 11,
+      "scheduled_date": "2026-04-11",
+      "scheduled_time": "18:00",
+      "home_club": "Fluminense",
+      "away_club": "Flamengo"
+    },
+    {
+      "source_ref": "102",
+      "round_number": 11,
+      "scheduled_date": "2026-04-11",
+      "scheduled_time": "16:00",
+      "home_club": "Botafogo",
+      "away_club": "Coritiba"
+    },
+    {
+      "source_ref": "103",
+      "round_number": 11,
+      "scheduled_date": "2026-04-11",
+      "scheduled_time": "20:00",
+      "home_club": "Santos",
+      "away_club": "Atlético Mineiro"
+    },
+    {
+      "source_ref": "104",
+      "round_number": 11,
+      "scheduled_date": "2026-04-11",
+      "scheduled_time": "18:30",
+      "home_club": "Corinthians",
+      "away_club": "Palmeiras"
+    },
+    {
+      "source_ref": "105",
+      "round_number": 11,
+      "scheduled_date": "2026-04-11",
+      "scheduled_time": "18:30",
+      "home_club": "Mirassol",
+      "away_club": "Bahia"
+    },
+    {
+      "source_ref": "106",
+      "round_number": 11,
+      "scheduled_date": "2026-04-11",
+      "scheduled_time": "18:30",
+      "home_club": "Cruzeiro",
+      "away_club": "Red Bull Bragantino"
+    },
+    {
+      "source_ref": "107",
+      "round_number": 11,
+      "scheduled_date": "2026-04-11",
+      "scheduled_time": "20:30",
+      "home_club": "Internacional",
+      "away_club": "Grêmio"
+    },
+    {
+      "source_ref": "108",
+      "round_number": 11,
+      "scheduled_date": "2026-04-11",
+      "scheduled_time": "11:00",
+      "home_club": "Athletico Paranaense",
+      "away_club": "Chapecoense"
+    },
+    {
+      "source_ref": "109",
+      "round_number": 11,
+      "scheduled_date": "2026-04-11",
+      "scheduled_time": "16:30",
+      "home_club": "Vitória",
+      "away_club": "São Paulo"
+    },
+    {
+      "source_ref": "110",
+      "round_number": 11,
+      "scheduled_date": "2026-04-11",
+      "scheduled_time": "16:30",
+      "home_club": "Remo",
+      "away_club": "Vasco da Gama"
+    },
+    {
+      "source_ref": "111",
+      "round_number": 12,
+      "scheduled_date": "2026-04-18",
+      "scheduled_time": "19:30",
+      "home_club": "Flamengo",
+      "away_club": "Bahia"
+    },
+    {
+      "source_ref": "112",
+      "round_number": 12,
+      "scheduled_date": "2026-04-18",
+      "scheduled_time": "18:30",
+      "home_club": "Vasco da Gama",
+      "away_club": "São Paulo"
+    },
+    {
+      "source_ref": "113",
+      "round_number": 12,
+      "scheduled_date": "2026-04-18",
+      "scheduled_time": "16:00",
+      "home_club": "Santos",
+      "away_club": "Fluminense"
+    },
+    {
+      "source_ref": "114",
+      "round_number": 12,
+      "scheduled_date": "2026-04-18",
+      "scheduled_time": "18:30",
+      "home_club": "Palmeiras",
+      "away_club": "Athletico Paranaense"
+    },
+    {
+      "source_ref": "115",
+      "round_number": 12,
+      "scheduled_date": "2026-04-18",
+      "scheduled_time": "18:30",
+      "home_club": "Red Bull Bragantino",
+      "away_club": "Remo"
+    },
+    {
+      "source_ref": "116",
+      "round_number": 12,
+      "scheduled_date": "2026-04-18",
+      "scheduled_time": "20:30",
+      "home_club": "Cruzeiro",
+      "away_club": "Grêmio"
+    },
+    {
+      "source_ref": "117",
+      "round_number": 12,
+      "scheduled_date": "2026-04-18",
+      "scheduled_time": "11:00",
+      "home_club": "Internacional",
+      "away_club": "Mirassol"
+    },
+    {
+      "source_ref": "118",
+      "round_number": 12,
+      "scheduled_date": "2026-04-18",
+      "scheduled_time": "16:00",
+      "home_club": "Coritiba",
+      "away_club": "Atlético Mineiro"
+    },
+    {
+      "source_ref": "119",
+      "round_number": 12,
+      "scheduled_date": "2026-04-18",
+      "scheduled_time": "20:00",
+      "home_club": "Vitória",
+      "away_club": "Corinthians"
+    },
+    {
+      "source_ref": "120",
+      "round_number": 12,
+      "scheduled_date": "2026-04-18",
+      "scheduled_time": "18:30",
+      "home_club": "Chapecoense",
+      "away_club": "Botafogo"
+    },
+    {
+      "source_ref": "121",
+      "round_number": 13,
+      "scheduled_date": "2026-04-26",
+      "scheduled_time": "20:30",
+      "home_club": "Fluminense",
+      "away_club": "Chapecoense"
+    },
+    {
+      "source_ref": "122",
+      "round_number": 13,
+      "scheduled_date": "2026-04-25",
+      "scheduled_time": "16:30",
+      "home_club": "Botafogo",
+      "away_club": "Internacional"
+    },
+    {
+      "source_ref": "123",
+      "round_number": 13,
+      "scheduled_date": "2026-04-25",
+      "scheduled_time": "21:00",
+      "home_club": "São Paulo",
+      "away_club": "Mirassol"
+    },
+    {
+      "source_ref": "124",
+      "round_number": 13,
+      "scheduled_date": "2026-04-26",
+      "scheduled_time": "16:00",
+      "home_club": "Corinthians",
+      "away_club": "Vasco da Gama"
+    },
+    {
+      "source_ref": "125",
+      "round_number": 13,
+      "scheduled_date": "2026-04-26",
+      "scheduled_time": "18:30",
+      "home_club": "Red Bull Bragantino",
+      "away_club": "Palmeiras"
+    },
+    {
+      "source_ref": "126",
+      "round_number": 13,
+      "scheduled_date": "2026-04-26",
+      "scheduled_time": "20:30",
+      "home_club": "Atlético Mineiro",
+      "away_club": "Flamengo"
+    },
+    {
+      "source_ref": "127",
+      "round_number": 13,
+      "scheduled_date": "2026-04-26",
+      "scheduled_time": "16:00",
+      "home_club": "Grêmio",
+      "away_club": "Coritiba"
+    },
+    {
+      "source_ref": "128",
+      "round_number": 13,
+      "scheduled_date": "2026-04-26",
+      "scheduled_time": "18:30",
+      "home_club": "Athletico Paranaense",
+      "away_club": "Vitória"
+    },
+    {
+      "source_ref": "129",
+      "round_number": 13,
+      "scheduled_date": "2026-04-25",
+      "scheduled_time": "18:30",
+      "home_club": "Bahia",
+      "away_club": "Santos"
+    },
+    {
+      "source_ref": "130",
+      "round_number": 13,
+      "scheduled_date": "2026-04-25",
+      "scheduled_time": "18:30",
+      "home_club": "Remo",
+      "away_club": "Cruzeiro"
+    },
+    {
+      "source_ref": "131",
+      "round_number": 14,
+      "scheduled_date": "2026-05-03",
+      "scheduled_time": "16:00",
+      "home_club": "Flamengo",
+      "away_club": "Vasco da Gama"
+    },
+    {
+      "source_ref": "132",
+      "round_number": 14,
+      "scheduled_date": "2026-05-02",
+      "scheduled_time": "16:00",
+      "home_club": "Botafogo",
+      "away_club": "Remo"
+    },
+    {
+      "source_ref": "133",
+      "round_number": 14,
+      "scheduled_date": "2026-05-03",
+      "scheduled_time": "16:00",
+      "home_club": "São Paulo",
+      "away_club": "Bahia"
+    },
+    {
+      "source_ref": "134",
+      "round_number": 14,
+      "scheduled_date": "2026-05-02",
+      "scheduled_time": "18:30",
+      "home_club": "Palmeiras",
+      "away_club": "Santos"
+    },
+    {
+      "source_ref": "135",
+      "round_number": 14,
+      "scheduled_date": "2026-05-03",
+      "scheduled_time": "20:30",
+      "home_club": "Mirassol",
+      "away_club": "Corinthians"
+    },
+    {
+      "source_ref": "136",
+      "round_number": 14,
+      "scheduled_date": "2026-05-02",
+      "scheduled_time": "21:00",
+      "home_club": "Cruzeiro",
+      "away_club": "Atlético Mineiro"
+    },
+    {
+      "source_ref": "137",
+      "round_number": 14,
+      "scheduled_date": "2026-05-03",
+      "scheduled_time": "18:30",
+      "home_club": "Internacional",
+      "away_club": "Fluminense"
+    },
+    {
+      "source_ref": "138",
+      "round_number": 14,
+      "scheduled_date": "2026-05-02",
+      "scheduled_time": "20:30",
+      "home_club": "Athletico Paranaense",
+      "away_club": "Grêmio"
+    },
+    {
+      "source_ref": "139",
+      "round_number": 14,
+      "scheduled_date": "2026-05-02",
+      "scheduled_time": "18:30",
+      "home_club": "Vitória",
+      "away_club": "Coritiba"
+    },
+    {
+      "source_ref": "140",
+      "round_number": 14,
+      "scheduled_date": "2026-05-03",
+      "scheduled_time": "18:30",
+      "home_club": "Chapecoense",
+      "away_club": "Red Bull Bragantino"
+    },
+    {
+      "source_ref": "141",
+      "round_number": 15,
+      "scheduled_date": "2026-05-09",
+      "scheduled_time": "18:00",
+      "home_club": "Fluminense",
+      "away_club": "Vitória"
+    },
+    {
+      "source_ref": "142",
+      "round_number": 15,
+      "scheduled_date": "2026-05-10",
+      "scheduled_time": "20:30",
+      "home_club": "Vasco da Gama",
+      "away_club": "Athletico Paranaense"
+    },
+    {
+      "source_ref": "143",
+      "round_number": 15,
+      "scheduled_date": "2026-05-10",
+      "scheduled_time": "18:30",
+      "home_club": "Santos",
+      "away_club": "Red Bull Bragantino"
+    },
+    {
+      "source_ref": "144",
+      "round_number": 15,
+      "scheduled_date": "2026-05-10",
+      "scheduled_time": "18:30",
+      "home_club": "Corinthians",
+      "away_club": "São Paulo"
+    },
+    {
+      "source_ref": "145",
+      "round_number": 15,
+      "scheduled_date": "2026-05-10",
+      "scheduled_time": "18:30",
+      "home_club": "Mirassol",
+      "away_club": "Chapecoense"
+    },
+    {
+      "source_ref": "146",
+      "round_number": 15,
+      "scheduled_date": "2026-05-10",
+      "scheduled_time": "16:00",
+      "home_club": "Atlético Mineiro",
+      "away_club": "Botafogo"
+    },
+    {
+      "source_ref": "147",
+      "round_number": 15,
+      "scheduled_date": "2026-05-10",
+      "scheduled_time": "19:30",
+      "home_club": "Grêmio",
+      "away_club": "Flamengo"
+    },
+    {
+      "source_ref": "148",
+      "round_number": 15,
+      "scheduled_date": "2026-05-09",
+      "scheduled_time": "16:00",
+      "home_club": "Coritiba",
+      "away_club": "Internacional"
+    },
+    {
+      "source_ref": "149",
+      "round_number": 15,
+      "scheduled_date": "2026-05-09",
+      "scheduled_time": "21:00",
+      "home_club": "Bahia",
+      "away_club": "Cruzeiro"
+    },
+    {
+      "source_ref": "150",
+      "round_number": 15,
+      "scheduled_date": "2026-05-10",
+      "scheduled_time": "16:00",
+      "home_club": "Remo",
+      "away_club": "Palmeiras"
+    },
+    {
+      "source_ref": "151",
+      "round_number": 16,
+      "scheduled_date": "2026-05-16",
+      "scheduled_time": "19:00",
+      "home_club": "Fluminense",
+      "away_club": "São Paulo"
+    },
+    {
+      "source_ref": "152",
+      "round_number": 16,
+      "scheduled_date": "2026-05-17",
+      "scheduled_time": "16:00",
+      "home_club": "Botafogo",
+      "away_club": "Corinthians"
+    },
+    {
+      "source_ref": "153",
+      "round_number": 16,
+      "scheduled_date": "2026-05-17",
+      "scheduled_time": "11:00",
+      "home_club": "Santos",
+      "away_club": "Coritiba"
+    },
+    {
+      "source_ref": "154",
+      "round_number": 16,
+      "scheduled_date": "2026-05-16",
+      "scheduled_time": "21:00",
+      "home_club": "Palmeiras",
+      "away_club": "Cruzeiro"
+    },
+    {
+      "source_ref": "155",
+      "round_number": 16,
+      "scheduled_date": "2026-05-17",
+      "scheduled_time": "18:30",
+      "home_club": "Red Bull Bragantino",
+      "away_club": "Vitória"
+    },
+    {
+      "source_ref": "156",
+      "round_number": 16,
+      "scheduled_date": "2026-05-16",
+      "scheduled_time": "18:30",
+      "home_club": "Atlético Mineiro",
+      "away_club": "Mirassol"
+    },
+    {
+      "source_ref": "157",
+      "round_number": 16,
+      "scheduled_date": "2026-05-16",
+      "scheduled_time": "18:30",
+      "home_club": "Internacional",
+      "away_club": "Vasco da Gama"
+    },
+    {
+      "source_ref": "158",
+      "round_number": 16,
+      "scheduled_date": "2026-05-17",
+      "scheduled_time": "19:30",
+      "home_club": "Athletico Paranaense",
+      "away_club": "Flamengo"
+    },
+    {
+      "source_ref": "159",
+      "round_number": 16,
+      "scheduled_date": "2026-05-17",
+      "scheduled_time": "16:00",
+      "home_club": "Bahia",
+      "away_club": "Grêmio"
+    },
+    {
+      "source_ref": "160",
+      "round_number": 16,
+      "scheduled_date": "2026-05-17",
+      "scheduled_time": "18:30",
+      "home_club": "Chapecoense",
+      "away_club": "Remo"
+    },
+    {
+      "source_ref": "161",
+      "round_number": 17,
+      "scheduled_date": "2026-05-23",
+      "scheduled_time": "21:00",
+      "home_club": "Flamengo",
+      "away_club": "Palmeiras"
+    },
+    {
+      "source_ref": "162",
+      "round_number": 17,
+      "scheduled_date": "2026-05-24",
+      "scheduled_time": "20:30",
+      "home_club": "Vasco da Gama",
+      "away_club": "Red Bull Bragantino"
+    },
+    {
+      "source_ref": "163",
+      "round_number": 17,
+      "scheduled_date": "2026-05-23",
+      "scheduled_time": "17:00",
+      "home_club": "São Paulo",
+      "away_club": "Botafogo"
+    },
+    {
+      "source_ref": "164",
+      "round_number": 17,
+      "scheduled_date": "2026-05-24",
+      "scheduled_time": "18:30",
+      "home_club": "Corinthians",
+      "away_club": "Atlético Mineiro"
+    },
+    {
+      "source_ref": "165",
+      "round_number": 17,
+      "scheduled_date": "2026-05-23",
+      "scheduled_time": "19:00",
+      "home_club": "Mirassol",
+      "away_club": "Fluminense"
+    },
+    {
+      "source_ref": "166",
+      "round_number": 17,
+      "scheduled_date": "2026-05-24",
+      "scheduled_time": "16:00",
+      "home_club": "Cruzeiro",
+      "away_club": "Chapecoense"
+    },
+    {
+      "source_ref": "167",
+      "round_number": 17,
+      "scheduled_date": "2026-05-23",
+      "scheduled_time": "19:00",
+      "home_club": "Grêmio",
+      "away_club": "Santos"
+    },
+    {
+      "source_ref": "168",
+      "round_number": 17,
+      "scheduled_date": "2026-05-25",
+      "scheduled_time": "20:00",
+      "home_club": "Coritiba",
+      "away_club": "Bahia"
+    },
+    {
+      "source_ref": "169",
+      "round_number": 17,
+      "scheduled_date": "2026-05-23",
+      "scheduled_time": "17:00",
+      "home_club": "Vitória",
+      "away_club": "Internacional"
+    },
+    {
+      "source_ref": "170",
+      "round_number": 17,
+      "scheduled_date": "2026-05-24",
+      "scheduled_time": "16:00",
+      "home_club": "Remo",
+      "away_club": "Athletico Paranaense"
+    },
+    {
+      "source_ref": "171",
+      "round_number": 18,
+      "scheduled_date": "2026-05-30",
+      "scheduled_time": "16:00",
+      "home_club": "Flamengo",
+      "away_club": "Coritiba"
+    },
+    {
+      "source_ref": "172",
+      "round_number": 18,
+      "scheduled_date": "2026-05-31",
+      "scheduled_time": "16:00",
+      "home_club": "Vasco da Gama",
+      "away_club": "Atlético Mineiro"
+    },
+    {
+      "source_ref": "173",
+      "round_number": 18,
+      "scheduled_date": "2026-05-30",
+      "scheduled_time": "20:00",
+      "home_club": "Santos",
+      "away_club": "Vitória"
+    },
+    {
+      "source_ref": "174",
+      "round_number": 18,
+      "scheduled_date": "2026-05-31",
+      "scheduled_time": "16:00",
+      "home_club": "Palmeiras",
+      "away_club": "Chapecoense"
+    },
+    {
+      "source_ref": "175",
+      "round_number": 18,
+      "scheduled_date": "2026-05-31",
+      "scheduled_time": "11:00",
+      "home_club": "Red Bull Bragantino",
+      "away_club": "Internacional"
+    },
+    {
+      "source_ref": "176",
+      "round_number": 18,
+      "scheduled_date": "2026-05-31",
+      "scheduled_time": "20:30",
+      "home_club": "Cruzeiro",
+      "away_club": "Fluminense"
+    },
+    {
+      "source_ref": "177",
+      "round_number": 18,
+      "scheduled_date": "2026-05-30",
+      "scheduled_time": "17:30",
+      "home_club": "Grêmio",
+      "away_club": "Corinthians"
+    },
+    {
+      "source_ref": "178",
+      "round_number": 18,
+      "scheduled_date": "2026-05-30",
+      "scheduled_time": "16:00",
+      "home_club": "Athletico Paranaense",
+      "away_club": "Mirassol"
+    },
+    {
+      "source_ref": "179",
+      "round_number": 18,
+      "scheduled_date": "2026-05-30",
+      "scheduled_time": "17:30",
+      "home_club": "Bahia",
+      "away_club": "Botafogo"
+    },
+    {
+      "source_ref": "180",
+      "round_number": 18,
+      "scheduled_date": "2026-05-31",
+      "scheduled_time": "20:30",
+      "home_club": "Remo",
+      "away_club": "São Paulo"
+    },
+    {
+      "source_ref": "181",
+      "round_number": 19,
+      "scheduled_date": "2026-07-17",
+      "scheduled_time": "20:00",
+      "home_club": "Fluminense",
+      "away_club": "Red Bull Bragantino"
+    },
+    {
+      "source_ref": "182",
+      "round_number": 19,
+      "scheduled_date": "2026-07-16",
+      "scheduled_time": "19:30",
+      "home_club": "Botafogo",
+      "away_club": "Santos"
+    },
+    {
+      "source_ref": "183",
+      "round_number": 19,
+      "scheduled_date": "2026-07-22",
+      "scheduled_time": "21:30",
+      "home_club": "São Paulo",
+      "away_club": "Athletico Paranaense"
+    },
+    {
+      "source_ref": "184",
+      "round_number": 19,
+      "scheduled_date": "2026-07-23",
+      "scheduled_time": "19:30",
+      "home_club": "Corinthians",
+      "away_club": "Remo"
+    },
+    {
+      "source_ref": "185",
+      "round_number": 19,
+      "scheduled_date": "2026-07-17",
+      "scheduled_time": "20:00",
+      "home_club": "Mirassol",
+      "away_club": "Grêmio"
+    },
+    {
+      "source_ref": "186",
+      "round_number": 19,
+      "scheduled_date": "2026-07-21",
+      "scheduled_time": "19:30",
+      "home_club": "Atlético Mineiro",
+      "away_club": "Bahia"
+    },
+    {
+      "source_ref": "187",
+      "round_number": 19,
+      "scheduled_date": "2026-07-22",
+      "scheduled_time": "21:30",
+      "home_club": "Internacional",
+      "away_club": "Cruzeiro"
+    },
+    {
+      "source_ref": "188",
+      "round_number": 19,
+      "scheduled_date": "2026-07-22",
+      "scheduled_time": "19:30",
+      "home_club": "Coritiba",
+      "away_club": "Palmeiras"
+    },
+    {
+      "source_ref": "189",
+      "round_number": 19,
+      "scheduled_date": "2026-07-16",
+      "scheduled_time": "19:30",
+      "home_club": "Vitória",
+      "away_club": "Vasco da Gama"
+    },
+    {
+      "source_ref": "190",
+      "round_number": 19,
+      "scheduled_date": "2026-07-22",
+      "scheduled_time": "21:30",
+      "home_club": "Chapecoense",
+      "away_club": "Flamengo"
+    },
+    {
+      "source_ref": "191",
+      "round_number": 20,
+      "scheduled_date": "2026-07-26",
+      "scheduled_time": "18:30",
+      "home_club": "Flamengo",
+      "away_club": "São Paulo"
+    },
+    {
+      "source_ref": "192",
+      "round_number": 20,
+      "scheduled_date": "2026-07-25",
+      "scheduled_time": "20:30",
+      "home_club": "Vasco da Gama",
+      "away_club": "Mirassol"
+    },
+    {
+      "source_ref": "193",
+      "round_number": 20,
+      "scheduled_date": "2026-07-25",
+      "scheduled_time": "18:30",
+      "home_club": "Santos",
+      "away_club": "Chapecoense"
+    },
+    {
+      "source_ref": "194",
+      "round_number": 20,
+      "scheduled_date": "2026-07-26",
+      "scheduled_time": "19:30",
+      "home_club": "Palmeiras",
+      "away_club": "Atlético Mineiro"
+    },
+    {
+      "source_ref": "195",
+      "round_number": 20,
+      "scheduled_date": "2026-07-26",
+      "scheduled_time": "18:30",
+      "home_club": "Red Bull Bragantino",
+      "away_club": "Coritiba"
+    },
+    {
+      "source_ref": "196",
+      "round_number": 20,
+      "scheduled_date": "2026-07-26",
+      "scheduled_time": "16:00",
+      "home_club": "Cruzeiro",
+      "away_club": "Botafogo"
+    },
+    {
+      "source_ref": "197",
+      "round_number": 20,
+      "scheduled_date": "2026-07-26",
+      "scheduled_time": "18:30",
+      "home_club": "Grêmio",
+      "away_club": "Fluminense"
+    },
+    {
+      "source_ref": "198",
+      "round_number": 20,
+      "scheduled_date": "2026-07-25",
+      "scheduled_time": "18:30",
+      "home_club": "Athletico Paranaense",
+      "away_club": "Internacional"
+    },
+    {
+      "source_ref": "199",
+      "round_number": 20,
+      "scheduled_date": "2026-07-26",
+      "scheduled_time": "16:00",
+      "home_club": "Bahia",
+      "away_club": "Corinthians"
+    },
+    {
+      "source_ref": "200",
+      "round_number": 20,
+      "scheduled_date": "2026-07-26",
+      "scheduled_time": "19:30",
+      "home_club": "Remo",
+      "away_club": "Vitória"
+    },
+    {
+      "source_ref": "201",
+      "round_number": 21,
+      "scheduled_date": "2026-07-29",
+      "scheduled_time": "21:30",
+      "home_club": "Fluminense",
+      "away_club": "Bahia"
+    },
+    {
+      "source_ref": "202",
+      "round_number": 21,
+      "scheduled_date": "2026-09-16",
+      "scheduled_time": "19:30",
+      "home_club": "Botafogo",
+      "away_club": "Grêmio"
+    },
+    {
+      "source_ref": "203",
+      "round_number": 21,
+      "scheduled_date": "2026-10-02",
+      "scheduled_time": "20:00",
+      "home_club": "São Paulo",
+      "away_club": "Santos"
+    },
+    {
+      "source_ref": "204",
+      "round_number": 21,
+      "scheduled_date": "2026-07-30",
+      "scheduled_time": "19:30",
+      "home_club": "Corinthians",
+      "away_club": "Athletico Paranaense"
+    },
+    {
+      "source_ref": "205",
+      "round_number": 21,
+      "scheduled_date": "2026-07-29",
+      "scheduled_time": "19:30",
+      "home_club": "Mirassol",
+      "away_club": "Remo"
+    },
+    {
+      "source_ref": "206",
+      "round_number": 21,
+      "scheduled_date": "2026-10-03",
+      "scheduled_time": "18:30",
+      "home_club": "Atlético Mineiro",
+      "away_club": "Red Bull Bragantino"
+    },
+    {
+      "source_ref": "207",
+      "round_number": 21,
+      "scheduled_date": "2026-07-29",
+      "scheduled_time": "19:30",
+      "home_club": "Internacional",
+      "away_club": "Flamengo"
+    },
+    {
+      "source_ref": "208",
+      "round_number": 21,
+      "scheduled_date": "2026-07-30",
+      "scheduled_time": "21:30",
+      "home_club": "Coritiba",
+      "away_club": "Cruzeiro"
+    },
+    {
+      "source_ref": "209",
+      "round_number": 21,
+      "scheduled_date": "2026-07-29",
+      "scheduled_time": "21:30",
+      "home_club": "Vitória",
+      "away_club": "Palmeiras"
+    },
+    {
+      "source_ref": "210",
+      "round_number": 21,
+      "scheduled_date": "2026-11-14",
+      "scheduled_time": "20:30",
+      "home_club": "Chapecoense",
+      "away_club": "Vasco da Gama"
+    },
+    {
+      "source_ref": "211",
+      "round_number": 22,
+      "scheduled_date": "2026-08-09",
+      "scheduled_time": "19:30",
+      "home_club": "Flamengo",
+      "away_club": "Vitória"
+    },
+    {
+      "source_ref": "212",
+      "round_number": 22,
+      "scheduled_date": "2026-08-08",
+      "scheduled_time": "21:00",
+      "home_club": "Botafogo",
+      "away_club": "Fluminense"
+    },
+    {
+      "source_ref": "213",
+      "round_number": 22,
+      "scheduled_date": "2026-08-09",
+      "scheduled_time": "18:30",
+      "home_club": "Santos",
+      "away_club": "Athletico Paranaense"
+    },
+    {
+      "source_ref": "214",
+      "round_number": 22,
+      "scheduled_date": "2026-08-09",
+      "scheduled_time": "16:00",
+      "home_club": "Palmeiras",
+      "away_club": "Internacional"
+    },
+    {
+      "source_ref": "215",
+      "round_number": 22,
+      "scheduled_date": "2026-08-09",
+      "scheduled_time": "18:30",
+      "home_club": "Red Bull Bragantino",
+      "away_club": "Corinthians"
+    },
+    {
+      "source_ref": "216",
+      "round_number": 22,
+      "scheduled_date": "2026-08-09",
+      "scheduled_time": "11:00",
+      "home_club": "Cruzeiro",
+      "away_club": "Mirassol"
+    },
+    {
+      "source_ref": "217",
+      "round_number": 22,
+      "scheduled_date": "2026-08-08",
+      "scheduled_time": "16:00",
+      "home_club": "Grêmio",
+      "away_club": "São Paulo"
+    },
+    {
+      "source_ref": "218",
+      "round_number": 22,
+      "scheduled_date": "2026-08-08",
+      "scheduled_time": "20:30",
+      "home_club": "Coritiba",
+      "away_club": "Chapecoense"
+    },
+    {
+      "source_ref": "219",
+      "round_number": 22,
+      "scheduled_date": "2026-08-09",
+      "scheduled_time": "16:00",
+      "home_club": "Bahia",
+      "away_club": "Vasco da Gama"
+    },
+    {
+      "source_ref": "220",
+      "round_number": 22,
+      "scheduled_date": "2026-08-08",
+      "scheduled_time": "18:30",
+      "home_club": "Remo",
+      "away_club": "Atlético Mineiro"
+    },
+    {
+      "source_ref": "221",
+      "round_number": 23,
+      "scheduled_date": "2026-08-15",
+      "scheduled_time": "16:30",
+      "home_club": "Fluminense",
+      "away_club": "Palmeiras"
+    },
+    {
+      "source_ref": "222",
+      "round_number": 23,
+      "scheduled_date": "2026-08-16",
+      "scheduled_time": "16:00",
+      "home_club": "Vasco da Gama",
+      "away_club": "Santos"
+    },
+    {
+      "source_ref": "223",
+      "round_number": 23,
+      "scheduled_date": "2026-08-15",
+      "scheduled_time": "21:00",
+      "home_club": "São Paulo",
+      "away_club": "Coritiba"
+    },
+    {
+      "source_ref": "224",
+      "round_number": 23,
+      "scheduled_date": "2026-08-16",
+      "scheduled_time": "19:30",
+      "home_club": "Corinthians",
+      "away_club": "Cruzeiro"
+    },
+    {
+      "source_ref": "225",
+      "round_number": 23,
+      "scheduled_date": "2026-08-16",
+      "scheduled_time": "18:30",
+      "home_club": "Mirassol",
+      "away_club": "Flamengo"
+    },
+    {
+      "source_ref": "226",
+      "round_number": 23,
+      "scheduled_date": "2026-08-16",
+      "scheduled_time": "16:00",
+      "home_club": "Atlético Mineiro",
+      "away_club": "Grêmio"
+    },
+    {
+      "source_ref": "227",
+      "round_number": 23,
+      "scheduled_date": "2026-08-17",
+      "scheduled_time": "20:00",
+      "home_club": "Internacional",
+      "away_club": "Remo"
+    },
+    {
+      "source_ref": "228",
+      "round_number": 23,
+      "scheduled_date": "2026-08-15",
+      "scheduled_time": "18:30",
+      "home_club": "Athletico Paranaense",
+      "away_club": "Red Bull Bragantino"
+    },
+    {
+      "source_ref": "229",
+      "round_number": 23,
+      "scheduled_date": "2026-08-16",
+      "scheduled_time": "18:30",
+      "home_club": "Vitória",
+      "away_club": "Botafogo"
+    },
+    {
+      "source_ref": "230",
+      "round_number": 23,
+      "scheduled_date": "2026-08-16",
+      "scheduled_time": "11:00",
+      "home_club": "Chapecoense",
+      "away_club": "Bahia"
+    },
+    {
+      "source_ref": "231",
+      "round_number": 24,
+      "scheduled_date": "2026-08-22",
+      "scheduled_time": "16:00",
+      "home_club": "Fluminense",
+      "away_club": "Remo"
+    },
+    {
+      "source_ref": "232",
+      "round_number": 24,
+      "scheduled_date": "2026-08-24",
+      "scheduled_time": "20:00",
+      "home_club": "Botafogo",
+      "away_club": "Athletico Paranaense"
+    },
+    {
+      "source_ref": "233",
+      "round_number": 24,
+      "scheduled_date": "2026-08-23",
+      "scheduled_time": "18:30",
+      "home_club": "Santos",
+      "away_club": "Mirassol"
+    },
+    {
+      "source_ref": "234",
+      "round_number": 24,
+      "scheduled_date": "2026-08-23",
+      "scheduled_time": "16:00",
+      "home_club": "Palmeiras",
+      "away_club": "Vasco da Gama"
+    },
+    {
+      "source_ref": "235",
+      "round_number": 24,
+      "scheduled_date": "2026-08-23",
+      "scheduled_time": "16:00",
+      "home_club": "Red Bull Bragantino",
+      "away_club": "Grêmio"
+    },
+    {
+      "source_ref": "236",
+      "round_number": 24,
+      "scheduled_date": "2026-08-22",
+      "scheduled_time": "20:30",
+      "home_club": "Cruzeiro",
+      "away_club": "Flamengo"
+    },
+    {
+      "source_ref": "237",
+      "round_number": 24,
+      "scheduled_date": "2026-08-22",
+      "scheduled_time": "18:30",
+      "home_club": "Internacional",
+      "away_club": "Atlético Mineiro"
+    },
+    {
+      "source_ref": "238",
+      "round_number": 24,
+      "scheduled_date": "2026-08-23",
+      "scheduled_time": "19:30",
+      "home_club": "Coritiba",
+      "away_club": "Corinthians"
+    },
+    {
+      "source_ref": "239",
+      "round_number": 24,
+      "scheduled_date": "2026-08-23",
+      "scheduled_time": "16:00",
+      "home_club": "Vitória",
+      "away_club": "Bahia"
+    },
+    {
+      "source_ref": "240",
+      "round_number": 24,
+      "scheduled_date": "2026-08-23",
+      "scheduled_time": "18:30",
+      "home_club": "Chapecoense",
+      "away_club": "São Paulo"
+    },
+    {
+      "source_ref": "241",
+      "round_number": 25,
+      "scheduled_date": "2026-08-30",
+      "scheduled_time": "16:00",
+      "home_club": "Flamengo",
+      "away_club": "Botafogo"
+    },
+    {
+      "source_ref": "242",
+      "round_number": 25,
+      "scheduled_date": "2026-08-29",
+      "scheduled_time": "21:20",
+      "home_club": "Vasco da Gama",
+      "away_club": "Cruzeiro"
+    },
+    {
+      "source_ref": "243",
+      "round_number": 25,
+      "scheduled_date": "2026-08-29",
+      "scheduled_time": "20:00",
+      "home_club": "São Paulo",
+      "away_club": "Red Bull Bragantino"
+    },
+    {
+      "source_ref": "244",
+      "round_number": 25,
+      "scheduled_date": "2026-08-30",
+      "scheduled_time": "16:00",
+      "home_club": "Corinthians",
+      "away_club": "Santos"
+    },
+    {
+      "source_ref": "245",
+      "round_number": 25,
+      "scheduled_date": "2026-08-30",
+      "scheduled_time": "18:30",
+      "home_club": "Mirassol",
+      "away_club": "Palmeiras"
+    },
+    {
+      "source_ref": "246",
+      "round_number": 25,
+      "scheduled_date": "2026-08-29",
+      "scheduled_time": "18:30",
+      "home_club": "Atlético Mineiro",
+      "away_club": "Vitória"
+    },
+    {
+      "source_ref": "247",
+      "round_number": 25,
+      "scheduled_date": "2026-08-30",
+      "scheduled_time": "18:30",
+      "home_club": "Grêmio",
+      "away_club": "Chapecoense"
+    },
+    {
+      "source_ref": "248",
+      "round_number": 25,
+      "scheduled_date": "2026-08-30",
+      "scheduled_time": "11:00",
+      "home_club": "Athletico Paranaense",
+      "away_club": "Fluminense"
+    },
+    {
+      "source_ref": "249",
+      "round_number": 25,
+      "scheduled_date": "2026-08-30",
+      "scheduled_time": "19:30",
+      "home_club": "Bahia",
+      "away_club": "Internacional"
+    },
+    {
+      "source_ref": "250",
+      "round_number": 25,
+      "scheduled_date": "2026-08-31",
+      "scheduled_time": "20:00",
+      "home_club": "Remo",
+      "away_club": "Coritiba"
+    },
+    {
+      "source_ref": "251",
+      "round_number": 26,
+      "scheduled_date": "2026-09-05",
+      "scheduled_time": "21:00",
+      "home_club": "Fluminense",
+      "away_club": "Vasco da Gama"
+    },
+    {
+      "source_ref": "252",
+      "round_number": 26,
+      "scheduled_date": "2026-09-06",
+      "scheduled_time": "18:30",
+      "home_club": "Botafogo",
+      "away_club": "Palmeiras"
+    },
+    {
+      "source_ref": "253",
+      "round_number": 26,
+      "scheduled_date": "2026-09-05",
+      "scheduled_time": "18:30",
+      "home_club": "São Paulo",
+      "away_club": "Atlético Mineiro"
+    },
+    {
+      "source_ref": "254",
+      "round_number": 26,
+      "scheduled_date": "2026-09-06",
+      "scheduled_time": "19:30",
+      "home_club": "Corinthians",
+      "away_club": "Chapecoense"
+    },
+    {
+      "source_ref": "255",
+      "round_number": 26,
+      "scheduled_date": "2026-09-05",
+      "scheduled_time": "16:00",
+      "home_club": "Red Bull Bragantino",
+      "away_club": "Bahia"
+    },
+    {
+      "source_ref": "256",
+      "round_number": 26,
+      "scheduled_date": "2026-09-06",
+      "scheduled_time": "16:00",
+      "home_club": "Cruzeiro",
+      "away_club": "Athletico Paranaense"
+    },
+    {
+      "source_ref": "257",
+      "round_number": 26,
+      "scheduled_date": "2026-09-06",
+      "scheduled_time": "16:00",
+      "home_club": "Internacional",
+      "away_club": "Santos"
+    },
+    {
+      "source_ref": "258",
+      "round_number": 26,
+      "scheduled_date": "2026-09-06",
+      "scheduled_time": "11:00",
+      "home_club": "Coritiba",
+      "away_club": "Mirassol"
+    },
+    {
+      "source_ref": "259",
+      "round_number": 26,
+      "scheduled_date": "2026-09-07",
+      "scheduled_time": "20:00",
+      "home_club": "Vitória",
+      "away_club": "Grêmio"
+    },
+    {
+      "source_ref": "260",
+      "round_number": 26,
+      "scheduled_date": "2026-09-06",
+      "scheduled_time": "16:00",
+      "home_club": "Remo",
+      "away_club": "Flamengo"
+    },
+    {
+      "source_ref": "261",
+      "round_number": 27,
+      "scheduled_date": "2026-09-13",
+      "scheduled_time": "17:30",
+      "home_club": "Flamengo",
+      "away_club": "Corinthians"
+    },
+    {
+      "source_ref": "262",
+      "round_number": 27,
+      "scheduled_date": "2026-09-12",
+      "scheduled_time": "20:30",
+      "home_club": "Botafogo",
+      "away_club": "Red Bull Bragantino"
+    },
+    {
+      "source_ref": "263",
+      "round_number": 27,
+      "scheduled_date": "2026-09-12",
+      "scheduled_time": "21:00",
+      "home_club": "Santos",
+      "away_club": "Cruzeiro"
+    },
+    {
+      "source_ref": "264",
+      "round_number": 27,
+      "scheduled_date": "2026-09-12",
+      "scheduled_time": "18:30",
+      "home_club": "Palmeiras",
+      "away_club": "São Paulo"
+    },
+    {
+      "source_ref": "265",
+      "round_number": 27,
+      "scheduled_date": "2026-09-13",
+      "scheduled_time": "16:00",
+      "home_club": "Mirassol",
+      "away_club": "Vitória"
+    },
+    {
+      "source_ref": "266",
+      "round_number": 27,
+      "scheduled_date": "2026-09-12",
+      "scheduled_time": "16:00",
+      "home_club": "Atlético Mineiro",
+      "away_club": "Fluminense"
+    },
+    {
+      "source_ref": "267",
+      "round_number": 27,
+      "scheduled_date": "2026-09-12",
+      "scheduled_time": "16:00",
+      "home_club": "Grêmio",
+      "away_club": "Vasco da Gama"
+    },
+    {
+      "source_ref": "268",
+      "round_number": 27,
+      "scheduled_date": "2026-09-11",
+      "scheduled_time": "21:00",
+      "home_club": "Coritiba",
+      "away_club": "Athletico Paranaense"
+    },
+    {
+      "source_ref": "269",
+      "round_number": 27,
+      "scheduled_date": "2026-09-14",
+      "scheduled_time": "20:00",
+      "home_club": "Bahia",
+      "away_club": "Remo"
+    },
+    {
+      "source_ref": "270",
+      "round_number": 27,
+      "scheduled_date": "2026-09-12",
+      "scheduled_time": "17:00",
+      "home_club": "Chapecoense",
+      "away_club": "Internacional"
+    },
+    {
+      "source_ref": "271",
+      "round_number": 28,
+      "scheduled_date": "2026-09-20",
+      "scheduled_time": "18:30",
+      "home_club": "Flamengo",
+      "away_club": "Red Bull Bragantino"
+    },
+    {
+      "source_ref": "272",
+      "round_number": 28,
+      "scheduled_date": "2026-09-19",
+      "scheduled_time": "20:30",
+      "home_club": "Vasco da Gama",
+      "away_club": "Coritiba"
+    },
+    {
+      "source_ref": "273",
+      "round_number": 28,
+      "scheduled_date": "2026-09-19",
+      "scheduled_time": "21:00",
+      "home_club": "São Paulo",
+      "away_club": "Internacional"
+    },
+    {
+      "source_ref": "274",
+      "round_number": 28,
+      "scheduled_date": "2026-09-20",
+      "scheduled_time": "16:00",
+      "home_club": "Corinthians",
+      "away_club": "Fluminense"
+    },
+    {
+      "source_ref": "275",
+      "round_number": 28,
+      "scheduled_date": "2026-09-19",
+      "scheduled_time": "17:00",
+      "home_club": "Mirassol",
+      "away_club": "Botafogo"
+    },
+    {
+      "source_ref": "276",
+      "round_number": 28,
+      "scheduled_date": "2026-09-19",
+      "scheduled_time": "16:00",
+      "home_club": "Atlético Mineiro",
+      "away_club": "Chapecoense"
+    },
+    {
+      "source_ref": "277",
+      "round_number": 28,
+      "scheduled_date": "2026-09-20",
+      "scheduled_time": "11:00",
+      "home_club": "Grêmio",
+      "away_club": "Palmeiras"
+    },
+    {
+      "source_ref": "278",
+      "round_number": 28,
+      "scheduled_date": "2026-09-20",
+      "scheduled_time": "19:30",
+      "home_club": "Athletico Paranaense",
+      "away_club": "Bahia"
+    },
+    {
+      "source_ref": "279",
+      "round_number": 28,
+      "scheduled_date": "2026-09-20",
+      "scheduled_time": "16:00",
+      "home_club": "Vitória",
+      "away_club": "Cruzeiro"
+    },
+    {
+      "source_ref": "280",
+      "round_number": 28,
+      "scheduled_date": "2026-09-19",
+      "scheduled_time": "18:30",
+      "home_club": "Remo",
+      "away_club": "Santos"
+    },
+    {
+      "source_ref": "281",
+      "round_number": 29,
+      "scheduled_date": "2026-10-08",
+      "scheduled_time": "21:30",
+      "home_club": "Fluminense",
+      "away_club": "Coritiba"
+    },
+    {
+      "source_ref": "282",
+      "round_number": 29,
+      "scheduled_date": "2026-10-07",
+      "scheduled_time": "20:30",
+      "home_club": "Botafogo",
+      "away_club": "Vasco da Gama"
+    },
+    {
+      "source_ref": "283",
+      "round_number": 29,
+      "scheduled_date": "2026-10-08",
+      "scheduled_time": "19:30",
+      "home_club": "Santos",
+      "away_club": "Flamengo"
+    },
+    {
+      "source_ref": "284",
+      "round_number": 29,
+      "scheduled_date": "2026-10-08",
+      "scheduled_time": "21:30",
+      "home_club": "Palmeiras",
+      "away_club": "Bahia"
+    },
+    {
+      "source_ref": "285",
+      "round_number": 29,
+      "scheduled_date": "2026-10-07",
+      "scheduled_time": "19:30",
+      "home_club": "Red Bull Bragantino",
+      "away_club": "Mirassol"
+    },
+    {
+      "source_ref": "286",
+      "round_number": 29,
+      "scheduled_date": "2026-10-07",
+      "scheduled_time": "21:30",
+      "home_club": "Cruzeiro",
+      "away_club": "São Paulo"
+    },
+    {
+      "source_ref": "287",
+      "round_number": 29,
+      "scheduled_date": "2026-10-07",
+      "scheduled_time": "19:30",
+      "home_club": "Internacional",
+      "away_club": "Corinthians"
+    },
+    {
+      "source_ref": "288",
+      "round_number": 29,
+      "scheduled_date": "2026-10-08",
+      "scheduled_time": "20:00",
+      "home_club": "Athletico Paranaense",
+      "away_club": "Atlético Mineiro"
+    },
+    {
+      "source_ref": "289",
+      "round_number": 29,
+      "scheduled_date": "2026-10-07",
+      "scheduled_time": "20:00",
+      "home_club": "Vitória",
+      "away_club": "Chapecoense"
+    },
+    {
+      "source_ref": "290",
+      "round_number": 29,
+      "scheduled_date": "2026-10-07",
+      "scheduled_time": "19:30",
+      "home_club": "Remo",
+      "away_club": "Grêmio"
+    },
+    {
+      "source_ref": "291",
+      "round_number": 30,
+      "scheduled_date": "2026-10-11",
+      "scheduled_time": "17:30",
+      "home_club": "Flamengo",
+      "away_club": "Fluminense"
+    },
+    {
+      "source_ref": "292",
+      "round_number": 30,
+      "scheduled_date": "2026-10-10",
+      "scheduled_time": "18:00",
+      "home_club": "Vasco da Gama",
+      "away_club": "Remo"
+    },
+    {
+      "source_ref": "293",
+      "round_number": 30,
+      "scheduled_date": "2026-10-10",
+      "scheduled_time": "21:00",
+      "home_club": "São Paulo",
+      "away_club": "Vitória"
+    },
+    {
+      "source_ref": "294",
+      "round_number": 30,
+      "scheduled_date": "2026-10-11",
+      "scheduled_time": "17:30",
+      "home_club": "Palmeiras",
+      "away_club": "Corinthians"
+    },
+    {
+      "source_ref": "295",
+      "round_number": 30,
+      "scheduled_date": "2026-10-12",
+      "scheduled_time": "21:00",
+      "home_club": "Red Bull Bragantino",
+      "away_club": "Cruzeiro"
+    },
+    {
+      "source_ref": "296",
+      "round_number": 30,
+      "scheduled_date": "2026-10-11",
+      "scheduled_time": "16:00",
+      "home_club": "Atlético Mineiro",
+      "away_club": "Santos"
+    },
+    {
+      "source_ref": "297",
+      "round_number": 30,
+      "scheduled_date": "2026-10-11",
+      "scheduled_time": "17:30",
+      "home_club": "Grêmio",
+      "away_club": "Internacional"
+    },
+    {
+      "source_ref": "298",
+      "round_number": 30,
+      "scheduled_date": "2026-10-12",
+      "scheduled_time": "16:00",
+      "home_club": "Coritiba",
+      "away_club": "Botafogo"
+    },
+    {
+      "source_ref": "299",
+      "round_number": 30,
+      "scheduled_date": "2026-10-11",
+      "scheduled_time": "19:30",
+      "home_club": "Bahia",
+      "away_club": "Mirassol"
+    },
+    {
+      "source_ref": "300",
+      "round_number": 30,
+      "scheduled_date": "2026-10-12",
+      "scheduled_time": "19:30",
+      "home_club": "Chapecoense",
+      "away_club": "Athletico Paranaense"
+    },
+    {
+      "source_ref": "301",
+      "round_number": 31,
+      "scheduled_date": "2026-10-18",
+      "scheduled_time": "16:00",
+      "home_club": "Fluminense",
+      "away_club": "Santos"
+    },
+    {
+      "source_ref": "302",
+      "round_number": 31,
+      "scheduled_date": "2026-10-17",
+      "scheduled_time": "18:00",
+      "home_club": "Botafogo",
+      "away_club": "Chapecoense"
+    },
+    {
+      "source_ref": "303",
+      "round_number": 31,
+      "scheduled_date": "2026-10-17",
+      "scheduled_time": "21:00",
+      "home_club": "São Paulo",
+      "away_club": "Vasco da Gama"
+    },
+    {
+      "source_ref": "304",
+      "round_number": 31,
+      "scheduled_date": "2026-10-19",
+      "scheduled_time": "20:00",
+      "home_club": "Corinthians",
+      "away_club": "Vitória"
+    },
+    {
+      "source_ref": "305",
+      "round_number": 31,
+      "scheduled_date": "2026-10-16",
+      "scheduled_time": "20:00",
+      "home_club": "Mirassol",
+      "away_club": "Internacional"
+    },
+    {
+      "source_ref": "306",
+      "round_number": 31,
+      "scheduled_date": "2026-10-17",
+      "scheduled_time": "18:30",
+      "home_club": "Atlético Mineiro",
+      "away_club": "Coritiba"
+    },
+    {
+      "source_ref": "307",
+      "round_number": 31,
+      "scheduled_date": "2026-10-18",
+      "scheduled_time": "16:00",
+      "home_club": "Grêmio",
+      "away_club": "Cruzeiro"
+    },
+    {
+      "source_ref": "308",
+      "round_number": 31,
+      "scheduled_date": "2026-10-17",
+      "scheduled_time": "19:30",
+      "home_club": "Athletico Paranaense",
+      "away_club": "Palmeiras"
+    },
+    {
+      "source_ref": "309",
+      "round_number": 31,
+      "scheduled_date": "2026-10-18",
+      "scheduled_time": "18:30",
+      "home_club": "Bahia",
+      "away_club": "Flamengo"
+    },
+    {
+      "source_ref": "310",
+      "round_number": 31,
+      "scheduled_date": "2026-10-18",
+      "scheduled_time": "19:30",
+      "home_club": "Remo",
+      "away_club": "Red Bull Bragantino"
+    },
+    {
+      "source_ref": "311",
+      "round_number": 32,
+      "scheduled_date": "2026-10-26",
+      "scheduled_time": "20:00",
+      "home_club": "Flamengo",
+      "away_club": "Atlético Mineiro"
+    },
+    {
+      "source_ref": "312",
+      "round_number": 32,
+      "scheduled_date": "2026-10-24",
+      "scheduled_time": "18:30",
+      "home_club": "Vasco da Gama",
+      "away_club": "Corinthians"
+    },
+    {
+      "source_ref": "313",
+      "round_number": 32,
+      "scheduled_date": "2026-10-24",
+      "scheduled_time": "21:00",
+      "home_club": "Santos",
+      "away_club": "Bahia"
+    },
+    {
+      "source_ref": "314",
+      "round_number": 32,
+      "scheduled_date": "2026-10-24",
+      "scheduled_time": "18:30",
+      "home_club": "Palmeiras",
+      "away_club": "Red Bull Bragantino"
+    },
+    {
+      "source_ref": "315",
+      "round_number": 32,
+      "scheduled_date": "2026-10-24",
+      "scheduled_time": "16:30",
+      "home_club": "Mirassol",
+      "away_club": "São Paulo"
+    },
+    {
+      "source_ref": "316",
+      "round_number": 32,
+      "scheduled_date": "2026-10-23",
+      "scheduled_time": "20:00",
+      "home_club": "Cruzeiro",
+      "away_club": "Remo"
+    },
+    {
+      "source_ref": "317",
+      "round_number": 32,
+      "scheduled_date": "2026-10-24",
+      "scheduled_time": "16:30",
+      "home_club": "Internacional",
+      "away_club": "Botafogo"
+    },
+    {
+      "source_ref": "318",
+      "round_number": 32,
+      "scheduled_date": "2026-10-26",
+      "scheduled_time": "19:30",
+      "home_club": "Coritiba",
+      "away_club": "Grêmio"
+    },
+    {
+      "source_ref": "319",
+      "round_number": 32,
+      "scheduled_date": "2026-10-24",
+      "scheduled_time": "16:30",
+      "home_club": "Vitória",
+      "away_club": "Athletico Paranaense"
+    },
+    {
+      "source_ref": "320",
+      "round_number": 32,
+      "scheduled_date": "2026-10-24",
+      "scheduled_time": "19:30",
+      "home_club": "Chapecoense",
+      "away_club": "Fluminense"
+    },
+    {
+      "source_ref": "321",
+      "round_number": 33,
+      "scheduled_date": "2026-10-28",
+      "scheduled_time": "19:30",
+      "home_club": "Fluminense",
+      "away_club": "Internacional"
+    },
+    {
+      "source_ref": "322",
+      "round_number": 33,
+      "scheduled_date": "2026-10-29",
+      "scheduled_time": "20:00",
+      "home_club": "Vasco da Gama",
+      "away_club": "Flamengo"
+    },
+    {
+      "source_ref": "323",
+      "round_number": 33,
+      "scheduled_date": "2026-10-28",
+      "scheduled_time": "19:30",
+      "home_club": "Santos",
+      "away_club": "Palmeiras"
+    },
+    {
+      "source_ref": "324",
+      "round_number": 33,
+      "scheduled_date": "2026-10-30",
+      "scheduled_time": "20:00",
+      "home_club": "Corinthians",
+      "away_club": "Mirassol"
+    },
+    {
+      "source_ref": "325",
+      "round_number": 33,
+      "scheduled_date": "2026-10-28",
+      "scheduled_time": "19:30",
+      "home_club": "Red Bull Bragantino",
+      "away_club": "Chapecoense"
+    },
+    {
+      "source_ref": "326",
+      "round_number": 33,
+      "scheduled_date": "2026-10-29",
+      "scheduled_time": "19:30",
+      "home_club": "Atlético Mineiro",
+      "away_club": "Cruzeiro"
+    },
+    {
+      "source_ref": "327",
+      "round_number": 33,
+      "scheduled_date": "2026-10-29",
+      "scheduled_time": "21:30",
+      "home_club": "Grêmio",
+      "away_club": "Athletico Paranaense"
+    },
+    {
+      "source_ref": "328",
+      "round_number": 33,
+      "scheduled_date": "2026-10-31",
+      "scheduled_time": "16:00",
+      "home_club": "Coritiba",
+      "away_club": "Vitória"
+    },
+    {
+      "source_ref": "329",
+      "round_number": 33,
+      "scheduled_date": "2026-10-28",
+      "scheduled_time": "21:30",
+      "home_club": "Bahia",
+      "away_club": "São Paulo"
+    },
+    {
+      "source_ref": "330",
+      "round_number": 33,
+      "scheduled_date": "2026-10-28",
+      "scheduled_time": "21:30",
+      "home_club": "Remo",
+      "away_club": "Botafogo"
+    },
+    {
+      "source_ref": "331",
+      "round_number": 34,
+      "scheduled_date": "2026-11-04",
+      "scheduled_time": "19:30",
+      "home_club": "Flamengo",
+      "away_club": "Grêmio"
+    },
+    {
+      "source_ref": "332",
+      "round_number": 34,
+      "scheduled_date": "2026-11-04",
+      "scheduled_time": "21:30",
+      "home_club": "Botafogo",
+      "away_club": "Atlético Mineiro"
+    },
+    {
+      "source_ref": "333",
+      "round_number": 34,
+      "scheduled_date": "2026-11-04",
+      "scheduled_time": "21:30",
+      "home_club": "São Paulo",
+      "away_club": "Corinthians"
+    },
+    {
+      "source_ref": "334",
+      "round_number": 34,
+      "scheduled_date": "2026-11-05",
+      "scheduled_time": "19:30",
+      "home_club": "Palmeiras",
+      "away_club": "Remo"
+    },
+    {
+      "source_ref": "335",
+      "round_number": 34,
+      "scheduled_date": "2026-11-02",
+      "scheduled_time": "20:00",
+      "home_club": "Red Bull Bragantino",
+      "away_club": "Santos"
+    },
+    {
+      "source_ref": "336",
+      "round_number": 34,
+      "scheduled_date": "2026-11-05",
+      "scheduled_time": "21:30",
+      "home_club": "Cruzeiro",
+      "away_club": "Bahia"
+    },
+    {
+      "source_ref": "337",
+      "round_number": 34,
+      "scheduled_date": "2026-11-03",
+      "scheduled_time": "21:30",
+      "home_club": "Internacional",
+      "away_club": "Coritiba"
+    },
+    {
+      "source_ref": "338",
+      "round_number": 34,
+      "scheduled_date": "2026-11-04",
+      "scheduled_time": "19:30",
+      "home_club": "Athletico Paranaense",
+      "away_club": "Vasco da Gama"
+    },
+    {
+      "source_ref": "339",
+      "round_number": 34,
+      "scheduled_date": "2026-11-06",
+      "scheduled_time": "20:00",
+      "home_club": "Vitória",
+      "away_club": "Fluminense"
+    },
+    {
+      "source_ref": "340",
+      "round_number": 34,
+      "scheduled_date": "2026-11-03",
+      "scheduled_time": "19:30",
+      "home_club": "Chapecoense",
+      "away_club": "Mirassol"
+    },
+    {
+      "source_ref": "341",
+      "round_number": 35,
+      "scheduled_date": "2026-11-18",
+      "scheduled_time": "20:30",
+      "home_club": "Flamengo",
+      "away_club": "Athletico Paranaense"
+    },
+    {
+      "source_ref": "342",
+      "round_number": 35,
+      "scheduled_date": "2026-11-19",
+      "scheduled_time": "19:30",
+      "home_club": "Vasco da Gama",
+      "away_club": "Internacional"
+    },
+    {
+      "source_ref": "343",
+      "round_number": 35,
+      "scheduled_date": "2026-11-19",
+      "scheduled_time": "21:30",
+      "home_club": "São Paulo",
+      "away_club": "Fluminense"
+    },
+    {
+      "source_ref": "344",
+      "round_number": 35,
+      "scheduled_date": "2026-11-18",
+      "scheduled_time": "21:30",
+      "home_club": "Corinthians",
+      "away_club": "Botafogo"
+    },
+    {
+      "source_ref": "345",
+      "round_number": 35,
+      "scheduled_date": "2026-11-14",
+      "scheduled_time": "18:30",
+      "home_club": "Mirassol",
+      "away_club": "Atlético Mineiro"
+    },
+    {
+      "source_ref": "346",
+      "round_number": 35,
+      "scheduled_date": "2026-11-18",
+      "scheduled_time": "20:30",
+      "home_club": "Cruzeiro",
+      "away_club": "Palmeiras"
+    },
+    {
+      "source_ref": "347",
+      "round_number": 35,
+      "scheduled_date": "2026-11-18",
+      "scheduled_time": "21:30",
+      "home_club": "Grêmio",
+      "away_club": "Bahia"
+    },
+    {
+      "source_ref": "348",
+      "round_number": 35,
+      "scheduled_date": "2026-11-18",
+      "scheduled_time": "19:30",
+      "home_club": "Coritiba",
+      "away_club": "Santos"
+    },
+    {
+      "source_ref": "349",
+      "round_number": 35,
+      "scheduled_date": "2026-11-19",
+      "scheduled_time": "19:30",
+      "home_club": "Vitória",
+      "away_club": "Red Bull Bragantino"
+    },
+    {
+      "source_ref": "350",
+      "round_number": 35,
+      "scheduled_date": "2026-11-18",
+      "scheduled_time": "20:00",
+      "home_club": "Remo",
+      "away_club": "Chapecoense"
+    },
+    {
+      "source_ref": "351",
+      "round_number": 36,
+      "scheduled_date": "2026-11-22",
+      "scheduled_time": "18:30",
+      "home_club": "Fluminense",
+      "away_club": "Mirassol"
+    },
+    {
+      "source_ref": "352",
+      "round_number": 36,
+      "scheduled_date": "2026-11-23",
+      "scheduled_time": "20:00",
+      "home_club": "Botafogo",
+      "away_club": "São Paulo"
+    },
+    {
+      "source_ref": "353",
+      "round_number": 36,
+      "scheduled_date": "2026-11-23",
+      "scheduled_time": "21:00",
+      "home_club": "Santos",
+      "away_club": "Grêmio"
+    },
+    {
+      "source_ref": "354",
+      "round_number": 36,
+      "scheduled_date": "2026-11-21",
+      "scheduled_time": "16:30",
+      "home_club": "Palmeiras",
+      "away_club": "Flamengo"
+    },
+    {
+      "source_ref": "355",
+      "round_number": 36,
+      "scheduled_date": "2026-11-22",
+      "scheduled_time": "19:30",
+      "home_club": "Red Bull Bragantino",
+      "away_club": "Vasco da Gama"
+    },
+    {
+      "source_ref": "356",
+      "round_number": 36,
+      "scheduled_date": "2026-11-25",
+      "scheduled_time": "20:00",
+      "home_club": "Atlético Mineiro",
+      "away_club": "Corinthians"
+    },
+    {
+      "source_ref": "357",
+      "round_number": 36,
+      "scheduled_date": "2026-11-23",
+      "scheduled_time": "19:30",
+      "home_club": "Internacional",
+      "away_club": "Vitória"
+    },
+    {
+      "source_ref": "358",
+      "round_number": 36,
+      "scheduled_date": "2026-11-22",
+      "scheduled_time": "16:00",
+      "home_club": "Athletico Paranaense",
+      "away_club": "Remo"
+    },
+    {
+      "source_ref": "359",
+      "round_number": 36,
+      "scheduled_date": "2026-11-21",
+      "scheduled_time": "17:30",
+      "home_club": "Bahia",
+      "away_club": "Coritiba"
+    },
+    {
+      "source_ref": "360",
+      "round_number": 36,
+      "scheduled_date": "2026-11-21",
+      "scheduled_time": "21:00",
+      "home_club": "Chapecoense",
+      "away_club": "Cruzeiro"
+    },
+    {
+      "source_ref": "361",
+      "round_number": 37,
+      "scheduled_date": "2026-11-27",
+      "scheduled_time": "20:00",
+      "home_club": "Fluminense",
+      "away_club": "Cruzeiro"
+    },
+    {
+      "source_ref": "362",
+      "round_number": 37,
+      "scheduled_date": "2026-11-28",
+      "scheduled_time": "21:00",
+      "home_club": "Botafogo",
+      "away_club": "Bahia"
+    },
+    {
+      "source_ref": "363",
+      "round_number": 37,
+      "scheduled_date": "2026-11-26",
+      "scheduled_time": "20:00",
+      "home_club": "São Paulo",
+      "away_club": "Remo"
+    },
+    {
+      "source_ref": "364",
+      "round_number": 37,
+      "scheduled_date": "2026-11-29",
+      "scheduled_time": "18:30",
+      "home_club": "Corinthians",
+      "away_club": "Grêmio"
+    },
+    {
+      "source_ref": "365",
+      "round_number": 37,
+      "scheduled_date": "2026-11-29",
+      "scheduled_time": "18:30",
+      "home_club": "Mirassol",
+      "away_club": "Athletico Paranaense"
+    },
+    {
+      "source_ref": "366",
+      "round_number": 37,
+      "scheduled_date": "2026-11-29",
+      "scheduled_time": "19:30",
+      "home_club": "Atlético Mineiro",
+      "away_club": "Vasco da Gama"
+    },
+    {
+      "source_ref": "367",
+      "round_number": 37,
+      "scheduled_date": "2026-11-29",
+      "scheduled_time": "18:30",
+      "home_club": "Internacional",
+      "away_club": "Red Bull Bragantino"
+    },
+    {
+      "source_ref": "368",
+      "round_number": 37,
+      "scheduled_date": "2026-11-29",
+      "scheduled_time": "16:00",
+      "home_club": "Coritiba",
+      "away_club": "Flamengo"
+    },
+    {
+      "source_ref": "369",
+      "round_number": 37,
+      "scheduled_date": "2026-11-29",
+      "scheduled_time": "16:00",
+      "home_club": "Vitória",
+      "away_club": "Santos"
+    },
+    {
+      "source_ref": "370",
+      "round_number": 37,
+      "scheduled_date": "2026-11-24",
+      "scheduled_time": "18:00",
+      "home_club": "Chapecoense",
+      "away_club": "Palmeiras"
+    },
+    {
+      "source_ref": "371",
+      "round_number": 38,
+      "scheduled_date": "2026-12-02",
+      "scheduled_time": "21:30",
+      "home_club": "Flamengo",
+      "away_club": "Chapecoense"
+    },
+    {
+      "source_ref": "372",
+      "round_number": 38,
+      "scheduled_date": "2026-12-02",
+      "scheduled_time": "21:30",
+      "home_club": "Vasco da Gama",
+      "away_club": "Vitória"
+    },
+    {
+      "source_ref": "373",
+      "round_number": 38,
+      "scheduled_date": "2026-12-02",
+      "scheduled_time": "21:30",
+      "home_club": "Santos",
+      "away_club": "Botafogo"
+    },
+    {
+      "source_ref": "374",
+      "round_number": 38,
+      "scheduled_date": "2026-12-02",
+      "scheduled_time": "21:30",
+      "home_club": "Palmeiras",
+      "away_club": "Coritiba"
+    },
+    {
+      "source_ref": "375",
+      "round_number": 38,
+      "scheduled_date": "2026-12-02",
+      "scheduled_time": "21:30",
+      "home_club": "Red Bull Bragantino",
+      "away_club": "Fluminense"
+    },
+    {
+      "source_ref": "376",
+      "round_number": 38,
+      "scheduled_date": "2026-12-02",
+      "scheduled_time": "21:30",
+      "home_club": "Cruzeiro",
+      "away_club": "Internacional"
+    },
+    {
+      "source_ref": "377",
+      "round_number": 38,
+      "scheduled_date": "2026-12-02",
+      "scheduled_time": "21:30",
+      "home_club": "Grêmio",
+      "away_club": "Mirassol"
+    },
+    {
+      "source_ref": "378",
+      "round_number": 38,
+      "scheduled_date": "2026-12-02",
+      "scheduled_time": "21:30",
+      "home_club": "Athletico Paranaense",
+      "away_club": "São Paulo"
+    },
+    {
+      "source_ref": "379",
+      "round_number": 38,
+      "scheduled_date": "2026-12-02",
+      "scheduled_time": "21:30",
+      "home_club": "Bahia",
+      "away_club": "Atlético Mineiro"
+    },
+    {
+      "source_ref": "380",
+      "round_number": 38,
+      "scheduled_date": "2026-12-02",
+      "scheduled_time": "21:30",
+      "home_club": "Remo",
+      "away_club": "Corinthians"
+    }
+  ]
+}

@@ -1,18 +1,26 @@
 from contextlib import asynccontextmanager
 import mimetypes
+from datetime import timedelta
 
-from fastapi import APIRouter, FastAPI, Depends, HTTPException, UploadFile, File, Form, Request
+from fastapi import APIRouter, FastAPI, Depends, HTTPException, UploadFile, File, Form, Request, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 import shutil, os
 from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import text
+from sqlalchemy import or_, text
 import models, schemas
 from database import engine, SessionLocal, get_db
 from typing import List, Optional
 import cloudinary
 import cloudinary.uploader
+
+from brafoot.gameplay.sessions import (
+    COOKIE_NAME,
+    SESSION_LIFETIME,
+    create_browser_session,
+    find_browser_session,
+)
 
 cloudinary.config(
     cloud_name = os.environ.get("CLOUDINARY_CLOUD_NAME"),
@@ -184,7 +192,113 @@ async def update_time(
     return db_team
 
 
-def create_app(*, create_schema: bool = True, database_engine=engine) -> FastAPI:
+@router.get(
+    "/api/v1/seasons/{season_id}/fixtures",
+    response_model=List[schemas.FixtureRead],
+)
+def list_season_fixtures(season_id: int, db: Session = Depends(get_db)):
+    season = db.query(models.Season).filter_by(id=season_id).one_or_none()
+    if season is None:
+        raise HTTPException(status_code=404, detail="Temporada não encontrada")
+    return (
+        db.query(models.Fixture)
+        .options(
+            joinedload(models.Fixture.home_club),
+            joinedload(models.Fixture.away_club),
+        )
+        .filter_by(season_id=season_id)
+        .order_by(models.Fixture.round_number, models.Fixture.source_ref)
+        .all()
+    )
+
+
+@router.post(
+    "/api/v1/saves",
+    response_model=schemas.GameSaveRead,
+    status_code=201,
+)
+def create_game_save(
+    payload: schemas.GameSaveCreate,
+    request: Request,
+    response: Response,
+    db: Session = Depends(get_db),
+):
+    season = db.query(models.Season).filter_by(id=payload.season_id).one_or_none()
+    club = db.query(models.Club).filter_by(id=payload.controlled_club_id).one_or_none()
+    if season is None or club is None:
+        raise HTTPException(status_code=404, detail="Temporada ou clube não encontrado")
+
+    club_in_season = (
+        db.query(models.Fixture.id)
+        .filter(models.Fixture.season_id == season.id)
+        .filter(
+            or_(
+                models.Fixture.home_club_id == club.id,
+                models.Fixture.away_club_id == club.id,
+            )
+        )
+        .first()
+    )
+    if club_in_season is None:
+        raise HTTPException(status_code=422, detail="Clube não pertence à temporada")
+
+    browser_session = find_browser_session(
+        db, request.cookies.get(COOKIE_NAME)
+    )
+    new_token: str | None = None
+    if browser_session is None:
+        browser_session, new_token = create_browser_session(db)
+
+    active_save = (
+        db.query(models.GameSave)
+        .filter_by(browser_session_id=browser_session.id, status="active")
+        .one_or_none()
+    )
+    if active_save is not None:
+        raise HTTPException(
+            status_code=409,
+            detail="Esta sessão já possui um save ativo",
+        )
+
+    game_save = models.GameSave(
+        browser_session_id=browser_session.id,
+        controlled_club_id=club.id,
+        season_id=season.id,
+    )
+    db.add(game_save)
+    db.commit()
+    db.refresh(game_save)
+
+    if new_token is not None:
+        response.set_cookie(
+            key=COOKIE_NAME,
+            value=new_token,
+            max_age=int(SESSION_LIFETIME / timedelta(seconds=1)),
+            httponly=True,
+            secure=os.getenv("COOKIE_SECURE", "0") == "1",
+            samesite="lax",
+        )
+    return game_save
+
+
+@router.get("/api/v1/saves/current", response_model=schemas.GameSaveRead)
+def get_current_game_save(request: Request, db: Session = Depends(get_db)):
+    browser_session = find_browser_session(
+        db, request.cookies.get(COOKIE_NAME)
+    )
+    if browser_session is None:
+        raise HTTPException(status_code=404, detail="Sessão de jogo não encontrada")
+    game_save = (
+        db.query(models.GameSave)
+        .filter_by(browser_session_id=browser_session.id, status="active")
+        .one_or_none()
+    )
+    if game_save is None:
+        raise HTTPException(status_code=404, detail="Save ativo não encontrado")
+    return game_save
+
+
+def create_app(*, create_schema: bool = False, database_engine=engine) -> FastAPI:
     """Cria uma aplicação configurável sem acessar o banco durante o import."""
 
     mimetypes.add_type("image/webp", ".webp")
@@ -201,4 +315,4 @@ def create_app(*, create_schema: bool = True, database_engine=engine) -> FastAPI
     return application
 
 
-app = create_app()
+app = create_app(create_schema=os.getenv("AUTO_CREATE_SCHEMA", "0") == "1")

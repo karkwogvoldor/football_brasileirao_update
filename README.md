@@ -152,13 +152,16 @@ def upload_imagem(file: UploadFile, pasta: str) -> str:
 
 ---
 
-### 4. Seeds
+### 4. Seeds locais e catálogo BRAFOOT
 
-Cada clube tem um arquivo de seed que popula o banco via API. O `seed_all.py` roda todos em sequência:
+Os arquivos antigos em `seed/` permanecem como fonte local dos elencos, mas não são mais executados contra a API publicada. O `seed_all.py` lê esses dados diretamente, aplica as migrações e importa o calendário oficial de 2026 em um banco local seguro:
 
-```bash
-railway run python seed_all.py
+```powershell
+$env:SEED_DATABASE_URL = "sqlite+pysqlite:///./brafoot_dev.db"
+venv\Scripts\python.exe seed_all.py
 ```
+
+Consulte [Base local, migrações e calendário](docs/BASE_LOCAL_E_MIGRACOES.md) antes de migrar ou popular qualquer banco.
 
 ---
 
