@@ -13,6 +13,7 @@ def create_team(client):
     return response.json()
 
 
+# Verifica o ciclo completo de criação, leitura, atualização e exclusão de um jogador.
 def test_player_crud_flow(client):
     team = create_team(client)
     payload = {
@@ -49,6 +50,7 @@ def test_player_crud_flow(client):
     assert client.get(f"/jogadores/{player_id}").status_code == 404
 
 
+# Verifica se uma posição de jogador fora do domínio permitido é rejeitada.
 def test_invalid_player_position_is_rejected(client):
     response = client.post(
         "/jogadores/",
@@ -58,6 +60,7 @@ def test_invalid_player_position_is_rejected(client):
     assert response.status_code == 422
 
 
+# Verifica se operações em um jogador inexistente retornam 404.
 def test_player_not_found_returns_404(client):
     assert client.get("/jogadores/999999").status_code == 404
     assert client.patch("/jogadores/999999", json={"number": 8}).status_code == 404

@@ -15,6 +15,7 @@ def create_team(client, nome="Time Teste", formacao="4-3-3"):
     return response.json()
 
 
+# Verifica o ciclo completo de criação, leitura, atualização e exclusão de um time.
 def test_team_crud_flow(client):
     created = create_team(client)
     team_id = created["id"]
@@ -48,12 +49,14 @@ def test_team_crud_flow(client):
     assert client.get(f"/times/{team_id}").status_code == 404
 
 
+# Verifica se operações em um time inexistente retornam 404.
 def test_team_not_found_returns_404(client):
     assert client.get("/times/999999").status_code == 404
     assert client.patch("/times/999999", data={"nome": "Ausente"}).status_code == 404
     assert client.delete("/times/999999").status_code == 404
 
 
+# Verifica se um formato de imagem não permitido é rejeitado.
 def test_invalid_team_image_is_rejected(client):
     response = client.post(
         "/times/",
@@ -65,6 +68,7 @@ def test_invalid_team_image_is_rejected(client):
     assert response.json() == {"detail": "Formato de imagem inválido"}
 
 
+# Verifica se imagens válidas passam pelo adaptador de upload e preservam suas URLs.
 def test_valid_team_images_use_the_upload_adapter(client, monkeypatch):
     uploads = []
 

@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+import mimetypes
 
 from fastapi import APIRouter, FastAPI, Depends, HTTPException, UploadFile, File, Form, Request
 from fastapi.staticfiles import StaticFiles
@@ -185,6 +186,8 @@ async def update_time(
 
 def create_app(*, create_schema: bool = True, database_engine=engine) -> FastAPI:
     """Cria uma aplicação configurável sem acessar o banco durante o import."""
+
+    mimetypes.add_type("image/webp", ".webp")
 
     @asynccontextmanager
     async def lifespan(_: FastAPI):

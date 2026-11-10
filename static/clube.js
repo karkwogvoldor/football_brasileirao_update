@@ -3,6 +3,12 @@ const pathParts = window.location.pathname.split('/');
 const TEAM_ID = parseInt(pathParts[pathParts.length - 1]) || 1;
 const BASE_URL = '';
 
+function normalizarUrlImagem(caminho) {
+    if (!caminho) return '';
+    if (/^https?:\/\//i.test(caminho) || caminho.startsWith('/')) return caminho;
+    return `/${caminho}`;
+}
+
 // Ordem de exibição no campo (ataque → goleiro)
 const ORDEM_TITULARES = ['GOL', 'ZAG', 'LAT', 'VOL', 'MEI', 'ATA'];
 const ORDEM_CAMPO     = ['ATA', 'MEI', 'VOL', 'LAT', 'ZAG', 'GOL'];
@@ -231,13 +237,11 @@ async function init() {
         const POSICOES_CAMPO = FORMACOES[time.formacao] || FORMACOES['4-4-2'];
 
         if (time.escudo) {
-            const caminhoEscudo = time.escudo.startsWith('/') ? time.escudo : `/${time.escudo}`;
-            document.getElementById('escudo').src = caminhoEscudo;
+            document.getElementById('escudo').src = normalizarUrlImagem(time.escudo);
         }
 
         if (time.foto_craque) {
-            const caminhoFoto = time.foto_craque.startsWith('/') ? time.foto_craque : `/${time.foto_craque}`;
-            document.getElementById('craqueFoto').src = caminhoFoto;
+            document.getElementById('craqueFoto').src = normalizarUrlImagem(time.foto_craque);
         }
 
         // ── Monta campo ──

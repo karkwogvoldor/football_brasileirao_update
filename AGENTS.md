@@ -14,6 +14,7 @@ Estas instruções se aplicam a todo o repositório.
 
 ## Integridade dos testes
 
+- Todo teste criado deve ter imediatamente acima da função um breve comentário iniciado por `#`, explicando o comportamento que ele verifica.
 - Jamais afrouxe, remova, pule ou reescreva um teste apenas para fazê-lo passar.
 - Não diminua a precisão das asserções, não aumente tolerâncias sem evidência e não substitua o objeto testado por mocks que eliminem o comportamento relevante.
 - Não use `skip`, `xfail`, filtros, retries ou exclusões para esconder regressões. Uma exceção legítima precisa de motivo técnico documentado e autorização do usuário.
