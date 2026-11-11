@@ -1,6 +1,7 @@
 """Pure football simulation domain."""
 
 from brafoot.engine.lineups import (
+    AvailabilityStatus,
     FORMATIONS,
     Lineup,
     LineupValidationError,
@@ -11,6 +12,7 @@ from brafoot.engine.lineups import (
 )
 
 __all__ = [
+    "AvailabilityStatus",
     "FORMATIONS",
     "Lineup",
     "LineupValidationError",

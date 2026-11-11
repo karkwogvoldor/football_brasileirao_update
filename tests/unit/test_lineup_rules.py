@@ -4,6 +4,7 @@ from pathlib import Path
 import pytest
 
 from brafoot.engine.lineups import (
+    AvailabilityStatus,
     Lineup,
     LineupValidationError,
     Starter,
@@ -90,6 +91,56 @@ def test_lineup_requires_every_player_to_belong_to_club():
     assert violation_codes(Lineup(10, "4-3-3", starters)) == {"foreign_player"}
 
 
+# Aceita como titular um jogador explicitamente disponível para a partida.
+def test_lineup_accepts_available_player():
+    lineup = make_valid_lineup()
+    starters = lineup.starters[:-1] + (
+        Starter(11, 10, "LIN", AvailabilityStatus.AVAILABLE),
+    )
+
+    assert violation_codes(Lineup(10, "4-3-3", starters)) == set()
+
+
+# Rejeita um jogador lesionado e informa seu identificador na infração.
+def test_lineup_rejects_injured_player():
+    lineup = make_valid_lineup()
+    starters = lineup.starters[:-1] + (
+        Starter(11, 10, "LIN", AvailabilityStatus.INJURED),
+    )
+    violations = validate_lineup(Lineup(10, "4-3-3", starters))
+
+    assert [violation.code for violation in violations] == ["ineligible_player"]
+    assert violations[0].player_ids == (11,)
+
+
+# Rejeita um jogador suspenso e informa seu identificador na infração.
+def test_lineup_rejects_suspended_player():
+    lineup = make_valid_lineup()
+    starters = lineup.starters[:-1] + (
+        Starter(11, 10, "LIN", AvailabilityStatus.SUSPENDED),
+    )
+    violations = validate_lineup(Lineup(10, "4-3-3", starters))
+
+    assert [violation.code for violation in violations] == ["ineligible_player"]
+    assert violations[0].player_ids == (11,)
+
+
+# Reúne todos os jogadores inelegíveis em uma única infração determinística.
+def test_lineup_reports_all_ineligible_players():
+    lineup = make_valid_lineup()
+    starters = (
+        lineup.starters[:-2]
+        + (
+            Starter(10, 10, "LIN", AvailabilityStatus.INJURED),
+            Starter(11, 10, "LIN", AvailabilityStatus.SUSPENDED),
+        )
+    )
+    violations = validate_lineup(Lineup(10, "4-3-3", starters))
+
+    assert [violation.code for violation in violations] == ["ineligible_player"]
+    assert violations[0].player_ids == (10, 11)
+
+
 # Rejeita uma formação que não pertence ao catálogo tático suportado.
 def test_lineup_requires_supported_formation():
     lineup = make_valid_lineup()
@@ -104,7 +155,10 @@ def test_require_valid_lineup_raises_with_all_violations():
     lineup = Lineup(
         club_id=10,
         formation="inválida",
-        starters=(Starter(1, 20, "LIN"), Starter(1, 20, "LIN")),
+        starters=(
+            Starter(1, 20, "LIN", AvailabilityStatus.SUSPENDED),
+            Starter(1, 20, "LIN"),
+        ),
     )
 
     with pytest.raises(LineupValidationError) as error:
@@ -115,6 +169,7 @@ def test_require_valid_lineup_raises_with_all_violations():
         "duplicate_player",
         "goalkeeper_count",
         "foreign_player",
+        "ineligible_player",
         "invalid_formation",
     }
 

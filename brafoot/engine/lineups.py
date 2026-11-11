@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import Enum
 
 
 FORMATIONS: dict[str, tuple[int, ...]] = {
@@ -15,6 +16,14 @@ FORMATIONS: dict[str, tuple[int, ...]] = {
 }
 
 
+class AvailabilityStatus(str, Enum):
+    """A player's eligibility state for the next match."""
+
+    AVAILABLE = "available"
+    INJURED = "injured"
+    SUSPENDED = "suspended"
+
+
 @dataclass(frozen=True, slots=True)
 class Starter:
     """Minimal player data required to validate a lineup."""
@@ -22,6 +31,7 @@ class Starter:
     player_id: int
     club_id: int
     position: str
+    availability: AvailabilityStatus = AvailabilityStatus.AVAILABLE
 
 
 @dataclass(frozen=True, slots=True)
@@ -39,6 +49,7 @@ class LineupViolation:
 
     code: str
     message: str
+    player_ids: tuple[int, ...] = ()
 
 
 class LineupValidationError(ValueError):
@@ -87,6 +98,20 @@ def validate_lineup(lineup: Lineup) -> tuple[LineupViolation, ...]:
             LineupViolation(
                 code="foreign_player",
                 message="Todos os titulares devem estar vinculados ao clube.",
+            )
+        )
+
+    ineligible_player_ids = tuple(
+        starter.player_id
+        for starter in lineup.starters
+        if starter.availability != AvailabilityStatus.AVAILABLE
+    )
+    if ineligible_player_ids:
+        violations.append(
+            LineupViolation(
+                code="ineligible_player",
+                message="Jogadores lesionados ou suspensos não podem ser titulares.",
+                player_ids=ineligible_player_ids,
             )
         )
 
