@@ -30,7 +30,7 @@ O Brasileirão será a primeira competição jogável. A estrutura já deve perm
 
 1. Escolher um clube e iniciar um save de uma temporada do Brasileirão.
 2. Ver elenco, onze inicial, reservas, condição física e atributos de jogo; trocar jogadores e escolher formação, estilo e intensidade.
-3. Simular uma rodada com narração textual curta, placar, eventos principais, estatísticas simples e influência observável das escolhas.
+3. Simular uma rodada com visualização 2D híbrida no navegador, narração textual curta, placar, eventos principais, estatísticas simples e influência observável das escolhas.
 4. Registrar resultados, tabela, calendário e evolução da temporada. Salvar e retomar o progresso.
 5. Importar ou atualizar elencos por uma fonte aprovada, com revisão das mudanças antes da publicação. A versão inicial deve aceitar também importação manual/CSV para não bloquear o jogo por dependência externa.
 
@@ -46,7 +46,7 @@ Adicionar lesões e suspensões com regras transparentes, treino e evolução, t
 | --- | --- |
 | Catálogo | `Competition`, `Season`, `Club`, `Player`, `ClubMembership` (vínculo com início/fim), `Fixture` e `RealDataSnapshot`. IDs internos imutáveis; IDs externos ficam numa tabela de mapeamento por fornecedor. |
 | Jogo | `PlayerAttributes` (versão, origem e confiança), `PlayerCondition` (energia, forma, disponibilidade), `Tactic`, `Lineup` e `LineupSlot`. Atributos base são distintos da condição transitória. |
-| Simulação | `SimulationRuleset`, `GameSave`, `GameSeason`, `GameMatch`, `MatchEvent` e `Standing`. Cada partida registra versão das regras, semente, entradas e resultado. |
+| Simulação | `SimulationRuleset`, `GameSave`, `GameSeason`, `GameMatch`, `MatchCheckpoint`, `MatchSegment`, `MatchCommand`, `MatchEvent` e `Standing`. Cada partida registra versão das regras, semente, comandos, segmentos confirmados e resultado. |
 | Ingestão | `DataSource`, `ImportRun`, `SourceRecord`, `ImportDiff` e `ImportApproval`, com datas, proveniência, erros e possibilidade de rejeitar um lote. |
 
 `Player` representa a pessoa; `ClubMembership` representa sua passagem pelo clube, sem sobrescrever história após transferência. `RealDataSnapshot` preserva a fotografia publicada. Um `GameSave` referencia um snapshot e uma versão de regras; novas importações criam novas versões e só entram em saves novos ou mediante ação explícita, com regras de compatibilidade documentadas.
@@ -83,7 +83,9 @@ Dados públicos de elenco não medem de modo confiável força, resistência ou 
 
 Criar um pacote Python independente de FastAPI, banco, scraper e interface. Entrada: dois elencos válidos, táticas, condição, contexto da partida, versão das regras e semente. Saída: placar, eventos ordenados, estatísticas, desgaste e alterações de estado. O mesmo input com a mesma semente deve produzir a mesma saída.
 
-Fluxo inicial proposto: validar escalações → calcular forças por setor e encaixe tático → gerar posses/oportunidades em períodos discretos → resolver criação, defesa e finalização → registrar gols e eventos → aplicar fadiga/substituições → consolidar estatísticas. Usar probabilidades limitadas e calibradas, com mandante e aleatoriedade moderados; registrar por que uma chance ocorreu. A experiência pode ser textual e em tempo acelerado, sem exigir animação complexa.
+Fluxo inicial proposto: validar escalações → calcular forças por setor e encaixe tático → gerar posses/oportunidades em períodos discretos → resolver criação, defesa e finalização → registrar gols e eventos → aplicar fadiga/substituições → consolidar estatísticas. Usar probabilidades limitadas e calibradas, com mandante e aleatoriedade moderados; registrar por que uma chance ocorreu.
+
+A engine avança em segmentos determinísticos de até três minutos simulados, encerrados antes em intervalo, fim de jogo ou interrupção relevante. Nenhum segmento futuro é calculado enquanto o atual está sendo apresentado. Substituições e mudanças táticas validadas entram na próxima interrupção permitida, geram novo checkpoint e afetam somente os segmentos seguintes. A experiência usa visualização 2D híbrida: movimentação tática simplificada entre acontecimentos e cenas mais detalhadas nos lances relevantes. A engine produz eventos semânticos; uma camada de apresentação separada gera posições e keyframes, sem poder alterar o resultado. A decisão completa está em [`DECISAO_SIMULACAO_VISUAL.md`](DECISAO_SIMULACAO_VISUAL.md).
 
 Invariantes: onze titulares distintos por equipe, goleiro presente, jogador elegível e pertencente ao elenco do save, eventos em ordem, placar igual à soma dos gols e tabela consistente com os resultados. Executar baterias de simulações para inspecionar distribuição de gols, empates, efeito do mando, equilíbrio entre clubes e impacto real das táticas. Ajustar parâmetros com dados e testes de regressão antes de ampliar a complexidade.
 
@@ -103,7 +105,7 @@ Manter FastAPI e PostgreSQL inicialmente. Separar os módulos `catalog`, `ingest
 
 Os endpoints antigos podem continuar servindo a galeria durante a transição. Novos endpoints versionados atendem competições, temporadas, clubes, elencos, saves, escalações, partidas e tabela. Restringir escrita administrativa e importações; salvar jogos exige identificação do dono do save ou, num protótipo local, um mecanismo de posse explícito. Definir limites de requisição e validação de dados importados antes de expor essas rotas publicamente.
 
-Ao trocar o front-end, mover titulares, craque e coordenadas persistentes para dados do servidor ou configuração de formação versionada. O campinho existente pode ser reutilizado para montar a equipe. Seleção e substituições passam a salvar uma `Lineup` do save; a página deve diferenciar alterações ainda não confirmadas de uma escalação persistida.
+Ao trocar o front-end, mover titulares, craque e coordenadas persistentes para dados do servidor ou configuração de formação versionada. O campinho existente pode ser reutilizado para montar a equipe. Seleção e substituições passam a salvar uma `Lineup` do save; a página deve diferenciar alterações ainda não confirmadas de uma escalação persistida. A partida usa uma página própria de visualização, separada do editor, reutilizando o SVG e as coordenadas normalizadas. O navegador reproduz eventos e cenas recebidos; nunca resolve regras esportivas.
 
 ## 9. Fases e critérios de conclusão
 
@@ -112,8 +114,8 @@ Ao trocar o front-end, mover titulares, craque e coordenadas persistentes para d
 | 0. Base segura | Inventário do banco/deploy, backup restaurável, amostra de dados, testes mínimos da galeria/API e escolha de migrações. | Baseline reproduzível; restauração ensaiada em ambiente separado; nenhuma mudança na produção por seeds de teste. |
 | 1. Catálogo versionado | Competições/temporadas, clubes, jogadores, vínculos, mapeamento dos IDs atuais; primeira migração de banco. | Os 20 clubes e seus jogadores aparecem na galeria via novo catálogo sem perda de registros; importação antiga preservada para rollback. |
 | 2. Dados e atributos | Snapshot inicial, perfis de atributos transparentes e importador manual com validação/diff/revisão. | Origem e data visíveis; duplicatas e alterações inesperadas são sinalizadas; reexecutar importação não duplica entidades. |
-| 3. Núcleo da engine | Simulação determinística de uma partida, eventos e desgaste. | Mesma entrada/semente gera mesmo resultado; invariantes e métricas de equilíbrio passam em testes. |
-| 4. Vertical jogável | Escolher clube, salvar escalação/tática, jogar uma partida e rever resultado. | Um usuário completa esse fluxo e o retoma após recarregar a página. |
+| 3. Núcleo da engine | Simulação determinística e segmentada de uma partida, comandos, eventos, checkpoints e desgaste. | Mesma entrada, semente, ruleset e histórico de comandos geram os mesmos segmentos; substituições afetam somente o futuro; invariantes e métricas de equilíbrio passam em testes. |
+| 4. Vertical jogável | Escolher clube, salvar escalação/tática, jogar uma partida no visualizador 2D híbrido e rever resultado. | Um usuário completa o fluxo, substitui um jogador durante uma interrupção e retoma a partida após recarregar sem duplicar eventos. |
 | 5. Temporada MVP | Calendário, rodada, classificação, persistência e encerramento do Brasileirão. | Uma temporada inteira pode ser concluída e retomada; tabela e histórico batem com os resultados. |
 | 6. Fonte autorizada | Prova de conceito de um provedor aprovado, agendamento, monitoramento e publicação revisada. | Termos/licença conferidos; falha mantém snapshot anterior; atualização não altera saves em curso. |
 | 7. Expansão | Segunda competição/temporada pelo mesmo modelo e regras configuráveis. | Inclusão sem copiar a engine nem depender de IDs ou nomes fixos do Brasileirão. |
@@ -138,6 +140,9 @@ Decisões fechadas em 10/11/2026:
 5. A engine começa por um domínio puro, sem dependência de FastAPI ou SQLAlchemy. Uma escalação válida tem exatamente 11 titulares distintos, um jogador designado para o gol, todos vinculados ao clube, disponíveis para a partida e uma formação presente no catálogo tático suportado. A disponibilidade distingue jogadores aptos, lesionados e suspensos; os dois últimos não podem ser titulares. Um jogador de linha somente pode ser designado para o gol quando o contexto do elenco informar explicitamente que não existe goleiro natural elegível; contexto ausente não libera a exceção. O validador retorna todas as infrações com códigos estáveis e os IDs dos jogadores afetados antes de qualquer simulação ou persistência.
 6. Uma partida somente pode começar entre clubes diferentes e depois que as escalações de mandante e visitante passarem por todas as validações da engine. Erros de escalação permanecem associados ao lado correspondente e são retornados juntos, sem ocultar a segunda equipe quando ambas são inválidas.
 7. O perfil de jogo usa o pool universal de 30 atributos de 1 a 20, altura, peso, pé preferido, posições de origem e características excepcionais. Qualquer jogador pode atuar improvisado com penalidade pequena; a nova função torna-se posição de origem após um limite configurável de partidas, sem níveis de experiência posicional armazenados na engine.
+8. A apresentação de partida será 2D híbrida: circulação simplificada entre acontecimentos e coreografia detalhada nos lances relevantes. Eventos da engine e cenas visuais são representações separadas; FPS, tamanho da tela e velocidade de reprodução nunca alteram o resultado.
+9. A partida avança inicialmente em segmentos de até três minutos simulados, configuráveis e interrompíveis por limites ou acontecimentos relevantes. Nenhum segmento posterior é gerado enquanto o atual está sendo apresentado.
+10. Substituições e mudanças táticas são comandos validados e aplicados na próxima interrupção permitida. Elas recalculam apenas o estado futuro, preservam eventos concluídos e geram checkpoint persistente para retomada segura.
 
 Caracterização inicial das escalações existentes: os 20 clubes atendem às regras acima. A referência legada incorreta do Bahia ao jogador `127`, pertencente ao Botafogo no seed reproduzível, foi substituída pelo goleiro João Paulo (`99`) e o goleiro ocupa a primeira posição do desenho tático.
 
