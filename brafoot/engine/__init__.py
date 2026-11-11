@@ -17,6 +17,17 @@ from brafoot.engine.attributes import (
     positional_factor,
     promote_to_origin_position,
 )
+from brafoot.engine.capabilities import (
+    REFERENCE_HEIGHT_CM,
+    REFERENCE_WEIGHT_KG,
+    AbilityContribution,
+    AerialPhase,
+    DerivedAbility,
+    SprintContext,
+    calculate_aerial_ability,
+    calculate_physical_duel_ability,
+    calculate_sprint_ability,
+)
 from brafoot.engine.lineups import (
     AvailabilityStatus,
     FORMATIONS,
@@ -52,6 +63,15 @@ __all__ = [
     "TraitImpact",
     "positional_factor",
     "promote_to_origin_position",
+    "REFERENCE_HEIGHT_CM",
+    "REFERENCE_WEIGHT_KG",
+    "AbilityContribution",
+    "AerialPhase",
+    "DerivedAbility",
+    "SprintContext",
+    "calculate_aerial_ability",
+    "calculate_physical_duel_ability",
+    "calculate_sprint_ability",
     "AvailabilityStatus",
     "FORMATIONS",
     "Lineup",

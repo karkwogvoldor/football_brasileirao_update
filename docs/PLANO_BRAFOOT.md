@@ -63,6 +63,10 @@ Características excepcionais são identificadas por uma estrela e representam d
 
 A posição define pesos para uma avaliação derivada, mas a avaliação geral não deve apagar o perfil: um atacante rápido e um centroavante forte podem ter o mesmo geral e jogar de forma diferente.
 
+As primeiras capacidades derivadas são determinísticas e explicáveis na mesma escala de 1 a 20. Corridas curtas dão prioridade à aceleração; corridas longas, à velocidade máxima. Altura e peso não entram novamente na corrida, pois seus efeitos observados já estão representados por aceleração, velocidade e resistência. A disputa aérea combina altura, impulsão, força, antecipação, cabeceio e o posicionamento correspondente à fase ofensiva ou defensiva. O duelo físico terrestre prioriza força e equilíbrio, usando peso e antecipação como contexto moderado. As faixas corporais de referência são parâmetros calibráveis, não afirmações biológicas nem notas armazenadas no jogador.
+
+Cada capacidade retorna o resultado e a contribuição individual de suas entradas. Características excepcionais não alteram silenciosamente essas bases: seus modificadores somente serão aplicados quando a engine modelar a situação específica a que pertencem.
+
 Separar explicitamente:
 
 - **Atributo base**: capacidade estimada para o jogo, versionada e com origem (`editorial`, `modelo`, `fonte licenciada`).
