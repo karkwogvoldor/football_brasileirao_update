@@ -83,6 +83,84 @@ def test_lineup_rejects_multiple_goalkeepers():
     }
 
 
+# Aceita jogador de linha no gol quando o elenco não tem goleiro elegível.
+def test_lineup_allows_emergency_goalkeeper_when_none_is_eligible():
+    lineup = make_valid_lineup()
+    starters = (Starter(1, 10, "LIN"),) + lineup.starters[1:]
+    emergency_lineup = Lineup(
+        club_id=10,
+        formation="4-3-3",
+        starters=starters,
+        designated_goalkeeper_id=1,
+        eligible_squad_goalkeeper_ids=(),
+    )
+
+    assert validate_lineup(emergency_lineup) == ()
+
+
+# Rejeita o improviso quando existe goleiro natural elegível no elenco.
+def test_lineup_rejects_emergency_goalkeeper_when_natural_keeper_is_eligible():
+    lineup = make_valid_lineup()
+    starters = (Starter(1, 10, "LIN"),) + lineup.starters[1:]
+    emergency_lineup = Lineup(
+        club_id=10,
+        formation="4-3-3",
+        starters=starters,
+        designated_goalkeeper_id=1,
+        eligible_squad_goalkeeper_ids=(12,),
+    )
+
+    assert violation_codes(emergency_lineup) == {
+        "emergency_goalkeeper_not_allowed"
+    }
+
+
+# Rejeita o improviso se um goleiro natural elegível já está entre os titulares.
+def test_lineup_rejects_emergency_keeper_with_eligible_starter_goalkeeper():
+    lineup = make_valid_lineup()
+    emergency_lineup = Lineup(
+        club_id=10,
+        formation="4-3-3",
+        starters=lineup.starters,
+        designated_goalkeeper_id=2,
+        eligible_squad_goalkeeper_ids=(),
+    )
+
+    assert violation_codes(emergency_lineup) == {
+        "emergency_goalkeeper_not_allowed"
+    }
+
+
+# Não autoriza goleiro improvisado quando a elegibilidade do elenco é desconhecida.
+def test_lineup_rejects_emergency_goalkeeper_without_squad_eligibility_context():
+    lineup = make_valid_lineup()
+    starters = (Starter(1, 10, "LIN"),) + lineup.starters[1:]
+    emergency_lineup = Lineup(
+        club_id=10,
+        formation="4-3-3",
+        starters=starters,
+        designated_goalkeeper_id=1,
+    )
+
+    assert violation_codes(emergency_lineup) == {
+        "emergency_goalkeeper_not_allowed"
+    }
+
+
+# Rejeita como goleiro designado um jogador que não está entre os titulares.
+def test_lineup_requires_designated_goalkeeper_to_be_a_starter():
+    lineup = make_valid_lineup()
+    invalid_lineup = Lineup(
+        club_id=10,
+        formation="4-3-3",
+        starters=lineup.starters,
+        designated_goalkeeper_id=99,
+        eligible_squad_goalkeeper_ids=(),
+    )
+
+    assert violation_codes(invalid_lineup) == {"goalkeeper_count"}
+
+
 # Rejeita titular cujo vínculo pertence a outro clube.
 def test_lineup_requires_every_player_to_belong_to_club():
     lineup = make_valid_lineup()

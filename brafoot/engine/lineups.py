@@ -41,6 +41,8 @@ class Lineup:
     club_id: int
     formation: str
     starters: tuple[Starter, ...]
+    designated_goalkeeper_id: int | None = None
+    eligible_squad_goalkeeper_ids: tuple[int, ...] | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -65,8 +67,10 @@ def validate_lineup(lineup: Lineup) -> tuple[LineupViolation, ...]:
 
     violations: list[LineupViolation] = []
     player_ids = [starter.player_id for starter in lineup.starters]
-    goalkeeper_count = sum(
-        starter.position.strip().upper() == "GOL" for starter in lineup.starters
+    natural_goalkeepers = tuple(
+        starter
+        for starter in lineup.starters
+        if starter.position.strip().upper() == "GOL"
     )
 
     if len(lineup.starters) != 11:
@@ -85,13 +89,50 @@ def validate_lineup(lineup: Lineup) -> tuple[LineupViolation, ...]:
             )
         )
 
-    if goalkeeper_count != 1:
+    designated_goalkeeper: Starter | None = None
+    if lineup.designated_goalkeeper_id is None:
+        if len(natural_goalkeepers) == 1:
+            designated_goalkeeper = natural_goalkeepers[0]
+    else:
+        designated_goalkeeper = next(
+            (
+                starter
+                for starter in lineup.starters
+                if starter.player_id == lineup.designated_goalkeeper_id
+            ),
+            None,
+        )
+
+    if designated_goalkeeper is None:
         violations.append(
             LineupViolation(
                 code="goalkeeper_count",
-                message="A escalação deve ter exatamente um goleiro.",
+                message="A escalação deve designar exatamente um titular para o gol.",
             )
         )
+    elif designated_goalkeeper.position.strip().upper() != "GOL":
+        eligible_natural_starter_ids = tuple(
+            starter.player_id
+            for starter in natural_goalkeepers
+            if starter.availability == AvailabilityStatus.AVAILABLE
+        )
+        eligible_squad_goalkeeper_ids = lineup.eligible_squad_goalkeeper_ids
+        emergency_is_allowed = (
+            eligible_squad_goalkeeper_ids is not None
+            and not eligible_squad_goalkeeper_ids
+            and not eligible_natural_starter_ids
+        )
+        if not emergency_is_allowed:
+            violations.append(
+                LineupViolation(
+                    code="emergency_goalkeeper_not_allowed",
+                    message=(
+                        "Um jogador de linha só pode atuar no gol quando não houver "
+                        "goleiro elegível no elenco."
+                    ),
+                    player_ids=(designated_goalkeeper.player_id,),
+                )
+            )
 
     if any(starter.club_id != lineup.club_id for starter in lineup.starters):
         violations.append(
