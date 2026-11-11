@@ -42,6 +42,8 @@ Na primeira versão, o relógio regulamentar é contínuo de `00:00` a `90:00`. 
 
 A zona semântica da bola usa inicialmente uma grade relativa de três terços (`defensivo`, `médio` e `ofensivo`) por três corredores (`esquerdo`, `central` e `direito`). Trocar a perspectiva entre as equipes gira a zona em 180 graus. Coordenadas normalizadas e posições exatas continuam sendo responsabilidade da apresentação e não integram o estado esportivo da engine.
 
+A primeira fatia persistível de `MatchState` reúne relógio, placar, lado com a posse, zona da bola relativa a esse lado, versão do ruleset, semente e posição lógica do gerador pseudoaleatório. `MatchCheckpoint` associa uma sequência monotônica a esse estado e usa um snapshot explícito com valores primitivos. Escalações, condição, cartões, substituições e comandos serão adicionados ao estado quando suas regras existirem.
+
 ## Eventos da engine e cenas visuais
 
 Existem duas representações distintas:

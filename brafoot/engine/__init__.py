@@ -81,6 +81,7 @@ from brafoot.engine.sectors import (
     TeamSectorProfile,
     calculate_team_sector_profile,
 )
+from brafoot.engine.state import KICKOFF_ZONE, MatchCheckpoint, MatchState
 from brafoot.engine.zones import (
     ALL_FIELD_ZONES,
     FieldLane,
@@ -155,6 +156,9 @@ __all__ = [
     "SectorMetric",
     "TeamSectorProfile",
     "calculate_team_sector_profile",
+    "KICKOFF_ZONE",
+    "MatchCheckpoint",
+    "MatchState",
     "ALL_FIELD_ZONES",
     "FieldLane",
     "FieldThird",
