@@ -1,5 +1,22 @@
 """Pure football simulation domain."""
 
+from brafoot.engine.attributes import (
+    DEFAULT_ORIGIN_POSITION_MATCHES,
+    EXCEPTIONAL_TRAITS,
+    IMPROVISED_POSITION_FACTOR,
+    MAX_ATTRIBUTE_VALUE,
+    MIN_ATTRIBUTE_VALUE,
+    ExceptionalTrait,
+    ExceptionalTraitDefinition,
+    PlayerAttributeValidationError,
+    PlayerAttributes,
+    PlayerPosition,
+    PlayerProfile,
+    PreferredFoot,
+    TraitImpact,
+    positional_factor,
+    promote_to_origin_position,
+)
 from brafoot.engine.lineups import (
     AvailabilityStatus,
     FORMATIONS,
@@ -20,6 +37,21 @@ from brafoot.engine.matches import (
 )
 
 __all__ = [
+    "DEFAULT_ORIGIN_POSITION_MATCHES",
+    "EXCEPTIONAL_TRAITS",
+    "IMPROVISED_POSITION_FACTOR",
+    "MAX_ATTRIBUTE_VALUE",
+    "MIN_ATTRIBUTE_VALUE",
+    "ExceptionalTrait",
+    "ExceptionalTraitDefinition",
+    "PlayerAttributeValidationError",
+    "PlayerAttributes",
+    "PlayerPosition",
+    "PlayerProfile",
+    "PreferredFoot",
+    "TraitImpact",
+    "positional_factor",
+    "promote_to_origin_position",
     "AvailabilityStatus",
     "FORMATIONS",
     "Lineup",

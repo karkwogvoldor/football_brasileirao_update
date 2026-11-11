@@ -55,7 +55,13 @@ Na migração, criar mapeamentos dos atuais IDs de `times` e `jogadores` para as
 
 ## 5. Atributos e condição dos jogadores
 
-Propor uma escala interna de 1 a 20 para atributos como velocidade, aceleração, resistência, força, passe, controle, finalização, desarme, posicionamento, tomada de decisão e habilidades específicas de goleiro. A posição define pesos para uma avaliação derivada, mas a avaliação geral não deve apagar o perfil: um atacante rápido e um centroavante forte podem ter o mesmo geral e jogar de forma diferente.
+Todos os jogadores usam o mesmo conjunto universal de 30 atributos, medidos de 1 a 20, independentemente da posição: 11 técnicos (`controle`, `drible`, `passe_curto`, `passe_longo`, `cruzamento`, `finalizacao`, `potencia_chute`, `cabeceio`, `desarme`, `bola_parada` e `pe_fraco`), 7 físicos (`aceleracao`, `velocidade`, `agilidade`, `equilibrio`, `forca`, `impulsao` e `resistencia`), 8 mentais/táticos (`visao`, `antecipacao`, `decisao`, `compostura`, `posicionamento_ofensivo`, `posicionamento_defensivo`, `concentracao` e `trabalho_coletivo`) e 4 específicos de goleiro (`reflexos_goleiro`, `manuseio_goleiro`, `posicionamento_goleiro` e `tecnica_aerea_goleiro`). Altura em centímetros, peso em quilogramas e pé preferido são características objetivas separadas das notas. Envergadura e posição secundária não fazem parte do modelo.
+
+A posição não bloqueia improvisações nem apaga as capacidades do jogador. Atuar fora das posições de origem aplica somente um redutor pequeno e calibrável; depois de uma quantidade configurável de partidas na nova função, ela é integrada diretamente às posições de origem. A engine não mantém nível ou mapa de experiência posicional: a camada da temporada informa apenas a contagem necessária para essa promoção.
+
+Características excepcionais são identificadas por uma estrela e representam desvios raros, positivos ou negativos, que serão aplicados apenas em seus contextos próprios. O catálogo inicial inclui `Polêmico`, `Baladeiro`, `Tem estrela`, `Cabeceador` e `Pegador de pênalti`. Elas não substituem os atributos de 1 a 20 nem funcionam como bônus gerais: por exemplo, `Cabeceador` só poderá influenciar situações aéreas, e `Pegador de pênalti`, cobranças de pênalti.
+
+A posição define pesos para uma avaliação derivada, mas a avaliação geral não deve apagar o perfil: um atacante rápido e um centroavante forte podem ter o mesmo geral e jogar de forma diferente.
 
 Separar explicitamente:
 
@@ -123,6 +129,7 @@ Decisões fechadas em 10/11/2026:
 4. O calendário-base e o snapshot de elenco ficam congelados quando o save começa. Atualizações posteriores não reescrevem a temporada em andamento.
 5. A engine começa por um domínio puro, sem dependência de FastAPI ou SQLAlchemy. Uma escalação válida tem exatamente 11 titulares distintos, um jogador designado para o gol, todos vinculados ao clube, disponíveis para a partida e uma formação presente no catálogo tático suportado. A disponibilidade distingue jogadores aptos, lesionados e suspensos; os dois últimos não podem ser titulares. Um jogador de linha somente pode ser designado para o gol quando o contexto do elenco informar explicitamente que não existe goleiro natural elegível; contexto ausente não libera a exceção. O validador retorna todas as infrações com códigos estáveis e os IDs dos jogadores afetados antes de qualquer simulação ou persistência.
 6. Uma partida somente pode começar entre clubes diferentes e depois que as escalações de mandante e visitante passarem por todas as validações da engine. Erros de escalação permanecem associados ao lado correspondente e são retornados juntos, sem ocultar a segunda equipe quando ambas são inválidas.
+7. O perfil de jogo usa o pool universal de 30 atributos de 1 a 20, altura, peso, pé preferido, posições de origem e características excepcionais. Qualquer jogador pode atuar improvisado com penalidade pequena; a nova função torna-se posição de origem após um limite configurável de partidas, sem níveis de experiência posicional armazenados na engine.
 
 Caracterização inicial das escalações existentes: os 20 clubes atendem às regras acima. A referência legada incorreta do Bahia ao jogador `127`, pertencente ao Botafogo no seed reproduzível, foi substituída pelo goleiro João Paulo (`99`) e o goleiro ocupa a primeira posição do desenho tático.
 
