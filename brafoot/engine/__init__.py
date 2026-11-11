@@ -10,6 +10,14 @@ from brafoot.engine.lineups import (
     require_valid_lineup,
     validate_lineup,
 )
+from brafoot.engine.matches import (
+    MatchSetup,
+    MatchSide,
+    MatchValidationError,
+    MatchViolation,
+    require_valid_match,
+    validate_match,
+)
 
 __all__ = [
     "AvailabilityStatus",
@@ -20,4 +28,10 @@ __all__ = [
     "Starter",
     "require_valid_lineup",
     "validate_lineup",
+    "MatchSetup",
+    "MatchSide",
+    "MatchValidationError",
+    "MatchViolation",
+    "require_valid_match",
+    "validate_match",
 ]
