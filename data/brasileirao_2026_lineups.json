@@ -1,0 +1,1465 @@
+{
+  "source": "static/clube.js",
+  "lineups": [
+    {
+      "club_slug": "corinthians",
+      "legacy_team_id": 1,
+      "formation": "4-1-2-1-2",
+      "starters": [
+        {
+          "legacy_player_id": 1,
+          "name": "Hugo Souza",
+          "position": "GOL",
+          "legacy_team_id": 1
+        },
+        {
+          "legacy_player_id": 7,
+          "name": "Gustavo Henrique",
+          "position": "ZAG",
+          "legacy_team_id": 1
+        },
+        {
+          "legacy_player_id": 8,
+          "name": "Gabriel Paulista",
+          "position": "ZAG",
+          "legacy_team_id": 1
+        },
+        {
+          "legacy_player_id": 6,
+          "name": "Matheus Bidu",
+          "position": "LAT",
+          "legacy_team_id": 1
+        },
+        {
+          "legacy_player_id": 5,
+          "name": "Matheuzinho",
+          "position": "LAT",
+          "legacy_team_id": 1
+        },
+        {
+          "legacy_player_id": 18,
+          "name": "Raniele",
+          "position": "VOL",
+          "legacy_team_id": 1
+        },
+        {
+          "legacy_player_id": 22,
+          "name": "André Luiz",
+          "position": "MEI",
+          "legacy_team_id": 1
+        },
+        {
+          "legacy_player_id": 17,
+          "name": "Breno Bidon",
+          "position": "MEI",
+          "legacy_team_id": 1
+        },
+        {
+          "legacy_player_id": 15,
+          "name": "Rodrigo Garro",
+          "position": "MEI",
+          "legacy_team_id": 1
+        },
+        {
+          "legacy_player_id": 26,
+          "name": "Memphis Depay",
+          "position": "SA",
+          "legacy_team_id": 1
+        },
+        {
+          "legacy_player_id": 27,
+          "name": "Yuri Alberto",
+          "position": "ATA",
+          "legacy_team_id": 1
+        }
+      ]
+    },
+    {
+      "club_slug": "atletico-mineiro",
+      "legacy_team_id": 2,
+      "formation": "4-4-2",
+      "starters": [
+        {
+          "legacy_player_id": 34,
+          "name": "Everson",
+          "position": "GOL",
+          "legacy_team_id": 2
+        },
+        {
+          "legacy_player_id": 42,
+          "name": "Ruan",
+          "position": "ZAG",
+          "legacy_team_id": 2
+        },
+        {
+          "legacy_player_id": 39,
+          "name": "Lyanco",
+          "position": "ZAG",
+          "legacy_team_id": 2
+        },
+        {
+          "legacy_player_id": 38,
+          "name": "Renan Lodi",
+          "position": "LAT",
+          "legacy_team_id": 2
+        },
+        {
+          "legacy_player_id": 43,
+          "name": "Natanael",
+          "position": "LAT",
+          "legacy_team_id": 2
+        },
+        {
+          "legacy_player_id": 55,
+          "name": "Bernard",
+          "position": "MEI",
+          "legacy_team_id": 2
+        },
+        {
+          "legacy_player_id": 59,
+          "name": "Igor Gomes",
+          "position": "VOL",
+          "legacy_team_id": 2
+        },
+        {
+          "legacy_player_id": 51,
+          "name": "Victor Hugo",
+          "position": "VOL",
+          "legacy_team_id": 2
+        },
+        {
+          "legacy_player_id": 50,
+          "name": "Gustavo Scarpa",
+          "position": "MEI",
+          "legacy_team_id": 2
+        },
+        {
+          "legacy_player_id": 65,
+          "name": "Hulk",
+          "position": "ATA",
+          "legacy_team_id": 2
+        },
+        {
+          "legacy_player_id": 68,
+          "name": "Mateo Cassierra",
+          "position": "ATA",
+          "legacy_team_id": 2
+        }
+      ]
+    },
+    {
+      "club_slug": "athletico-paranaense",
+      "legacy_team_id": 3,
+      "formation": "3-4-3",
+      "starters": [
+        {
+          "legacy_player_id": 70,
+          "name": "Santos",
+          "position": "GOL",
+          "legacy_team_id": 3
+        },
+        {
+          "legacy_player_id": 76,
+          "name": "Arthur Dias",
+          "position": "ZAG",
+          "legacy_team_id": 3
+        },
+        {
+          "legacy_player_id": 77,
+          "name": "Juan Felipe Aguirre",
+          "position": "ZAG",
+          "legacy_team_id": 3
+        },
+        {
+          "legacy_player_id": 78,
+          "name": "Carlos Terán",
+          "position": "ZAG",
+          "legacy_team_id": 3
+        },
+        {
+          "legacy_player_id": 81,
+          "name": "Dudu",
+          "position": "MEI",
+          "legacy_team_id": 3
+        },
+        {
+          "legacy_player_id": 79,
+          "name": "Gastón Benavídez",
+          "position": "LAT",
+          "legacy_team_id": 3
+        },
+        {
+          "legacy_player_id": 90,
+          "name": "Isaac",
+          "position": "MEI",
+          "legacy_team_id": 3
+        },
+        {
+          "legacy_player_id": 84,
+          "name": "Bruno Zapelli",
+          "position": "MEI",
+          "legacy_team_id": 3
+        },
+        {
+          "legacy_player_id": 86,
+          "name": "Stiven Mendoza",
+          "position": "MEI",
+          "legacy_team_id": 3
+        },
+        {
+          "legacy_player_id": 94,
+          "name": "Leozinho",
+          "position": "ATA",
+          "legacy_team_id": 3
+        },
+        {
+          "legacy_player_id": 96,
+          "name": "Renan Viana",
+          "position": "ATA",
+          "legacy_team_id": 3
+        }
+      ]
+    },
+    {
+      "club_slug": "bahia",
+      "legacy_team_id": 4,
+      "formation": "4-3-3",
+      "starters": [
+        {
+          "legacy_player_id": 102,
+          "name": "Luciano Juba",
+          "position": "LAT",
+          "legacy_team_id": 4
+        },
+        {
+          "legacy_player_id": 110,
+          "name": "Román Gómez",
+          "position": "LAT",
+          "legacy_team_id": 4
+        },
+        {
+          "legacy_player_id": 104,
+          "name": "Gilberto",
+          "position": "LAT",
+          "legacy_team_id": 4
+        },
+        {
+          "legacy_player_id": 103,
+          "name": "Santiago Ramos Mingo",
+          "position": "ZAG",
+          "legacy_team_id": 4
+        },
+        {
+          "legacy_player_id": 105,
+          "name": "Gabriel Xavier",
+          "position": "ZAG",
+          "legacy_team_id": 4
+        },
+        {
+          "legacy_player_id": 114,
+          "name": "Rodrigo Nestor",
+          "position": "MEI",
+          "legacy_team_id": 4
+        },
+        {
+          "legacy_player_id": 113,
+          "name": "Jean Lucas",
+          "position": "VOL",
+          "legacy_team_id": 4
+        },
+        {
+          "legacy_player_id": 120,
+          "name": "Erick",
+          "position": "VOL",
+          "legacy_team_id": 4
+        },
+        {
+          "legacy_player_id": 123,
+          "name": "Willian Jose",
+          "position": "ATA",
+          "legacy_team_id": 4
+        },
+        {
+          "legacy_player_id": 124,
+          "name": "Dell",
+          "position": "ATA",
+          "legacy_team_id": 4
+        },
+        {
+          "legacy_player_id": 127,
+          "name": "Neto",
+          "position": "GOL",
+          "legacy_team_id": 5
+        }
+      ]
+    },
+    {
+      "club_slug": "botafogo",
+      "legacy_team_id": 5,
+      "formation": "4-2-3-1",
+      "starters": [
+        {
+          "legacy_player_id": 128,
+          "name": "Léo Linck",
+          "position": "GOL",
+          "legacy_team_id": 5
+        },
+        {
+          "legacy_player_id": 136,
+          "name": "Mateo Ponte",
+          "position": "LAT",
+          "legacy_team_id": 5
+        },
+        {
+          "legacy_player_id": 134,
+          "name": "Bastos",
+          "position": "ZAG",
+          "legacy_team_id": 5
+        },
+        {
+          "legacy_player_id": 132,
+          "name": "Vitinho",
+          "position": "LAT",
+          "legacy_team_id": 5
+        },
+        {
+          "legacy_player_id": 133,
+          "name": "Nahuel Ferraresi",
+          "position": "ZAG",
+          "legacy_team_id": 5
+        },
+        {
+          "legacy_player_id": 150,
+          "name": "Jordan Barrera",
+          "position": "MEI",
+          "legacy_team_id": 5
+        },
+        {
+          "legacy_player_id": 148,
+          "name": "Álvaro Montoro",
+          "position": "MEI",
+          "legacy_team_id": 5
+        },
+        {
+          "legacy_player_id": 165,
+          "name": "Kadir Barría",
+          "position": "ATA",
+          "legacy_team_id": 5
+        },
+        {
+          "legacy_player_id": 154,
+          "name": "Newton",
+          "position": "VOL",
+          "legacy_team_id": 5
+        },
+        {
+          "legacy_player_id": 164,
+          "name": "Matheus Martins",
+          "position": "ATA",
+          "legacy_team_id": 5
+        },
+        {
+          "legacy_player_id": 163,
+          "name": "Júnior Santos",
+          "position": "ATA",
+          "legacy_team_id": 5
+        }
+      ]
+    },
+    {
+      "club_slug": "red-bull-bragantino",
+      "legacy_team_id": 6,
+      "formation": "4-2-3-1",
+      "starters": [
+        {
+          "legacy_player_id": 170,
+          "name": "Cleiton",
+          "position": "GOL",
+          "legacy_team_id": 6
+        },
+        {
+          "legacy_player_id": 179,
+          "name": "Gustavo Marques",
+          "position": "ZAG",
+          "legacy_team_id": 6
+        },
+        {
+          "legacy_player_id": 181,
+          "name": "Agustin Sant'Anna",
+          "position": "LAT",
+          "legacy_team_id": 6
+        },
+        {
+          "legacy_player_id": 175,
+          "name": "Juninho Capixaba",
+          "position": "LAT",
+          "legacy_team_id": 6
+        },
+        {
+          "legacy_player_id": 177,
+          "name": "Guzmán Rodríguez",
+          "position": "ZAG",
+          "legacy_team_id": 6
+        },
+        {
+          "legacy_player_id": 190,
+          "name": "Gabriel Girotto",
+          "position": "VOL",
+          "legacy_team_id": 6
+        },
+        {
+          "legacy_player_id": 191,
+          "name": "Ignacio Sosa",
+          "position": "VOL",
+          "legacy_team_id": 6
+        },
+        {
+          "legacy_player_id": 197,
+          "name": "Gabriel Lopes",
+          "position": "VOL",
+          "legacy_team_id": 6
+        },
+        {
+          "legacy_player_id": 189,
+          "name": "Matheus Fernandes",
+          "position": "VOL",
+          "legacy_team_id": 6
+        },
+        {
+          "legacy_player_id": 204,
+          "name": "Bruno Goncalves De Jesus",
+          "position": "ATA",
+          "legacy_team_id": 6
+        },
+        {
+          "legacy_player_id": 199,
+          "name": "Eduardo Sasha",
+          "position": "ATA",
+          "legacy_team_id": 6
+        }
+      ]
+    },
+    {
+      "club_slug": "chapecoense",
+      "legacy_team_id": 7,
+      "formation": "4-1-2-1-2",
+      "starters": [
+        {
+          "legacy_player_id": 211,
+          "name": "Matheus",
+          "position": "GOL",
+          "legacy_team_id": 7
+        },
+        {
+          "legacy_player_id": 218,
+          "name": "João Paulo",
+          "position": "ZAG",
+          "legacy_team_id": 7
+        },
+        {
+          "legacy_player_id": 220,
+          "name": "Victor Caetano",
+          "position": "ZAG",
+          "legacy_team_id": 7
+        },
+        {
+          "legacy_player_id": 214,
+          "name": "Rafael Thyere",
+          "position": "ZAG",
+          "legacy_team_id": 7
+        },
+        {
+          "legacy_player_id": 229,
+          "name": "Camilo",
+          "position": "VOL",
+          "legacy_team_id": 7
+        },
+        {
+          "legacy_player_id": 240,
+          "name": "Bruno Matias",
+          "position": "VOL",
+          "legacy_team_id": 7
+        },
+        {
+          "legacy_player_id": 230,
+          "name": "Jean Carlos",
+          "position": "MEI",
+          "legacy_team_id": 7
+        },
+        {
+          "legacy_player_id": 236,
+          "name": "Higor Meritão",
+          "position": "VOL",
+          "legacy_team_id": 7
+        },
+        {
+          "legacy_player_id": 231,
+          "name": "Robert Santos",
+          "position": "MEI",
+          "legacy_team_id": 7
+        },
+        {
+          "legacy_player_id": 250,
+          "name": "Wermeson",
+          "position": "ATA",
+          "legacy_team_id": 7
+        },
+        {
+          "legacy_player_id": 246,
+          "name": "Giovanni Augusto",
+          "position": "ATA",
+          "legacy_team_id": 7
+        }
+      ]
+    },
+    {
+      "club_slug": "coritiba",
+      "legacy_team_id": 8,
+      "formation": "4-2-3-1",
+      "starters": [
+        {
+          "legacy_player_id": 257,
+          "name": "Keiller",
+          "position": "GOL",
+          "legacy_team_id": 8
+        },
+        {
+          "legacy_player_id": 263,
+          "name": "Felipe Jonatan",
+          "position": "LAT",
+          "legacy_team_id": 8
+        },
+        {
+          "legacy_player_id": 266,
+          "name": "Rodrigo Moledo",
+          "position": "ZAG",
+          "legacy_team_id": 8
+        },
+        {
+          "legacy_player_id": 269,
+          "name": "João Almeida",
+          "position": "LAT",
+          "legacy_team_id": 8
+        },
+        {
+          "legacy_player_id": 265,
+          "name": "Jacy Maranhão",
+          "position": "ZAG",
+          "legacy_team_id": 8
+        },
+        {
+          "legacy_player_id": 276,
+          "name": "Willian Oliveira",
+          "position": "VOL",
+          "legacy_team_id": 8
+        },
+        {
+          "legacy_player_id": 280,
+          "name": "Alejandro Ararat Diaz",
+          "position": "VOL",
+          "legacy_team_id": 8
+        },
+        {
+          "legacy_player_id": 283,
+          "name": "Pedro Rocha",
+          "position": "ATA",
+          "legacy_team_id": 8
+        },
+        {
+          "legacy_player_id": 272,
+          "name": "Lucas Ronier",
+          "position": "MEI",
+          "legacy_team_id": 8
+        },
+        {
+          "legacy_player_id": 284,
+          "name": "Renato Marques",
+          "position": "ATA",
+          "legacy_team_id": 8
+        },
+        {
+          "legacy_player_id": 285,
+          "name": "Fabinho",
+          "position": "ATA",
+          "legacy_team_id": 8
+        }
+      ]
+    },
+    {
+      "club_slug": "cruzeiro",
+      "legacy_team_id": 9,
+      "formation": "4-2-3-1",
+      "starters": [
+        {
+          "legacy_player_id": 288,
+          "name": "Otávio Costa",
+          "position": "GOL",
+          "legacy_team_id": 9
+        },
+        {
+          "legacy_player_id": 297,
+          "name": "Kauã Moraes",
+          "position": "LAT",
+          "legacy_team_id": 9
+        },
+        {
+          "legacy_player_id": 290,
+          "name": "Fagner",
+          "position": "LAT",
+          "legacy_team_id": 9
+        },
+        {
+          "legacy_player_id": 293,
+          "name": "Lucas Villalba",
+          "position": "ZAG",
+          "legacy_team_id": 9
+        },
+        {
+          "legacy_player_id": 291,
+          "name": "Kaiki",
+          "position": "LAT",
+          "legacy_team_id": 9
+        },
+        {
+          "legacy_player_id": 301,
+          "name": "Matheus Pereira",
+          "position": "MEI",
+          "legacy_team_id": 9
+        },
+        {
+          "legacy_player_id": 305,
+          "name": "Lucas Romero",
+          "position": "VOL",
+          "legacy_team_id": 9
+        },
+        {
+          "legacy_player_id": 308,
+          "name": "Wanderson",
+          "position": "MEI",
+          "legacy_team_id": 9
+        },
+        {
+          "legacy_player_id": 302,
+          "name": "Keny Arroyo",
+          "position": "MEI",
+          "legacy_team_id": 9
+        },
+        {
+          "legacy_player_id": 303,
+          "name": "Marquinhos",
+          "position": "MEI",
+          "legacy_team_id": 9
+        },
+        {
+          "legacy_player_id": 316,
+          "name": "Luis Sinisterra",
+          "position": "ATA",
+          "legacy_team_id": 9
+        }
+      ]
+    },
+    {
+      "club_slug": "flamengo",
+      "legacy_team_id": 10,
+      "formation": "4-3-3",
+      "starters": [
+        {
+          "legacy_player_id": 321,
+          "name": "Andrew",
+          "position": "GOL",
+          "legacy_team_id": 10
+        },
+        {
+          "legacy_player_id": 328,
+          "name": "Emerson Royal",
+          "position": "LAT",
+          "legacy_team_id": 10
+        },
+        {
+          "legacy_player_id": 327,
+          "name": "Léo Ortiz",
+          "position": "ZAG",
+          "legacy_team_id": 10
+        },
+        {
+          "legacy_player_id": 326,
+          "name": "Leo Pereira",
+          "position": "ZAG",
+          "legacy_team_id": 10
+        },
+        {
+          "legacy_player_id": 330,
+          "name": "Ayrton Lucas",
+          "position": "LAT",
+          "legacy_team_id": 10
+        },
+        {
+          "legacy_player_id": 337,
+          "name": "Samuel Lino",
+          "position": "MEI",
+          "legacy_team_id": 10
+        },
+        {
+          "legacy_player_id": 336,
+          "name": "Jorginho",
+          "position": "VOL",
+          "legacy_team_id": 10
+        },
+        {
+          "legacy_player_id": 344,
+          "name": "Everton",
+          "position": "MEI",
+          "legacy_team_id": 10
+        },
+        {
+          "legacy_player_id": 350,
+          "name": "Wallace Yan",
+          "position": "ATA",
+          "legacy_team_id": 10
+        },
+        {
+          "legacy_player_id": 349,
+          "name": "Bruno Henrique",
+          "position": "ATA",
+          "legacy_team_id": 10
+        },
+        {
+          "legacy_player_id": 341,
+          "name": "Jorge Carrascal",
+          "position": "MEI",
+          "legacy_team_id": 10
+        }
+      ]
+    },
+    {
+      "club_slug": "fluminense",
+      "legacy_team_id": 11,
+      "formation": "4-3-3",
+      "starters": [
+        {
+          "legacy_player_id": 354,
+          "name": "Marcelo Pitaluga",
+          "position": "GOL",
+          "legacy_team_id": 11
+        },
+        {
+          "legacy_player_id": 364,
+          "name": "Julián Millán",
+          "position": "ZAG",
+          "legacy_team_id": 11
+        },
+        {
+          "legacy_player_id": 366,
+          "name": "Júlio Fidelis",
+          "position": "LAT",
+          "legacy_team_id": 11
+        },
+        {
+          "legacy_player_id": 358,
+          "name": "Ignácio",
+          "position": "ZAG",
+          "legacy_team_id": 11
+        },
+        {
+          "legacy_player_id": 360,
+          "name": "Rene",
+          "position": "LAT",
+          "legacy_team_id": 11
+        },
+        {
+          "legacy_player_id": 373,
+          "name": "Luciano Acosta",
+          "position": "MEI",
+          "legacy_team_id": 11
+        },
+        {
+          "legacy_player_id": 375,
+          "name": "Agustín Canobbio",
+          "position": "MEI",
+          "legacy_team_id": 11
+        },
+        {
+          "legacy_player_id": 378,
+          "name": "Alisson",
+          "position": "VOL",
+          "legacy_team_id": 11
+        },
+        {
+          "legacy_player_id": 371,
+          "name": "Jefferson Savarino",
+          "position": "MEI",
+          "legacy_team_id": 11
+        },
+        {
+          "legacy_player_id": 386,
+          "name": "Rodrigo Castillo",
+          "position": "ATA",
+          "legacy_team_id": 11
+        },
+        {
+          "legacy_player_id": 374,
+          "name": "Kevin Serna",
+          "position": "MEI",
+          "legacy_team_id": 11
+        }
+      ]
+    },
+    {
+      "club_slug": "gremio",
+      "legacy_team_id": 12,
+      "formation": "4-3-3",
+      "starters": [
+        {
+          "legacy_player_id": 389,
+          "name": "Gabriel Grando",
+          "position": "GOL",
+          "legacy_team_id": 12
+        },
+        {
+          "legacy_player_id": 397,
+          "name": "Caio Paulista",
+          "position": "LAT",
+          "legacy_team_id": 12
+        },
+        {
+          "legacy_player_id": 393,
+          "name": "Marcos Rocha",
+          "position": "LAT",
+          "legacy_team_id": 12
+        },
+        {
+          "legacy_player_id": 398,
+          "name": "Wagner Leonardo",
+          "position": "ZAG",
+          "legacy_team_id": 12
+        },
+        {
+          "legacy_player_id": 394,
+          "name": "Walter Kannemann",
+          "position": "ZAG",
+          "legacy_team_id": 12
+        },
+        {
+          "legacy_player_id": 407,
+          "name": "Gabriel Mec",
+          "position": "MEI",
+          "legacy_team_id": 12
+        },
+        {
+          "legacy_player_id": 410,
+          "name": "Cristian Pavon",
+          "position": "MEI",
+          "legacy_team_id": 12
+        },
+        {
+          "legacy_player_id": 415,
+          "name": "Dodi",
+          "position": "VOL",
+          "legacy_team_id": 12
+        },
+        {
+          "legacy_player_id": 424,
+          "name": "André Henrique",
+          "position": "ATA",
+          "legacy_team_id": 12
+        },
+        {
+          "legacy_player_id": 422,
+          "name": "Martin Braithwaite",
+          "position": "ATA",
+          "legacy_team_id": 12
+        },
+        {
+          "legacy_player_id": 423,
+          "name": "Tetê",
+          "position": "ATA",
+          "legacy_team_id": 12
+        }
+      ]
+    },
+    {
+      "club_slug": "internacional",
+      "legacy_team_id": 13,
+      "formation": "4-2-3-1",
+      "starters": [
+        {
+          "legacy_player_id": 426,
+          "name": "Anthoni",
+          "position": "GOL",
+          "legacy_team_id": 13
+        },
+        {
+          "legacy_player_id": 429,
+          "name": "Alexandro Bernabei",
+          "position": "LAT",
+          "legacy_team_id": 13
+        },
+        {
+          "legacy_player_id": 433,
+          "name": "Braian Aguirre",
+          "position": "LAT",
+          "legacy_team_id": 13
+        },
+        {
+          "legacy_player_id": 430,
+          "name": "Gabriel Mercado",
+          "position": "ZAG",
+          "legacy_team_id": 13
+        },
+        {
+          "legacy_player_id": 434,
+          "name": "Matheus Bahia",
+          "position": "LAT",
+          "legacy_team_id": 13
+        },
+        {
+          "legacy_player_id": 446,
+          "name": "Rodrigo Villagra",
+          "position": "VOL",
+          "legacy_team_id": 13
+        },
+        {
+          "legacy_player_id": 449,
+          "name": "Richard",
+          "position": "VOL",
+          "legacy_team_id": 13
+        },
+        {
+          "legacy_player_id": 445,
+          "name": "Bruno Henrique",
+          "position": "VOL",
+          "legacy_team_id": 13
+        },
+        {
+          "legacy_player_id": 440,
+          "name": "Kayky",
+          "position": "MEI",
+          "legacy_team_id": 13
+        },
+        {
+          "legacy_player_id": 455,
+          "name": "Alerrandro",
+          "position": "ATA",
+          "legacy_team_id": 13
+        },
+        {
+          "legacy_player_id": 454,
+          "name": "Johan Carbonero",
+          "position": "ATA",
+          "legacy_team_id": 13
+        }
+      ]
+    },
+    {
+      "club_slug": "mirassol",
+      "legacy_team_id": 14,
+      "formation": "3-5-2",
+      "starters": [
+        {
+          "legacy_player_id": 459,
+          "name": "Alex Muralha",
+          "position": "GOL",
+          "legacy_team_id": 14
+        },
+        {
+          "legacy_player_id": 465,
+          "name": "Igor Formiga",
+          "position": "LAT",
+          "legacy_team_id": 14
+        },
+        {
+          "legacy_player_id": 468,
+          "name": "Rodrigues",
+          "position": "ZAG",
+          "legacy_team_id": 14
+        },
+        {
+          "legacy_player_id": 472,
+          "name": "Eduardo",
+          "position": "MEI",
+          "legacy_team_id": 14
+        },
+        {
+          "legacy_player_id": 463,
+          "name": "Victor Luis",
+          "position": "LAT",
+          "legacy_team_id": 14
+        },
+        {
+          "legacy_player_id": 464,
+          "name": "Willian Machado",
+          "position": "ZAG",
+          "legacy_team_id": 14
+        },
+        {
+          "legacy_player_id": 482,
+          "name": "Luiz Filipe",
+          "position": "MEI",
+          "legacy_team_id": 14
+        },
+        {
+          "legacy_player_id": 483,
+          "name": "Tiquinho Soares",
+          "position": "ATA",
+          "legacy_team_id": 14
+        },
+        {
+          "legacy_player_id": 481,
+          "name": "Yuri Lara",
+          "position": "VOL",
+          "legacy_team_id": 14
+        },
+        {
+          "legacy_player_id": 486,
+          "name": "Alesson",
+          "position": "ATA",
+          "legacy_team_id": 14
+        },
+        {
+          "legacy_player_id": 484,
+          "name": "Negueba",
+          "position": "ATA",
+          "legacy_team_id": 14
+        }
+      ]
+    },
+    {
+      "club_slug": "palmeiras",
+      "legacy_team_id": 15,
+      "formation": "4-2-3-1",
+      "starters": [
+        {
+          "legacy_player_id": 492,
+          "name": "Marcelo Lomba",
+          "position": "GOL",
+          "legacy_team_id": 15
+        },
+        {
+          "legacy_player_id": 496,
+          "name": "Joaquín Piquerez",
+          "position": "LAT",
+          "legacy_team_id": 15
+        },
+        {
+          "legacy_player_id": 499,
+          "name": "Bruno Fuchs",
+          "position": "ZAG",
+          "legacy_team_id": 15
+        },
+        {
+          "legacy_player_id": 498,
+          "name": "Murilo",
+          "position": "ZAG",
+          "legacy_team_id": 15
+        },
+        {
+          "legacy_player_id": 502,
+          "name": "Jefté",
+          "position": "LAT",
+          "legacy_team_id": 15
+        },
+        {
+          "legacy_player_id": 512,
+          "name": "Lucas Evangelista",
+          "position": "VOL",
+          "legacy_team_id": 15
+        },
+        {
+          "legacy_player_id": 511,
+          "name": "Marlon Freitas",
+          "position": "VOL",
+          "legacy_team_id": 15
+        },
+        {
+          "legacy_player_id": 508,
+          "name": "Felipe Anderson",
+          "position": "MEI",
+          "legacy_team_id": 15
+        },
+        {
+          "legacy_player_id": 507,
+          "name": "Mauricio",
+          "position": "MEI",
+          "legacy_team_id": 15
+        },
+        {
+          "legacy_player_id": 506,
+          "name": "Andreas Pereira",
+          "position": "MEI",
+          "legacy_team_id": 15
+        },
+        {
+          "legacy_player_id": 518,
+          "name": "Paulinho",
+          "position": "ATA",
+          "legacy_team_id": 15
+        }
+      ]
+    },
+    {
+      "club_slug": "remo",
+      "legacy_team_id": 16,
+      "formation": "4-2-3-1",
+      "starters": [
+        {
+          "legacy_player_id": 524,
+          "name": "Ygor Vinhas",
+          "position": "GOL",
+          "legacy_team_id": 16
+        },
+        {
+          "legacy_player_id": 529,
+          "name": "Matheus Alexandre",
+          "position": "LAT",
+          "legacy_team_id": 16
+        },
+        {
+          "legacy_player_id": 532,
+          "name": "Braian Cufré",
+          "position": "LAT",
+          "legacy_team_id": 16
+        },
+        {
+          "legacy_player_id": 533,
+          "name": "Thalisson Gabriel",
+          "position": "ZAG",
+          "legacy_team_id": 16
+        },
+        {
+          "legacy_player_id": 527,
+          "name": "Mayk Silva",
+          "position": "LAT",
+          "legacy_team_id": 16
+        },
+        {
+          "legacy_player_id": 539,
+          "name": "Diego Hernández",
+          "position": "MEI",
+          "legacy_team_id": 16
+        },
+        {
+          "legacy_player_id": 550,
+          "name": "Nicolás Ferreira",
+          "position": "MEI",
+          "legacy_team_id": 16
+        },
+        {
+          "legacy_player_id": 538,
+          "name": "Patrick de Paula",
+          "position": "VOL",
+          "legacy_team_id": 16
+        },
+        {
+          "legacy_player_id": 540,
+          "name": "Vitor Bueno",
+          "position": "MEI",
+          "legacy_team_id": 16
+        },
+        {
+          "legacy_player_id": 546,
+          "name": "Jajá",
+          "position": "MEI",
+          "legacy_team_id": 16
+        },
+        {
+          "legacy_player_id": 557,
+          "name": "Gabriel Poveda",
+          "position": "ATA",
+          "legacy_team_id": 16
+        }
+      ]
+    },
+    {
+      "club_slug": "santos",
+      "legacy_team_id": 17,
+      "formation": "4-2-3-1",
+      "starters": [
+        {
+          "legacy_player_id": 562,
+          "name": "João Pedro",
+          "position": "GOL",
+          "legacy_team_id": 17
+        },
+        {
+          "legacy_player_id": 568,
+          "name": "Lucas Veríssimo",
+          "position": "ZAG",
+          "legacy_team_id": 17
+        },
+        {
+          "legacy_player_id": 569,
+          "name": "Gonzalo Escobar",
+          "position": "LAT",
+          "legacy_team_id": 17
+        },
+        {
+          "legacy_player_id": 570,
+          "name": "Luan Peres",
+          "position": "ZAG",
+          "legacy_team_id": 17
+        },
+        {
+          "legacy_player_id": 567,
+          "name": "Zé Ivaldo",
+          "position": "ZAG",
+          "legacy_team_id": 17
+        },
+        {
+          "legacy_player_id": 579,
+          "name": "Willian Arao",
+          "position": "VOL",
+          "legacy_team_id": 17
+        },
+        {
+          "legacy_player_id": 580,
+          "name": "Gabriel Bontempo",
+          "position": "MEI",
+          "legacy_team_id": 17
+        },
+        {
+          "legacy_player_id": 594,
+          "name": "Thaciano",
+          "position": "ATA",
+          "legacy_team_id": 17
+        },
+        {
+          "legacy_player_id": 586,
+          "name": "Gabriel Barbosa",
+          "position": "ATA",
+          "legacy_team_id": 17
+        },
+        {
+          "legacy_player_id": 588,
+          "name": "Lautaro Díaz",
+          "position": "ATA",
+          "legacy_team_id": 17
+        },
+        {
+          "legacy_player_id": 587,
+          "name": "Rony",
+          "position": "ATA",
+          "legacy_team_id": 17
+        }
+      ]
+    },
+    {
+      "club_slug": "sao-paulo",
+      "legacy_team_id": 18,
+      "formation": "4-2-3-1",
+      "starters": [
+        {
+          "legacy_player_id": 600,
+          "name": "Young",
+          "position": "GOL",
+          "legacy_team_id": 18
+        },
+        {
+          "legacy_player_id": 606,
+          "name": "Enzo Díaz",
+          "position": "LAT",
+          "legacy_team_id": 18
+        },
+        {
+          "legacy_player_id": 608,
+          "name": "Sabino",
+          "position": "ZAG",
+          "legacy_team_id": 18
+        },
+        {
+          "legacy_player_id": 605,
+          "name": "Alan Franco",
+          "position": "ZAG",
+          "legacy_team_id": 18
+        },
+        {
+          "legacy_player_id": 613,
+          "name": "Matheus Belém",
+          "position": "ZAG",
+          "legacy_team_id": 18
+        },
+        {
+          "legacy_player_id": 623,
+          "name": "Felipe Negrucci",
+          "position": "VOL",
+          "legacy_team_id": 18
+        },
+        {
+          "legacy_player_id": 618,
+          "name": "Pablo Maia",
+          "position": "VOL",
+          "legacy_team_id": 18
+        },
+        {
+          "legacy_player_id": 617,
+          "name": "Damián Bobadilla",
+          "position": "VOL",
+          "legacy_team_id": 18
+        },
+        {
+          "legacy_player_id": 628,
+          "name": "Jonathan Calleri",
+          "position": "ATA",
+          "legacy_team_id": 18
+        },
+        {
+          "legacy_player_id": 630,
+          "name": "Gonzalo Tapia",
+          "position": "ATA",
+          "legacy_team_id": 18
+        },
+        {
+          "legacy_player_id": 629,
+          "name": "Luciano",
+          "position": "ATA",
+          "legacy_team_id": 18
+        }
+      ]
+    },
+    {
+      "club_slug": "vasco-da-gama",
+      "legacy_team_id": 19,
+      "formation": "4-2-3-1",
+      "starters": [
+        {
+          "legacy_player_id": 636,
+          "name": "Daniel Fuzato",
+          "position": "GOL",
+          "legacy_team_id": 19
+        },
+        {
+          "legacy_player_id": 644,
+          "name": "Puma Rodríguez",
+          "position": "LAT",
+          "legacy_team_id": 19
+        },
+        {
+          "legacy_player_id": 646,
+          "name": "Alan Saldivia",
+          "position": "ZAG",
+          "legacy_team_id": 19
+        },
+        {
+          "legacy_player_id": 642,
+          "name": "Cuiabano",
+          "position": "LAT",
+          "legacy_team_id": 19
+        },
+        {
+          "legacy_player_id": 640,
+          "name": "Carlos Cuesta",
+          "position": "ZAG",
+          "legacy_team_id": 19
+        },
+        {
+          "legacy_player_id": 653,
+          "name": "JP",
+          "position": "MEI",
+          "legacy_team_id": 19
+        },
+        {
+          "legacy_player_id": 649,
+          "name": "Tchê Tchê",
+          "position": "VOL",
+          "legacy_team_id": 19
+        },
+        {
+          "legacy_player_id": 667,
+          "name": "Nuno Moreira",
+          "position": "ATA",
+          "legacy_team_id": 19
+        },
+        {
+          "legacy_player_id": 651,
+          "name": "Hugo Moura",
+          "position": "VOL",
+          "legacy_team_id": 19
+        },
+        {
+          "legacy_player_id": 668,
+          "name": "Johan Rojas",
+          "position": "ATA",
+          "legacy_team_id": 19
+        },
+        {
+          "legacy_player_id": 663,
+          "name": "David",
+          "position": "ATA",
+          "legacy_team_id": 19
+        }
+      ]
+    },
+    {
+      "club_slug": "vitoria",
+      "legacy_team_id": 20,
+      "formation": "4-3-3",
+      "starters": [
+        {
+          "legacy_player_id": 670,
+          "name": "Gabriel",
+          "position": "GOL",
+          "legacy_team_id": 20
+        },
+        {
+          "legacy_player_id": 674,
+          "name": "Ramon",
+          "position": "LAT",
+          "legacy_team_id": 20
+        },
+        {
+          "legacy_player_id": 677,
+          "name": "Claudinho",
+          "position": "LAT",
+          "legacy_team_id": 20
+        },
+        {
+          "legacy_player_id": 679,
+          "name": "Nathan Mendes",
+          "position": "LAT",
+          "legacy_team_id": 20
+        },
+        {
+          "legacy_player_id": 678,
+          "name": "Jamerson",
+          "position": "LAT",
+          "legacy_team_id": 20
+        },
+        {
+          "legacy_player_id": 692,
+          "name": "Rúben Ramos Ismael",
+          "position": "VOL",
+          "legacy_team_id": 20
+        },
+        {
+          "legacy_player_id": 686,
+          "name": "Gabriel Baralhas",
+          "position": "VOL",
+          "legacy_team_id": 20
+        },
+        {
+          "legacy_player_id": 696,
+          "name": "Anderson Bispo dos Santos",
+          "position": "MEI",
+          "legacy_team_id": 20
+        },
+        {
+          "legacy_player_id": 708,
+          "name": "Kike Saverio",
+          "position": "ATA",
+          "legacy_team_id": 20
+        },
+        {
+          "legacy_player_id": 701,
+          "name": "Aitor Cantalapiedra",
+          "position": "ATA",
+          "legacy_team_id": 20
+        },
+        {
+          "legacy_player_id": 699,
+          "name": "Erick",
+          "position": "ATA",
+          "legacy_team_id": 20
+        }
+      ]
+    }
+  ]
+}

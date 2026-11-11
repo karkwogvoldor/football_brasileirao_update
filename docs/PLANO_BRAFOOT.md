@@ -121,6 +121,9 @@ Decisões fechadas em 10/11/2026:
 2. Cada save controla somente um clube durante a temporada. Um novo save poderá escolher outro clube, mas não haverá troca de clube dentro da temporada do MVP.
 3. A temporada usa o calendário real do Brasileirão Série A 2026: 20 clubes, 38 rodadas, datas, confrontos e mandos oficiais. Placares reais não são importados; todos os resultados pertencem à simulação do BRAFOOT.
 4. O calendário-base e o snapshot de elenco ficam congelados quando o save começa. Atualizações posteriores não reescrevem a temporada em andamento.
+5. A engine começa por um domínio puro, sem dependência de FastAPI ou SQLAlchemy. Uma escalação válida tem exatamente 11 titulares distintos, exatamente um goleiro, todos vinculados ao clube e uma formação presente no catálogo tático suportado. O validador retorna todas as infrações com códigos estáveis antes de qualquer simulação ou persistência.
+
+Caracterização inicial das escalações existentes: 19 dos 20 clubes atendem às regras acima. A lista legada do Bahia referencia o jogador `127`, que no seed reproduzível pertence ao Botafogo; esse defeito permanece explicitamente coberto por teste até a escalação do Bahia ser corrigida com uma escolha esportiva consciente.
 
 Decisões ainda abertas:
 
