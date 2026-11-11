@@ -123,7 +123,7 @@ Decisões fechadas em 10/11/2026:
 4. O calendário-base e o snapshot de elenco ficam congelados quando o save começa. Atualizações posteriores não reescrevem a temporada em andamento.
 5. A engine começa por um domínio puro, sem dependência de FastAPI ou SQLAlchemy. Uma escalação válida tem exatamente 11 titulares distintos, exatamente um goleiro, todos vinculados ao clube e uma formação presente no catálogo tático suportado. O validador retorna todas as infrações com códigos estáveis antes de qualquer simulação ou persistência.
 
-Caracterização inicial das escalações existentes: 19 dos 20 clubes atendem às regras acima. A lista legada do Bahia referencia o jogador `127`, que no seed reproduzível pertence ao Botafogo; esse defeito permanece explicitamente coberto por teste até a escalação do Bahia ser corrigida com uma escolha esportiva consciente.
+Caracterização inicial das escalações existentes: os 20 clubes atendem às regras acima. A referência legada incorreta do Bahia ao jogador `127`, pertencente ao Botafogo no seed reproduzível, foi substituída pelo goleiro João Paulo (`99`) e o goleiro ocupa a primeira posição do desenho tático.
 
 Decisões ainda abertas:
 

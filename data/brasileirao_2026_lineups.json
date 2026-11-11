@@ -226,6 +226,12 @@
       "formation": "4-3-3",
       "starters": [
         {
+          "legacy_player_id": 99,
+          "name": "João Paulo",
+          "position": "GOL",
+          "legacy_team_id": 4
+        },
+        {
           "legacy_player_id": 102,
           "name": "Luciano Juba",
           "position": "LAT",
@@ -284,12 +290,6 @@
           "name": "Dell",
           "position": "ATA",
           "legacy_team_id": 4
-        },
-        {
-          "legacy_player_id": 127,
-          "name": "Neto",
-          "position": "GOL",
-          "legacy_team_id": 5
         }
       ]
     },

@@ -119,7 +119,7 @@ def test_require_valid_lineup_raises_with_all_violations():
     }
 
 
-# Caracteriza as escalações legadas e mantém visível o vínculo incorreto do Bahia.
+# Garante que todas as escalações cadastradas satisfazem as regras da engine.
 def test_registered_lineups_characterize_current_legacy_data():
     payload = json.loads(
         (PROJECT_ROOT / "data" / "brasileirao_2026_lineups.json").read_text(
@@ -144,5 +144,5 @@ def test_registered_lineups_characterize_current_legacy_data():
         results[registered["club_slug"]] = violation_codes(lineup)
 
     assert len(results) == 20
-    assert results.pop("bahia") == {"foreign_player"}
+    assert results["bahia"] == set()
     assert all(not violations for violations in results.values())
