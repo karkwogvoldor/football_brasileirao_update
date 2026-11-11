@@ -44,6 +44,8 @@ A zona semântica da bola usa inicialmente uma grade relativa de três terços (
 
 A primeira fatia persistível de `MatchState` reúne relógio, placar, lado com a posse, zona da bola relativa a esse lado, versão do ruleset, semente e posição lógica do gerador pseudoaleatório. `MatchCheckpoint` associa uma sequência monotônica a esse estado e usa um snapshot explícito com valores primitivos. Escalações, condição, cartões, substituições e comandos serão adicionados ao estado quando suas regras existirem.
 
+O primeiro avanço puro de segmento altera somente o relógio e informa se parou pelo limite configurado, intervalo ou fim de jogo. Ele rejeita períodos pausados e ruleset com versão diferente da registrada no estado. Eventos futuros poderão substituir outros campos, mas deverão preservar a mesma entrada e saída imutáveis.
+
 ## Eventos da engine e cenas visuais
 
 Existem duas representações distintas:
