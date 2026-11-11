@@ -38,6 +38,8 @@ Mesma entrada inicial, mesma versão de regras, mesma semente e mesmo histórico
 
 Na primeira versão, o relógio regulamentar é contínuo de `00:00` a `90:00`. O primeiro tempo para exatamente em `45:00`, permanece no estado de intervalo até uma transição explícita e o segundo tempo para exatamente em `90:00`. Um avanço nunca consome segundos do período seguinte. Acréscimos e prorrogação ficam fora desta primeira fatia e exigirão regras versionadas próprias.
 
+A zona semântica da bola usa inicialmente uma grade relativa de três terços (`defensivo`, `médio` e `ofensivo`) por três corredores (`esquerdo`, `central` e `direito`). Trocar a perspectiva entre as equipes gira a zona em 180 graus. Coordenadas normalizadas e posições exatas continuam sendo responsabilidade da apresentação e não integram o estado esportivo da engine.
+
 ## Eventos da engine e cenas visuais
 
 Existem duas representações distintas:

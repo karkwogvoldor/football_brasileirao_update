@@ -77,6 +77,13 @@ from brafoot.engine.sectors import (
     TeamSectorProfile,
     calculate_team_sector_profile,
 )
+from brafoot.engine.zones import (
+    ALL_FIELD_ZONES,
+    FieldLane,
+    FieldThird,
+    FieldZone,
+    opposing_perspective,
+)
 
 __all__ = [
     "DEFAULT_ORIGIN_POSITION_MATCHES",
@@ -142,4 +149,9 @@ __all__ = [
     "SectorMetric",
     "TeamSectorProfile",
     "calculate_team_sector_profile",
+    "ALL_FIELD_ZONES",
+    "FieldLane",
+    "FieldThird",
+    "FieldZone",
+    "opposing_perspective",
 ]

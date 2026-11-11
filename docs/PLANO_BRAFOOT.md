@@ -89,6 +89,8 @@ A engine avança em segmentos determinísticos de até três minutos simulados, 
 
 O relógio regulamentar inicial é um valor de domínio imutável e contínuo. Ele para em `45:00` para o intervalo, exige transição explícita para o segundo tempo e encerra em `90:00`; nenhum avanço ultrapassa um limite de período. Acréscimos e prorrogação não fazem parte desta primeira versão.
 
+A zona da bola usa uma grade semântica 3×3 relativa à equipe analisada: terço defensivo, médio ou ofensivo combinado com corredor esquerdo, central ou direito. A perspectiva adversária gira terço e corredor em 180 graus; coordenadas exatas permanecem na camada de apresentação.
+
 Invariantes: onze titulares distintos por equipe, goleiro presente, jogador elegível e pertencente ao elenco do save, eventos em ordem, placar igual à soma dos gols e tabela consistente com os resultados. Executar baterias de simulações para inspecionar distribuição de gols, empates, efeito do mando, equilíbrio entre clubes e impacto real das táticas. Ajustar parâmetros com dados e testes de regressão antes de ampliar a complexidade.
 
 ## 7. Atualização de times e escalações
