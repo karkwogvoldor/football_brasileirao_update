@@ -21,6 +21,8 @@ A partida não será calculada integralmente antes da exibição porque substitu
 
 A quantidade de substituições, as janelas permitidas e quais interrupções aceitam comandos pertencem ao conjunto de regras versionado, não ao front-end.
 
+A primeira fatia de `SimulationRuleset` registra uma versão canônica e a duração positiva do segmento, com padrão de 180 segundos. Os demais limites serão incorporados quando suas regras de domínio forem implementadas, sem usar valores implícitos no front-end.
+
 ## Estado e determinismo
 
 Cada segmento recebe um estado completo e devolve um novo estado, eventos semânticos ordenados e um checkpoint persistível. O estado mínimo inclui:

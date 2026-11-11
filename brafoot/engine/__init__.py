@@ -63,6 +63,10 @@ from brafoot.engine.matches import (
     require_valid_match,
     validate_match,
 )
+from brafoot.engine.rulesets import (
+    DEFAULT_SEGMENT_DURATION_SECONDS,
+    SimulationRuleset,
+)
 from brafoot.engine.sectors import (
     ATTACK_POSITIONS,
     DEFENSIVE_POSITIONS,
@@ -137,6 +141,8 @@ __all__ = [
     "MatchViolation",
     "require_valid_match",
     "validate_match",
+    "DEFAULT_SEGMENT_DURATION_SECONDS",
+    "SimulationRuleset",
     "ATTACK_POSITIONS",
     "DEFENSIVE_POSITIONS",
     "MIDFIELD_POSITIONS",
