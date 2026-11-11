@@ -28,6 +28,14 @@ from brafoot.engine.capabilities import (
     calculate_physical_duel_ability,
     calculate_sprint_ability,
 )
+from brafoot.engine.contests import (
+    ContestOutcome,
+    ContestResult,
+    compare_aerial_duel,
+    compare_abilities,
+    compare_physical_duel,
+    compare_sprint,
+)
 from brafoot.engine.lineups import (
     AvailabilityStatus,
     FORMATIONS,
@@ -72,6 +80,12 @@ __all__ = [
     "calculate_aerial_ability",
     "calculate_physical_duel_ability",
     "calculate_sprint_ability",
+    "ContestOutcome",
+    "ContestResult",
+    "compare_aerial_duel",
+    "compare_abilities",
+    "compare_physical_duel",
+    "compare_sprint",
     "AvailabilityStatus",
     "FORMATIONS",
     "Lineup",

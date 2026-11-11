@@ -67,6 +67,8 @@ As primeiras capacidades derivadas são determinísticas e explicáveis na mesma
 
 Cada capacidade retorna o resultado e a contribuição individual de suas entradas. Características excepcionais não alteram silenciosamente essas bases: seus modificadores somente serão aplicados quando a engine modelar a situação específica a que pertencem.
 
+Os confrontos entre jogadores comparam duas capacidades derivadas e preservam o detalhamento de ambos os lados. Corridas distinguem distância curta e longa; disputas aéreas confrontam a fase ofensiva do atacante com a fase defensiva do marcador; duelos físicos usam a mesma capacidade terrestre nos dois lados. O resultado informa vantagem técnica, margem na escala de atributos e margem normalizada entre -1 e 1. Essa comparação ainda não determina quem vence o lance: probabilidade e aleatoriedade entram somente numa etapa posterior e versionada.
+
 Separar explicitamente:
 
 - **Atributo base**: capacidade estimada para o jogo, versionada e com origem (`editorial`, `modelo`, `fonte licenciada`).
