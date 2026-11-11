@@ -27,6 +27,7 @@ from brafoot.engine.capabilities import (
     calculate_aerial_ability,
     calculate_physical_duel_ability,
     calculate_sprint_ability,
+    derive_weighted_ability,
 )
 from brafoot.engine.contests import (
     ContestOutcome,
@@ -54,6 +55,20 @@ from brafoot.engine.matches import (
     require_valid_match,
     validate_match,
 )
+from brafoot.engine.sectors import (
+    ATTACK_POSITIONS,
+    DEFENSIVE_POSITIONS,
+    MIDFIELD_POSITIONS,
+    AttackSectorProfile,
+    DefenseSectorProfile,
+    LineupPlayer,
+    MidfieldSectorProfile,
+    PlayerSectorContribution,
+    SectorCompositionError,
+    SectorMetric,
+    TeamSectorProfile,
+    calculate_team_sector_profile,
+)
 
 __all__ = [
     "DEFAULT_ORIGIN_POSITION_MATCHES",
@@ -80,6 +95,7 @@ __all__ = [
     "calculate_aerial_ability",
     "calculate_physical_duel_ability",
     "calculate_sprint_ability",
+    "derive_weighted_ability",
     "ContestOutcome",
     "ContestResult",
     "compare_aerial_duel",
@@ -100,4 +116,16 @@ __all__ = [
     "MatchViolation",
     "require_valid_match",
     "validate_match",
+    "ATTACK_POSITIONS",
+    "DEFENSIVE_POSITIONS",
+    "MIDFIELD_POSITIONS",
+    "AttackSectorProfile",
+    "DefenseSectorProfile",
+    "LineupPlayer",
+    "MidfieldSectorProfile",
+    "PlayerSectorContribution",
+    "SectorCompositionError",
+    "SectorMetric",
+    "TeamSectorProfile",
+    "calculate_team_sector_profile",
 ]

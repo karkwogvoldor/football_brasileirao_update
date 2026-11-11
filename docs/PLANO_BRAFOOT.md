@@ -69,6 +69,8 @@ Cada capacidade retorna o resultado e a contribuição individual de suas entrad
 
 Os confrontos entre jogadores comparam duas capacidades derivadas e preservam o detalhamento de ambos os lados. Corridas distinguem distância curta e longa; disputas aéreas confrontam a fase ofensiva do atacante com a fase defensiva do marcador; duelos físicos usam a mesma capacidade terrestre nos dois lados. O resultado informa vantagem técnica, margem na escala de atributos e margem normalizada entre -1 e 1. Essa comparação ainda não determina quem vence o lance: probabilidade e aleatoriedade entram somente numa etapa posterior e versionada.
 
+O perfil coletivo não possui uma nota geral nem reduz defesa, meio e ataque a três números. Ele preserva 15 dimensões: goleiro, proteção central, proteção lateral, defesa aérea e recuperação defensiva; controle, progressão, criação, recuperação e pressão no meio; profundidade, combinação, presença aérea, criação e finalização no ataque. Cada dimensão guarda as capacidades individuais, a eventual penalidade pequena por improvisação e a contribuição ajustada de cada jogador. A média representa qualidade do grupo; superioridade numérica, desenho da formação e instruções táticas serão aplicados posteriormente no confronto entre equipes, evitando misturá-los prematuramente com a qualidade individual.
+
 Separar explicitamente:
 
 - **Atributo base**: capacidade estimada para o jogo, versionada e com origem (`editorial`, `modelo`, `fonte licenciada`).

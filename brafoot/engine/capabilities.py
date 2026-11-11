@@ -81,7 +81,7 @@ def calculate_sprint_ability(
             ("velocidade", attributes.velocidade, 0.65),
             ("resistencia", attributes.resistencia, 0.10),
         )
-    return _build_ability(sources)
+    return derive_weighted_ability(sources)
 
 
 def calculate_aerial_ability(
@@ -101,7 +101,7 @@ def calculate_aerial_ability(
         if phase is AerialPhase.ATTACKING
         else "posicionamento_defensivo"
     )
-    return _build_ability(
+    return derive_weighted_ability(
         (
             ("altura", _normalize_fact(profile.height_cm, REFERENCE_HEIGHT_CM), 0.15),
             ("impulsao", attributes.impulsao, 0.20),
@@ -117,7 +117,7 @@ def calculate_physical_duel_ability(profile: PlayerProfile) -> DerivedAbility:
     """Calculate capacity to withstand and impose contact in a ground duel."""
 
     attributes = profile.attributes
-    return _build_ability(
+    return derive_weighted_ability(
         (
             ("forca", attributes.forca, 0.45),
             ("equilibrio", attributes.equilibrio, 0.25),
@@ -127,9 +127,11 @@ def calculate_physical_duel_ability(profile: PlayerProfile) -> DerivedAbility:
     )
 
 
-def _build_ability(
+def derive_weighted_ability(
     sources: tuple[tuple[str, float, float], ...],
 ) -> DerivedAbility:
+    """Build an explainable ability from named values whose weights total one."""
+
     total_weight = sum(weight for _, _, weight in sources)
     if not isclose(total_weight, 1.0):
         raise ValueError("Os pesos de uma capacidade derivada devem somar 1.")
