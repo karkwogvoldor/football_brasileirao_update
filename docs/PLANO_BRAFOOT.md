@@ -87,6 +87,8 @@ Fluxo inicial proposto: validar escalações → calcular forças por setor e en
 
 A engine avança em segmentos determinísticos de até três minutos simulados, encerrados antes em intervalo, fim de jogo ou interrupção relevante. Nenhum segmento futuro é calculado enquanto o atual está sendo apresentado. Substituições e mudanças táticas validadas entram na próxima interrupção permitida, geram novo checkpoint e afetam somente os segmentos seguintes. A experiência usa visualização 2D híbrida: movimentação tática simplificada entre acontecimentos e cenas mais detalhadas nos lances relevantes. A engine produz eventos semânticos; uma camada de apresentação separada gera posições e keyframes, sem poder alterar o resultado. A decisão completa está em [`DECISAO_SIMULACAO_VISUAL.md`](DECISAO_SIMULACAO_VISUAL.md).
 
+O relógio regulamentar inicial é um valor de domínio imutável e contínuo. Ele para em `45:00` para o intervalo, exige transição explícita para o segundo tempo e encerra em `90:00`; nenhum avanço ultrapassa um limite de período. Acréscimos e prorrogação não fazem parte desta primeira versão.
+
 Invariantes: onze titulares distintos por equipe, goleiro presente, jogador elegível e pertencente ao elenco do save, eventos em ordem, placar igual à soma dos gols e tabela consistente com os resultados. Executar baterias de simulações para inspecionar distribuição de gols, empates, efeito do mando, equilíbrio entre clubes e impacto real das táticas. Ajustar parâmetros com dados e testes de regressão antes de ampliar a complexidade.
 
 ## 7. Atualização de times e escalações

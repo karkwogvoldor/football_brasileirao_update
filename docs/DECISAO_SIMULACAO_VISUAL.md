@@ -36,6 +36,8 @@ Cada segmento recebe um estado completo e devolve um novo estado, eventos semân
 
 Mesma entrada inicial, mesma versão de regras, mesma semente e mesmo histórico de comandos devem produzir os mesmos segmentos e eventos. Recarregar a página restaura o último checkpoint confirmado; não recalcula silenciosamente o passado.
 
+Na primeira versão, o relógio regulamentar é contínuo de `00:00` a `90:00`. O primeiro tempo para exatamente em `45:00`, permanece no estado de intervalo até uma transição explícita e o segundo tempo para exatamente em `90:00`. Um avanço nunca consome segundos do período seguinte. Acréscimos e prorrogação ficam fora desta primeira fatia e exigirão regras versionadas próprias.
+
 ## Eventos da engine e cenas visuais
 
 Existem duas representações distintas:

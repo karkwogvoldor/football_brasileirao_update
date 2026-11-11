@@ -29,6 +29,14 @@ from brafoot.engine.capabilities import (
     calculate_sprint_ability,
     derive_weighted_ability,
 )
+from brafoot.engine.clock import (
+    REGULATION_HALF_SECONDS,
+    REGULATION_MATCH_SECONDS,
+    MatchClock,
+    MatchPeriod,
+    advance_match_clock,
+    start_second_half,
+)
 from brafoot.engine.contests import (
     ContestOutcome,
     ContestResult,
@@ -96,6 +104,12 @@ __all__ = [
     "calculate_physical_duel_ability",
     "calculate_sprint_ability",
     "derive_weighted_ability",
+    "REGULATION_HALF_SECONDS",
+    "REGULATION_MATCH_SECONDS",
+    "MatchClock",
+    "MatchPeriod",
+    "advance_match_clock",
+    "start_second_half",
     "ContestOutcome",
     "ContestResult",
     "compare_aerial_duel",
