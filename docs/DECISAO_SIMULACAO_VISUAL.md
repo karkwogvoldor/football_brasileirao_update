@@ -55,6 +55,8 @@ Existem duas representações distintas:
 
 O evento semântico registra minuto, participantes, equipe, zona de origem, zona de destino, contexto, resultado e explicação do cálculo. A cena visual pode ser reconstruída a partir do evento e de uma versão de apresentação, sem alterar o resultado esportivo.
 
+O envelope inicial de `MatchEvent` é imutável e persistível. Ele registra sequência positiva, relógio e período, tipo estável, equipe quando aplicável, participantes únicos, zonas semânticas opcionais, códigos de contexto e resultado e uma explicação não vazia. Início e fim de período são neutros. A timeline preserva a ordem recebida e valida continuidade da sequência, relógio monotônico e progressão de período; não reordena silenciosamente eventos inválidos.
+
 O navegador nunca calcula se um chute foi gol, se um jogador venceu um duelo ou se uma substituição é válida. Queda de FPS, aba em segundo plano, velocidade de reprodução ou tamanho da tela não podem mudar a partida.
 
 ## Visualizador 2D híbrido

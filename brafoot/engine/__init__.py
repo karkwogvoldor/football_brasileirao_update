@@ -45,6 +45,13 @@ from brafoot.engine.contests import (
     compare_physical_duel,
     compare_sprint,
 )
+from brafoot.engine.events import (
+    NEUTRAL_EVENT_TYPES,
+    EventTimelineViolation,
+    MatchEvent,
+    MatchEventType,
+    validate_event_timeline,
+)
 from brafoot.engine.lineups import (
     AvailabilityStatus,
     FORMATIONS,
@@ -133,6 +140,11 @@ __all__ = [
     "compare_abilities",
     "compare_physical_duel",
     "compare_sprint",
+    "NEUTRAL_EVENT_TYPES",
+    "EventTimelineViolation",
+    "MatchEvent",
+    "MatchEventType",
+    "validate_event_timeline",
     "AvailabilityStatus",
     "FORMATIONS",
     "Lineup",

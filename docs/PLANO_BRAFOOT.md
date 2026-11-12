@@ -93,6 +93,8 @@ A zona da bola usa uma grade semântica 3×3 relativa à equipe analisada: terç
 
 O avanço inicial de um segmento é puro e ainda não gera eventos: recebe estado e ruleset compatíveis, altera somente o relógio e para no limite de duração, intervalo ou fim de jogo. Essa fatia estabelece a fronteira determinística que os eventos esportivos usarão depois.
 
+O envelope persistível de `MatchEvent` usa sequência positiva, relógio, tipo estável, equipe, participantes, zonas, contexto, resultado e explicação. Eventos de início e fim de período são neutros. A timeline deve manter sequências contíguas e tempo/período monotônicos; entradas inválidas são relatadas, nunca reordenadas silenciosamente.
+
 Invariantes: onze titulares distintos por equipe, goleiro presente, jogador elegível e pertencente ao elenco do save, eventos em ordem, placar igual à soma dos gols e tabela consistente com os resultados. Executar baterias de simulações para inspecionar distribuição de gols, empates, efeito do mando, equilíbrio entre clubes e impacto real das táticas. Ajustar parâmetros com dados e testes de regressão antes de ampliar a complexidade.
 
 ## 7. Atualização de times e escalações
