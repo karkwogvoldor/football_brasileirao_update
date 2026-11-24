@@ -13,6 +13,9 @@ def test_simulation_ruleset_uses_default_segment_duration():
     assert ruleset.version == "2026.1"
     assert ruleset.segment_duration_seconds == 180
     assert ruleset.segment_duration_seconds == DEFAULT_SEGMENT_DURATION_SECONDS
+    assert ruleset.max_substitutions == 5
+    assert ruleset.max_substitution_windows == 3
+    assert ruleset.half_time_substitution_consumes_window is False
 
 
 # Permite reduzir a duração do segmento sem alterar a versão informada.
@@ -40,4 +43,28 @@ def test_simulation_ruleset_requires_positive_integer_segment_duration(duration)
         SimulationRuleset(
             version="2026.1",
             segment_duration_seconds=duration,
+        )
+
+
+# Rejeita limites de substituição que não sejam inteiros não negativos.
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("max_substitutions", -1),
+        ("max_substitutions", True),
+        ("max_substitution_windows", -1),
+        ("max_substitution_windows", False),
+    ],
+)
+def test_simulation_ruleset_requires_non_negative_substitution_limits(field, value):
+    with pytest.raises(ValueError, match="substitui"):
+        SimulationRuleset(version="2026.1", **{field: value})
+
+
+# Exige um booleano explícito para a regra de janela durante o intervalo.
+def test_simulation_ruleset_requires_boolean_half_time_window_rule():
+    with pytest.raises(ValueError, match="intervalo"):
+        SimulationRuleset(
+            version="2026.1",
+            half_time_substitution_consumes_window=1,
         )

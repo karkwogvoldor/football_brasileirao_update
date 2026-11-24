@@ -23,6 +23,8 @@ A quantidade de substituições, as janelas permitidas e quais interrupções ac
 
 A primeira fatia de `SimulationRuleset` registra uma versão canônica e a duração positiva do segmento, com padrão de 180 segundos. Os demais limites serão incorporados quando suas regras de domínio forem implementadas, sem usar valores implícitos no front-end.
 
+A primeira fatia de substituições incorpora ao `SimulationRuleset` os limites de cinco trocas e três janelas, além da regra explícita de o intervalo consumir ou não uma janela. Esses valores são padrões versionáveis, não decisões do front-end.
+
 ## Estado e determinismo
 
 Cada segmento recebe um estado completo e devolve um novo estado, eventos semânticos ordenados e um checkpoint persistível. O estado mínimo inclui:
@@ -56,6 +58,8 @@ Existem duas representações distintas:
 O evento semântico registra minuto, participantes, equipe, zona de origem, zona de destino, contexto, resultado e explicação do cálculo. A cena visual pode ser reconstruída a partir do evento e de uma versão de apresentação, sem alterar o resultado esportivo.
 
 O envelope inicial de `MatchEvent` é imutável e persistível. Ele registra sequência positiva, relógio e período, tipo estável, equipe quando aplicável, participantes únicos, zonas semânticas opcionais, códigos de contexto e resultado e uma explicação não vazia. Início e fim de período são neutros. A timeline preserva a ordem recebida e valida continuidade da sequência, relógio monotônico e progressão de período; não reordena silenciosamente eventos inválidos.
+
+O primeiro domínio de comandos representa a seleção ativa de cada lado separadamente do estado mínimo já persistido. Um `SubstitutionCommand` imutável pode agrupar várias trocas na mesma janela e só produz uma nova `MatchTeamSelection` quando recebe uma interrupção confirmada. A aplicação valida lado, jogadores em campo e no banco, disponibilidade, limites, janelas e preservação de um goleiro designado; a seleção anterior não é alterada. A incorporação das duas seleções e do histórico de comandos ao `MatchCheckpoint` ocorrerá junto da integração de persistência, sem ampliar retroativamente o snapshot mínimo existente.
 
 O navegador nunca calcula se um chute foi gol, se um jogador venceu um duelo ou se uma substituição é válida. Queda de FPS, aba em segundo plano, velocidade de reprodução ou tamanho da tela não podem mudar a partida.
 

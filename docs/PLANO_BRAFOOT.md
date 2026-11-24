@@ -95,6 +95,8 @@ O avanço inicial de um segmento é puro e ainda não gera eventos: recebe estad
 
 O envelope persistível de `MatchEvent` usa sequência positiva, relógio, tipo estável, equipe, participantes, zonas, contexto, resultado e explicação. Eventos de início e fim de período são neutros. A timeline deve manter sequências contíguas e tempo/período monotônicos; entradas inválidas são relatadas, nunca reordenadas silenciosamente.
 
+A primeira fatia de comandos mantém uma `MatchTeamSelection` imutável com jogadores em campo, banco, posições atribuídas, goleiro e contadores de substituições. Um `SubstitutionCommand` pode reunir várias trocas na mesma janela e só é aplicado em uma interrupção confirmada. A validação agrega violações de lado, participantes, disponibilidade, goleiro e limites do `SimulationRuleset`; a aplicação gera uma nova seleção para os segmentos futuros sem alterar a anterior. A integração dessas seleções ao checkpoint persistido fica para a fronteira de persistência da partida.
+
 Invariantes: onze titulares distintos por equipe, goleiro presente, jogador elegível e pertencente ao elenco do save, eventos em ordem, placar igual à soma dos gols e tabela consistente com os resultados. Executar baterias de simulações para inspecionar distribuição de gols, empates, efeito do mando, equilíbrio entre clubes e impacto real das táticas. Ajustar parâmetros com dados e testes de regressão antes de ampliar a complexidade.
 
 ## 7. Atualização de times e escalações

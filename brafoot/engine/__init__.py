@@ -45,6 +45,17 @@ from brafoot.engine.contests import (
     compare_physical_duel,
     compare_sprint,
 )
+from brafoot.engine.commands import (
+    AssignedPlayer,
+    CommandInterruption,
+    CommandValidationError,
+    CommandViolation,
+    MatchTeamSelection,
+    Substitution,
+    SubstitutionApplication,
+    SubstitutionCommand,
+    apply_substitution_command,
+)
 from brafoot.engine.events import (
     NEUTRAL_EVENT_TYPES,
     EventTimelineViolation,
@@ -71,6 +82,8 @@ from brafoot.engine.matches import (
     validate_match,
 )
 from brafoot.engine.rulesets import (
+    DEFAULT_MAX_SUBSTITUTIONS,
+    DEFAULT_MAX_SUBSTITUTION_WINDOWS,
     DEFAULT_SEGMENT_DURATION_SECONDS,
     SimulationRuleset,
 )
@@ -140,6 +153,15 @@ __all__ = [
     "compare_abilities",
     "compare_physical_duel",
     "compare_sprint",
+    "AssignedPlayer",
+    "CommandInterruption",
+    "CommandValidationError",
+    "CommandViolation",
+    "MatchTeamSelection",
+    "Substitution",
+    "SubstitutionApplication",
+    "SubstitutionCommand",
+    "apply_substitution_command",
     "NEUTRAL_EVENT_TYPES",
     "EventTimelineViolation",
     "MatchEvent",
@@ -159,6 +181,8 @@ __all__ = [
     "MatchViolation",
     "require_valid_match",
     "validate_match",
+    "DEFAULT_MAX_SUBSTITUTIONS",
+    "DEFAULT_MAX_SUBSTITUTION_WINDOWS",
     "DEFAULT_SEGMENT_DURATION_SECONDS",
     "SimulationRuleset",
     "ATTACK_POSITIONS",
