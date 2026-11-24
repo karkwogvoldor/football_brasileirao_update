@@ -81,6 +81,8 @@ Decisões de apresentação:
 
 A primeira fatia do visualizador está disponível em `/partida`. Ela usa uma página própria, um campo SVG horizontal e 22 marcadores em duas formações 4-3-3 estáticas. As posições usam coordenadas percentuais normalizadas e a equipe visitante é o espelho horizontal da mandante. O protótipo é responsivo e não executa JavaScript esportivo: placar, relógio e formações ainda são somente estrutura de apresentação para a futura reprodução de eventos confirmados.
 
+A primeira cena dinâmica cobre somente `MatchEventType.PASS`. A camada Python `brafoot.presentation` recebe as posições normalizadas dos dois participantes e produz uma `PresentationScene` imutável com versão, duração e keyframes persistíveis. O primeiro keyframe coincide com o jogador que executa o passe, o intermediário permanece na reta entre os participantes e o último coincide com o receptor; as zonas semânticas permanecem contexto do lance e não substituem essas posições exatas. O endpoint demonstrativo entrega esse snapshot à página, e o JavaScript limita-se a mover a bola pelos keyframes recebidos, com alternativa sem animação para preferência de movimento reduzido. Repetir a cena não recalcula nem altera o evento esportivo.
+
 Velocidade de reprodução é uma preferência visual. O relógio oficial, a fadiga e os eventos avançam apenas pelo estado da engine.
 
 ## Substituições e decisões durante o jogo

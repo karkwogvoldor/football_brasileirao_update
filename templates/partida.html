@@ -67,6 +67,7 @@
           <rect class="goal" x="0" y="26" width="1.5" height="12" />
           <rect class="goal" x="98.5" y="26" width="1.5" height="12" />
         </svg>
+        <span class="scene-ball" id="sceneBall" hidden aria-hidden="true"></span>
 
         <article class="match-player home" data-team="home" style="--x:6;--y:50" aria-label="Goleiro do mandante">
           <span class="player-marker">1</span><span class="player-name">Goleiro</span>
@@ -137,12 +138,21 @@
         </article>
       </div>
 
+      <section class="scene-console" aria-label="Controle da cena de apresentação">
+        <div>
+          <span class="scene-label">Cena 01 / Passe</span>
+          <p id="sceneNarration" aria-live="polite">Carregando cena determinística...</p>
+        </div>
+        <button id="replayScene" type="button" disabled>Reproduzir passe</button>
+      </section>
+
       <footer class="pitch-legend">
         <span><i class="legend-dot home-dot"></i> Mandante ataca para a direita</span>
-        <span class="presentation-note">Protótipo visual estático</span>
+        <span class="presentation-note">Cena visual versionada</span>
         <span><i class="legend-dot away-dot"></i> Visitante ataca para a esquerda</span>
       </footer>
     </section>
   </main>
+  <script src="/static/partida.js"></script>
 </body>
 </html>

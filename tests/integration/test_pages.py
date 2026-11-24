@@ -27,6 +27,7 @@ class MatchPageParser(HTMLParser):
         super().__init__()
         self.players = []
         self.stylesheets = []
+        self.scripts = []
         self.pitch_labels = []
 
     def handle_starttag(self, tag, attrs):
@@ -47,6 +48,8 @@ class MatchPageParser(HTMLParser):
             )
         if tag == "link" and attributes.get("rel") == "stylesheet":
             self.stylesheets.append(attributes.get("href"))
+        if tag == "script" and attributes.get("src"):
+            self.scripts.append(attributes["src"])
         if tag == "svg" and "match-pitch-lines" in classes:
             self.pitch_labels.append(attributes.get("aria-label"))
 
@@ -101,6 +104,35 @@ def test_match_page_has_available_dedicated_stylesheet(client):
     stylesheet = client.get("/static/partida.css")
     assert stylesheet.status_code == 200
     assert stylesheet.headers["content-type"].startswith("text/css")
+
+
+# Expõe uma cena de passe determinística sem consultar banco ou alterar a partida.
+def test_demo_pass_scene_endpoint_is_deterministic(client):
+    first_response = client.get("/api/v1/presentation/demo-pass")
+    second_response = client.get("/api/v1/presentation/demo-pass")
+    scene = first_response.json()
+
+    assert first_response.status_code == 200
+    assert second_response.json() == scene
+    assert scene["presentation_version"] == "2026.1"
+    assert scene["event_type"] == "pass"
+    assert scene["team_side"] == "home"
+    assert scene["participant_ids"] == [8, 9]
+    assert scene["duration_ms"] == 1200
+    assert scene["keyframes"][0] == {"at_ms": 0, "x": 33, "y": 50}
+    assert scene["keyframes"][-1] == {"at_ms": 1200, "x": 42, "y": 50}
+
+
+# Carrega o reprodutor dedicado da cena sem reutilizar o editor legado.
+def test_match_page_has_available_presentation_script(client):
+    response = client.get("/partida")
+    parser = MatchPageParser()
+    parser.feed(response.text)
+
+    assert "/static/partida.js" in parser.scripts
+    script = client.get("/static/partida.js")
+    assert script.status_code == 200
+    assert "demo-pass" in script.text
 
 
 # Verifica se todos os escudos exibidos na página inicial existem e são servidos como imagem.

@@ -21,6 +21,11 @@ from brafoot.gameplay.sessions import (
     create_browser_session,
     find_browser_session,
 )
+from brafoot.engine.clock import MatchClock, MatchPeriod
+from brafoot.engine.events import MatchEvent, MatchEventType
+from brafoot.engine.matches import MatchSide
+from brafoot.engine.zones import FieldLane, FieldThird, FieldZone
+from brafoot.presentation.scenes import NormalizedPoint, build_pass_scene
 
 cloudinary.config(
     cloud_name = os.environ.get("CLOUDINARY_CLOUD_NAME"),
@@ -56,6 +61,29 @@ def clube(team_id: int):
 @router.get("/partida")
 def partida():
     return FileResponse("templates/partida.html")
+
+
+@router.get("/api/v1/presentation/demo-pass")
+def get_demo_pass_scene():
+    event = MatchEvent(
+        sequence=1,
+        clock=MatchClock(125, MatchPeriod.FIRST_HALF),
+        event_type=MatchEventType.PASS,
+        team_side=MatchSide.HOME,
+        participant_ids=(8, 9),
+        origin_zone=FieldZone(FieldThird.MIDDLE, FieldLane.CENTER),
+        destination_zone=FieldZone(FieldThird.ATTACKING, FieldLane.LEFT),
+        context="open_play",
+        outcome="completed",
+        explanation="O camisa 8 encontra o atacante entre as linhas.",
+    )
+    return build_pass_scene(
+        event,
+        participant_positions={
+            8: NormalizedPoint(33, 50),
+            9: NormalizedPoint(42, 50),
+        },
+    ).to_snapshot()
 
 
 @router.post("/jogadores/", response_model=schemas.Jogador)

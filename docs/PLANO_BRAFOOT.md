@@ -119,6 +119,8 @@ Ao trocar o front-end, mover titulares, craque e coordenadas persistentes para d
 
 O primeiro protótipo dessa página existe em `/partida`: campo SVG horizontal responsivo, placar estrutural e duas formações 4-3-3 estáticas e espelhadas. Ele não consulta escalações nem simula lances; estabelece apenas a fronteira visual e o sistema de coordenadas que receberão cenas derivadas dos eventos da engine.
 
+A primeira derivação visual implementada transforma um passe semântico confirmado em uma `PresentationScene` versionada. A cena recebe as posições normalizadas do passador e do receptor: a bola parte exatamente do jogador A, percorre uma linha reta e termina exatamente no jogador B, enquanto as zonas 3×3 continuam descrevendo apenas o contexto semântico do lance. Keyframes determinísticos descrevem somente o trajeto visual da bola. A página consome uma cena demonstrativa por API e pode repeti-la sem alterar placar, relógio, evento ou qualquer estado da engine.
+
 ## 9. Fases e critérios de conclusão
 
 | Fase | Entrega | Critério de aceite |
