@@ -53,6 +53,11 @@ def clube(team_id: int):
     return FileResponse("templates/clube.html")
 
 
+@router.get("/partida")
+def partida():
+    return FileResponse("templates/partida.html")
+
+
 @router.post("/jogadores/", response_model=schemas.Jogador)
 def create_jogador(jogador: schemas.JogadorCreate, db: Session = Depends(get_db)):
     db_jogador = models.Jogador(

@@ -79,6 +79,8 @@ Decisões de apresentação:
 - relógio, placar, narração, estatísticas, pausa e velocidades de reprodução;
 - opção de melhores momentos sem alterar a timeline da engine.
 
+A primeira fatia do visualizador está disponível em `/partida`. Ela usa uma página própria, um campo SVG horizontal e 22 marcadores em duas formações 4-3-3 estáticas. As posições usam coordenadas percentuais normalizadas e a equipe visitante é o espelho horizontal da mandante. O protótipo é responsivo e não executa JavaScript esportivo: placar, relógio e formações ainda são somente estrutura de apresentação para a futura reprodução de eventos confirmados.
+
 Velocidade de reprodução é uma preferência visual. O relógio oficial, a fadiga e os eventos avançam apenas pelo estado da engine.
 
 ## Substituições e decisões durante o jogo

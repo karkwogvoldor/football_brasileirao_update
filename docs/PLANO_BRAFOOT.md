@@ -117,6 +117,8 @@ Os endpoints antigos podem continuar servindo a galeria durante a transição. N
 
 Ao trocar o front-end, mover titulares, craque e coordenadas persistentes para dados do servidor ou configuração de formação versionada. O campinho existente pode ser reutilizado para montar a equipe. Seleção e substituições passam a salvar uma `Lineup` do save; a página deve diferenciar alterações ainda não confirmadas de uma escalação persistida. A partida usa uma página própria de visualização, separada do editor, reutilizando o SVG e as coordenadas normalizadas. O navegador reproduz eventos e cenas recebidos; nunca resolve regras esportivas.
 
+O primeiro protótipo dessa página existe em `/partida`: campo SVG horizontal responsivo, placar estrutural e duas formações 4-3-3 estáticas e espelhadas. Ele não consulta escalações nem simula lances; estabelece apenas a fronteira visual e o sistema de coordenadas que receberão cenas derivadas dos eventos da engine.
+
 ## 9. Fases e critérios de conclusão
 
 | Fase | Entrega | Critério de aceite |

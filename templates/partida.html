@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Visualizador tático estático de uma partida do BRAFOOT" />
+  <title>Partida | BRAFOOT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/partida.css" />
+</head>
+<body>
+  <header class="match-nav">
+    <a href="/" class="back-link" aria-label="Voltar ao Brasileirão">BRAFOOT / 2026</a>
+    <div class="match-state"><span></span> Prévia tática</div>
+  </header>
+
+  <main class="match-shell">
+    <section class="scoreboard" aria-label="Placar da partida">
+      <div class="team team-home">
+        <span class="team-code">MAN</span>
+        <div>
+          <strong>Mandante</strong>
+          <small>4-3-3</small>
+        </div>
+      </div>
+
+      <div class="score-center">
+        <span class="match-clock">00:00</span>
+        <div class="score"><b>0</b><i>:</i><b>0</b></div>
+        <span class="match-phase">Formações iniciais</span>
+      </div>
+
+      <div class="team team-away">
+        <div>
+          <strong>Visitante</strong>
+          <small>4-3-3</small>
+        </div>
+        <span class="team-code">VIS</span>
+      </div>
+    </section>
+
+    <section class="pitch-panel" aria-labelledby="pitch-title">
+      <div class="panel-heading">
+        <div>
+          <span class="eyebrow">Leitura de campo</span>
+          <h1 id="pitch-title">Duas equipes. Um mesmo plano.</h1>
+        </div>
+        <p>Posições normalizadas de 0 a 100. A apresentação não altera o resultado esportivo.</p>
+      </div>
+
+      <div class="match-pitch">
+        <svg class="match-pitch-lines" viewBox="0 0 100 64" preserveAspectRatio="none" role="img" aria-label="Campo de futebol com duas formações estáticas" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1.5" y="1.5" width="97" height="61" rx="0.5" />
+          <line x1="50" y1="1.5" x2="50" y2="62.5" />
+          <circle cx="50" cy="32" r="9" />
+          <circle class="pitch-fill" cx="50" cy="32" r="0.65" />
+          <rect x="1.5" y="14" width="16" height="36" />
+          <rect x="1.5" y="23" width="6" height="18" />
+          <circle class="pitch-fill" cx="12" cy="32" r="0.55" />
+          <path d="M17.5 25 A9 9 0 0 1 17.5 39" />
+          <rect x="82.5" y="14" width="16" height="36" />
+          <rect x="92.5" y="23" width="6" height="18" />
+          <circle class="pitch-fill" cx="88" cy="32" r="0.55" />
+          <path d="M82.5 25 A9 9 0 0 0 82.5 39" />
+          <rect class="goal" x="0" y="26" width="1.5" height="12" />
+          <rect class="goal" x="98.5" y="26" width="1.5" height="12" />
+        </svg>
+
+        <article class="match-player home" data-team="home" style="--x:6;--y:50" aria-label="Goleiro do mandante">
+          <span class="player-marker">1</span><span class="player-name">Goleiro</span>
+        </article>
+        <article class="match-player home" data-team="home" style="--x:19;--y:17" aria-label="Lateral direito do mandante">
+          <span class="player-marker">2</span><span class="player-name">Lateral</span>
+        </article>
+        <article class="match-player home" data-team="home" style="--x:17;--y:39" aria-label="Zagueiro do mandante">
+          <span class="player-marker">3</span><span class="player-name">Zagueiro</span>
+        </article>
+        <article class="match-player home" data-team="home" style="--x:17;--y:61" aria-label="Zagueiro do mandante">
+          <span class="player-marker">4</span><span class="player-name">Zagueiro</span>
+        </article>
+        <article class="match-player home" data-team="home" style="--x:19;--y:83" aria-label="Lateral esquerdo do mandante">
+          <span class="player-marker">6</span><span class="player-name">Lateral</span>
+        </article>
+        <article class="match-player home" data-team="home" style="--x:31;--y:27" aria-label="Meio-campista do mandante">
+          <span class="player-marker">5</span><span class="player-name">Meio</span>
+        </article>
+        <article class="match-player home" data-team="home" style="--x:33;--y:50" aria-label="Meio-campista do mandante">
+          <span class="player-marker">8</span><span class="player-name">Meio</span>
+        </article>
+        <article class="match-player home" data-team="home" style="--x:31;--y:73" aria-label="Meio-campista do mandante">
+          <span class="player-marker">10</span><span class="player-name">Meio</span>
+        </article>
+        <article class="match-player home" data-team="home" style="--x:41;--y:20" aria-label="Atacante do mandante">
+          <span class="player-marker">7</span><span class="player-name">Ponta</span>
+        </article>
+        <article class="match-player home" data-team="home" style="--x:42;--y:50" aria-label="Atacante do mandante">
+          <span class="player-marker">9</span><span class="player-name">Centroavante</span>
+        </article>
+        <article class="match-player home" data-team="home" style="--x:41;--y:80" aria-label="Atacante do mandante">
+          <span class="player-marker">11</span><span class="player-name">Ponta</span>
+        </article>
+
+        <article class="match-player away" data-team="away" style="--x:94;--y:50" aria-label="Goleiro do visitante">
+          <span class="player-marker">1</span><span class="player-name">Goleiro</span>
+        </article>
+        <article class="match-player away" data-team="away" style="--x:81;--y:17" aria-label="Lateral esquerdo do visitante">
+          <span class="player-marker">6</span><span class="player-name">Lateral</span>
+        </article>
+        <article class="match-player away" data-team="away" style="--x:83;--y:39" aria-label="Zagueiro do visitante">
+          <span class="player-marker">4</span><span class="player-name">Zagueiro</span>
+        </article>
+        <article class="match-player away" data-team="away" style="--x:83;--y:61" aria-label="Zagueiro do visitante">
+          <span class="player-marker">3</span><span class="player-name">Zagueiro</span>
+        </article>
+        <article class="match-player away" data-team="away" style="--x:81;--y:83" aria-label="Lateral direito do visitante">
+          <span class="player-marker">2</span><span class="player-name">Lateral</span>
+        </article>
+        <article class="match-player away" data-team="away" style="--x:69;--y:27" aria-label="Meio-campista do visitante">
+          <span class="player-marker">10</span><span class="player-name">Meio</span>
+        </article>
+        <article class="match-player away" data-team="away" style="--x:67;--y:50" aria-label="Meio-campista do visitante">
+          <span class="player-marker">8</span><span class="player-name">Meio</span>
+        </article>
+        <article class="match-player away" data-team="away" style="--x:69;--y:73" aria-label="Meio-campista do visitante">
+          <span class="player-marker">5</span><span class="player-name">Meio</span>
+        </article>
+        <article class="match-player away" data-team="away" style="--x:59;--y:20" aria-label="Atacante do visitante">
+          <span class="player-marker">11</span><span class="player-name">Ponta</span>
+        </article>
+        <article class="match-player away" data-team="away" style="--x:58;--y:50" aria-label="Atacante do visitante">
+          <span class="player-marker">9</span><span class="player-name">Centroavante</span>
+        </article>
+        <article class="match-player away" data-team="away" style="--x:59;--y:80" aria-label="Atacante do visitante">
+          <span class="player-marker">7</span><span class="player-name">Ponta</span>
+        </article>
+      </div>
+
+      <footer class="pitch-legend">
+        <span><i class="legend-dot home-dot"></i> Mandante ataca para a direita</span>
+        <span class="presentation-note">Protótipo visual estático</span>
+        <span><i class="legend-dot away-dot"></i> Visitante ataca para a esquerda</span>
+      </footer>
+    </section>
+  </main>
+</body>
+</html>
