@@ -192,13 +192,16 @@ def build_pass_scene(
     ]
     | None = None,
     presentation_version: str = DEFAULT_PRESENTATION_VERSION,
+    duration_ms: int = PASS_SCENE_DURATION_MS,
 ) -> PresentationScene:
-    """Create deterministic ball keyframes from one confirmed pass event."""
+    """Create deterministic ball keyframes from one confirmed pass or cross event."""
 
     if not isinstance(event, MatchEvent):
         raise ValueError("O evento da cena de passe não é válido.")
-    if event.event_type is not MatchEventType.PASS:
+    if event.event_type not in (MatchEventType.PASS, MatchEventType.CROSS):
         raise ValueError("A cena de passe exige um evento do tipo passe.")
+    if not _is_positive_int(duration_ms):
+        raise ValueError("A duração da cena de passe não é válida.")
     if len(event.participant_ids) != 2:
         raise ValueError("A cena de passe exige exatamente dois participantes.")
     if event.origin_zone is None or event.destination_zone is None:
@@ -226,17 +229,17 @@ def build_pass_scene(
         event_type=event.event_type,
         team_side=event.team_side,
         participant_ids=event.participant_ids,
-        duration_ms=PASS_SCENE_DURATION_MS,
+        duration_ms=duration_ms,
         keyframes=tuple(
             SceneKeyframe(at_ms=at_ms, position=point)
             for at_ms, point in zip(
-                (0, 600, PASS_SCENE_DURATION_MS),
+                (0, duration_ms // 2, duration_ms),
                 (start, midpoint, end),
             )
         ),
         player_tracks=_build_player_tracks(
             player_movements,
-            PASS_SCENE_DURATION_MS,
+            duration_ms,
         ),
         narration=event.explanation,
     )

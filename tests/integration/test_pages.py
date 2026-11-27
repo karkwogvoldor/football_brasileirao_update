@@ -200,8 +200,8 @@ def test_developer_scene_catalog_is_grouped_and_deterministic(client):
         "movement",
         "composite",
     ]
-    assert len(catalog["scenarios"]) == 8
-    assert len({scenario["id"] for scenario in catalog["scenarios"]}) == 8
+    assert len(catalog["scenarios"]) == 12
+    assert len({scenario["id"] for scenario in catalog["scenarios"]}) == 12
     assert all(
         len(scenario["initial_state"]["players"]) == 22
         and scenario["scenes"]
@@ -215,6 +215,7 @@ def test_developer_scene_catalog_is_grouped_and_deterministic(client):
     }
     assert movement_ids == {
         "movement-switch-of-play",
+        "movement-offside-trap",
         "movement-goalkeeper-adjustment",
         "movement-interception-attempt",
     }
@@ -388,3 +389,107 @@ def test_shot_scene_keeps_goalkeeper_out_of_goal(client):
         if player["side"] == "away" and player["player_id"] == 11
     )
     assert initial_away_11["x"] > 50  # fica no campo de ataque do time da casa, não em (24,28)
+
+
+def _scenarios_by_id(client):
+    return {
+        scenario["id"]: scenario
+        for scenario in client.get("/api/v1/dev/presentation-scenes").json()["scenarios"]
+    }
+
+
+def _state_positions(state):
+    return {
+        (player["side"], player["player_id"]): (player["x"], player["y"])
+        for player in state["players"]
+    }
+
+
+# Nenhum jogador das cenas novas ou revisadas excede uma velocidade humana de corrida (8,5 m/s).
+def test_new_and_revised_scenes_keep_human_running_speeds(client):
+    scenarios = _scenarios_by_id(client)
+    reviewed = (
+        "movement-switch-of-play",
+        "ball-cross-far-post",
+        "movement-offside-trap",
+        "ball-goal-kick-short",
+        "ball-one-two",
+    )
+
+    for scenario_id in reviewed:
+        for scene in scenarios[scenario_id]["scenes"]:
+            seconds = scene["duration_ms"] / 1000
+            for track in scene["player_tracks"]:
+                start, end = track["keyframes"][0], track["keyframes"][-1]
+                meters = (
+                    ((end["x"] - start["x"]) * 1.05) ** 2
+                    + ((end["y"] - start["y"]) * 0.68) ** 2
+                ) ** 0.5
+                assert meters / seconds <= 8.5, (scenario_id, track["player_id"])
+
+
+# A inversão de jogo revisada: lateral acompanha para a frente, goleiros quase parados e movimento suave.
+def test_switch_of_play_revision_is_smoother_with_forward_fullback(client):
+    scenario = _scenarios_by_id(client)["movement-switch-of-play"]
+    initial = _state_positions(scenario["initial_state"])
+    final = _state_positions(scenario["final_state"])
+
+    assert scenario["version"] == 2
+    assert scenario["scenes"][0]["duration_ms"] >= 2400  # mais lenta e suave
+    assert final[("home", 6)][0] > initial[("home", 6)][0]  # lateral avança após o lançamento
+    assert final[("home", 7)][0] > initial[("home", 7)][0]  # atacantes sobem levemente
+    assert abs(final[("home", 1)][1] - initial[("home", 1)][1]) <= 6  # goleiro não varre o campo
+
+
+# O cruzamento termina com a bola no segundo pau, um atacante no primeiro pau e a zaga dentro da área.
+def test_cross_scene_occupies_near_far_post_and_keeps_defense_in_box(client):
+    scenario = _scenarios_by_id(client)["ball-cross-far-post"]
+    final = _state_positions(scenario["final_state"])
+    ball = scenario["scenes"][0]["keyframes"][-1]
+
+    assert scenario["scenes"][0]["event_type"] == "cross"
+    assert (ball["x"], ball["y"]) == final[("home", 7)]  # bola chega ao atacante do segundo pau
+    assert final[("home", 7)][1] < 50 < final[("home", 9)][1]  # lados opostos do gol
+    assert final[("home", 9)][0] >= 94  # primeiro pau, junto da pequena área
+    assert all(final[("away", pid)][0] >= 84 for pid in (2, 3, 4, 6))  # zaga na grande área
+    assert 90 <= final[("away", 1)][0] <= 96
+
+
+# Na linha de impedimento a zaga sobe junta, alinhada, e o centroavante fica além dela.
+def test_offside_trap_steps_defensive_line_up_as_one_unit(client):
+    scenario = _scenarios_by_id(client)["movement-offside-trap"]
+    initial = _state_positions(scenario["initial_state"])
+    final = _state_positions(scenario["final_state"])
+    line = {final[("away", pid)][0] for pid in (2, 3, 4, 6)}
+
+    assert scenario["scenes"][0]["narration"].startswith("No passe em profundidade")
+    assert len(line) == 1  # linha reta
+    assert all(final[("away", pid)][0] < initial[("away", pid)][0] for pid in (2, 3, 4, 6))
+    assert final[("home", 9)][0] > line.pop()  # centroavante em impedimento
+
+
+# No tiro de meta curto o goleiro toca para o zagueiro aberto na área e o adversário pressiona.
+def test_short_goal_kick_builds_from_the_back_under_pressure(client):
+    scenario = _scenarios_by_id(client)["ball-goal-kick-short"]
+    initial = _state_positions(scenario["initial_state"])
+    final = _state_positions(scenario["final_state"])
+
+    assert scenario["scenes"][0]["participant_ids"] == [1, 4]
+    assert final[("home", 4)][0] <= 16  # receptor dentro da área
+    assert final[("home", 4)][1] > 60  # aberto
+    assert final[("away", 9)][0] < initial[("away", 9)][0]  # adversário fecha a linha de passe
+    assert 4 <= final[("home", 1)][0] <= 10
+
+
+# Na tabela a bola volta ao meia, que termina à frente do ponto onde passou.
+def test_one_two_returns_ball_to_the_runner_ahead_of_the_passer(client):
+    scenario = _scenarios_by_id(client)["ball-one-two"]
+    first, second = scenario["scenes"]
+    initial = _state_positions(scenario["initial_state"])
+    final = _state_positions(scenario["final_state"])
+
+    assert [first["participant_ids"], second["participant_ids"]] == [[8, 9], [9, 8]]
+    start, end = second["keyframes"][0], first["keyframes"][-1]
+    assert (start["x"], start["y"]) == (end["x"], end["y"])  # sem teletransporte da bola
+    assert second["keyframes"][-1]["x"] == final[("home", 8)][0]
+    assert final[("home", 8)][0] > initial[("home", 9)][0]  # recebe além da posição do parceiro

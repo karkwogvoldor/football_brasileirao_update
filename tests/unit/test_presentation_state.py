@@ -10,6 +10,7 @@ from brafoot.presentation.scenes import NormalizedPoint
 from brafoot.presentation.state import (
     PresentationState,
     INTERLOCKING_BLOCKS,
+    CollectiveShape,
     PresentedPlayer,
     advance_carry_scene,
     advance_pass_scene,
@@ -402,3 +403,52 @@ def test_interlocking_blocks_retreat_less_and_move_defenders_as_one_line():
         for pid in (2, 3, 4, 6)
     }
     assert len(home_line) == 1
+
+
+# Um cruzamento é aceito como passe visual e mantém seu tipo de evento na cena.
+def test_cross_event_is_accepted_as_pass_scene():
+    state = make_state()
+    event = replace(make_pass(1, 8, 9), event_type=MatchEventType.CROSS)
+
+    advance = advance_pass_scene(state, event)
+
+    assert advance.scene.event_type is MatchEventType.CROSS
+    assert advance.end_state.ball_holder_id == 9
+
+
+# Destinos de apoio no passe e duração configurável aparecem na cena e no estado final.
+def test_pass_supports_fixed_destinations_and_custom_duration():
+    state = make_state()
+    runner = (MatchSide.HOME, 11)
+
+    advance = advance_pass_scene(
+        state,
+        make_pass(1, 8, 9),
+        supporting_destinations={runner: NormalizedPoint(60, 80)},
+        duration_ms=2000,
+    )
+
+    assert advance.scene.duration_ms == 2000
+    assert advance.scene.keyframes[-1].at_ms == 2000
+    assert advance.end_state.position_for(*runner) == NormalizedPoint(60, 80)
+
+
+# Liberar a profundidade mínima da zaga permite cenas dentro da área sem puxá-la para fora.
+def test_defender_min_x_allows_defenders_inside_the_box():
+    shape = CollectiveShape(forward_only=True, defender_min_x=8)
+    players = tuple(
+        replace(player, position=NormalizedPoint(10, player.position.y))
+        if player.side is MatchSide.HOME and player.player_id in (2, 3, 4, 6)
+        else player
+        for player in make_players()
+    )
+    state = make_state(players=players)
+
+    advance = advance_pass_scene(state, make_pass(1, 8, 9), shape=shape)
+
+    assert all(
+        advance.end_state.position_for(MatchSide.HOME, pid).x >= 8 for pid in (2, 3, 4, 6)
+    )
+    assert any(
+        advance.end_state.position_for(MatchSide.HOME, pid).x < 17 for pid in (2, 3, 4, 6)
+    )

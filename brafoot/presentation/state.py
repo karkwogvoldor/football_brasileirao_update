@@ -8,6 +8,7 @@ from dataclasses import dataclass, replace
 from brafoot.engine.events import MatchEvent, MatchEventType
 from brafoot.engine.matches import MatchSide
 from brafoot.presentation.scenes import (
+    PASS_SCENE_DURATION_MS,
     NormalizedPoint,
     PresentationScene,
     build_carry_scene,
@@ -172,6 +173,11 @@ class CollectiveShape:
     forward_only: bool = False
     defending_retreat_ratio: float = 1.0
     defender_line_ratio: float = 1.0
+    # Profundidade mínima da zaga (referencial do próprio time); cenas dentro da área
+    # (escanteio, cruzamento, tiro de meta) liberam valores menores que a entrada da área.
+    defender_min_x: float = DEFENDER_MIN_X
+    # Avanço constante do time com a bola, mesmo sem progressão da bola (leve subida).
+    base_advance: float = 0.0
 
 
 RIGID_BLOCKS = CollectiveShape()
@@ -210,14 +216,20 @@ def advance_pass_scene(
     shape: CollectiveShape = RIGID_BLOCKS,
     lateral_ratio: float = COLLECTIVE_LATERAL_RATIO,
     max_lateral: float = MAX_COLLECTIVE_LATERAL,
+    supporting_destinations: Mapping[tuple[MatchSide, int], NormalizedPoint]
+    | None = None,
+    duration_ms: int = PASS_SCENE_DURATION_MS,
 ) -> SceneAdvance:
-    """Advance the visual ball holder through one confirmed pass event."""
+    """Advance the visual ball holder through one confirmed pass or cross event."""
 
     if not isinstance(state, PresentationState):
         raise ValueError("O estado visual do passe não é válido.")
     if not isinstance(event, MatchEvent):
         raise ValueError("O evento visual do passe não é válido.")
-    if event.event_type is not MatchEventType.PASS or event.team_side is None:
+    if (
+        event.event_type not in (MatchEventType.PASS, MatchEventType.CROSS)
+        or event.team_side is None
+    ):
         raise ValueError("O avanço de passe exige um evento de passe válido.")
     if len(event.participant_ids) != 2:
         raise ValueError("O avanço de passe exige exatamente dois participantes.")
@@ -239,6 +251,7 @@ def advance_pass_scene(
         state,
         movement_start=sender_position,
         movement_end=state.position_for(event.team_side, receiver_id),
+        fixed_destinations=supporting_destinations,
         lateral_ratio=lateral_ratio,
         max_lateral=max_lateral,
         attacking_side=event.team_side,
@@ -253,6 +266,7 @@ def advance_pass_scene(
         participant_positions=participant_positions,
         player_movements=_player_movements(state, player_destinations),
         presentation_version=state.presentation_version,
+        duration_ms=duration_ms,
     )
     end_state = replace(
         state,
@@ -429,6 +443,9 @@ def _derive_collective_destinations(
         -MAX_COLLECTIVE_PROGRESS,
         MAX_COLLECTIVE_PROGRESS,
     )
+    if shape.base_advance:
+        direction = 1 if attacking_side is MatchSide.HOME else -1
+        progress += shape.base_advance * direction
     shifts = _line_shifts(state, progress, attacking_side, shape)
     lateral_scale = {
         identity: shape.defender_line_ratio
@@ -455,7 +472,7 @@ def _derive_collective_destinations(
         for player in state.players
     }
     destinations = {
-        identity: _limit_to_role(identity, point)
+        identity: _limit_to_role(identity, point, shape)
         for identity, point in destinations.items()
     }
     if fixed_destinations:
@@ -490,7 +507,7 @@ def _line_shifts(
             )
             own_shift = -line_shift if mirrored else line_shift
             # A linha recua no máximo até a entrada da área, sem desalinhar os zagueiros.
-            own_shift = max(own_shift, DEFENDER_MIN_X - lowest_x)
+            own_shift = max(own_shift, shape.defender_min_x - lowest_x)
             line_shift = -own_shift if mirrored else own_shift
         for player in state.players:
             if player.side is side:
@@ -503,6 +520,7 @@ def _line_shifts(
 def _limit_to_role(
     identity: tuple[MatchSide, int],
     point: NormalizedPoint,
+    shape: CollectiveShape = RIGID_BLOCKS,
 ) -> NormalizedPoint:
     """Keep goalkeepers off the goal line and defenders out of the penalty area."""
 
@@ -512,7 +530,7 @@ def _limit_to_role(
     if player_id == GOALKEEPER_SLOT:
         own_x = _clamp(own_x, *GOALKEEPER_X_RANGE)
     elif player_id in DEFENDER_SLOTS:
-        own_x = max(own_x, DEFENDER_MIN_X)
+        own_x = max(own_x, shape.defender_min_x)
     x = 100 - own_x if mirrored else own_x
     return NormalizedPoint(x=x, y=point.y)
 

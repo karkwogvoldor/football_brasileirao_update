@@ -17,6 +17,7 @@ from brafoot.presentation.scenes import (
 )
 from brafoot.presentation.state import (
     INTERLOCKING_BLOCKS,
+    CollectiveShape,
     PresentationState,
     PresentedPlayer,
     SceneAdvance,
@@ -161,6 +162,10 @@ def build_developer_scene_catalog() -> dict[str, object]:
         _carry_scenario(),
         _shot_scenario(),
         _switch_of_play_scenario(),
+        _cross_far_post_scenario(),
+        _offside_trap_scenario(),
+        _short_goal_kick_scenario(),
+        _one_two_scenario(),
         _goalkeeper_adjustment_scenario(),
         _interception_attempt_scenario(),
         {
@@ -288,6 +293,7 @@ def _switch_of_play_scenario() -> dict[str, object]:
         player_id: (x, shifted_right(y))
         for player_id, (x, y) in HOME_POSITIONS.items()
     }
+    home[1] = (6, 54)
     # Laterais bem abertos: o direito tem a bola, o esquerdo está livre do outro lado.
     home[6] = (30, 92)
     home[2] = (30, 8)
@@ -295,6 +301,7 @@ def _switch_of_play_scenario() -> dict[str, object]:
         player_id: (100 - x, shifted_right(100 - y))
         for player_id, (x, y) in HOME_POSITIONS.items()
     }
+    away[1] = (94, 54)
     state = _initial_state(holder_id=6, formation=home, away_positions=away)
     description = (
         "O lateral direito lança para o lateral esquerdo, aberto do outro lado, "
@@ -310,6 +317,20 @@ def _switch_of_play_scenario() -> dict[str, object]:
         event,
         lateral_ratio=0.45,
         max_lateral=18,
+        shape=CollectiveShape(
+            forward_only=True,
+            defending_retreat_ratio=0.5,
+            defender_line_ratio=0.5,
+            base_advance=3,
+        ),
+        # Depois de bater na bola, o lateral dá uma breve acompanhada para a frente.
+        supporting_destinations={
+            (MatchSide.HOME, 6): NormalizedPoint(38, 86),
+            (MatchSide.HOME, 1): NormalizedPoint(6, 50),
+            (MatchSide.AWAY, 1): NormalizedPoint(94, 50),
+        },
+        # Movimento mais lento e suave: o lançamento longo leva mais tempo.
+        duration_ms=2600,
     )
     return _scenario_snapshot(
         "movement-switch-of-play",
@@ -319,6 +340,244 @@ def _switch_of_play_scenario() -> dict[str, object]:
         "players",
         state,
         (advance,),
+        version=2,
+    )
+
+
+# Cenas baseadas em princípios táticos descritos em fontes de treinamento (ver
+# docs/FONTES_CENAS.md). Coordenadas em % do campo: x vai do gol da casa (0) ao do
+# visitante (100); y de 0 a 100 na largura. Gol: y 45–55; área: x>=84, y 20–80.
+
+
+def _fixed(
+    side: MatchSide, positions: dict[int, tuple[float, float]]
+) -> dict[tuple[MatchSide, int], NormalizedPoint]:
+    return {
+        (side, player_id): NormalizedPoint(x, y)
+        for player_id, (x, y) in positions.items()
+    }
+
+
+def _cross_far_post_scenario() -> dict[str, object]:
+    """Cruzamento da direita: um atacante puxa o goleiro no primeiro pau, outro
+    ataca o segundo pau e recebe, e um terceiro chega à meia-lua."""
+
+    home = {
+        1: (6, 50),
+        2: (50, 18), 3: (52, 40), 4: (52, 60), 6: (50, 82),
+        5: (66, 28), 8: (72, 50), 10: (66, 72),
+        7: (82, 24), 9: (80, 50), 11: (78, 90),
+    }
+    away = {
+        1: (94, 50),
+        2: (88, 66), 3: (88, 56), 4: (88, 44), 6: (88, 34),
+        5: (74, 70), 8: (74, 50), 10: (74, 30),
+        7: (60, 68), 9: (58, 50), 11: (60, 32),
+    }
+    state = _initial_state(holder_id=11, formation=home, away_positions=away)
+    description = (
+        "A ponta direita cruza: o centroavante ataca o primeiro pau e leva a zaga, "
+        "o ponta esquerda surge no segundo pau para finalizar e o meia chega à meia-lua."
+    )
+    event = replace(
+        _event(1, MatchEventType.CROSS, (11, 7), description, lane=FieldLane.RIGHT),
+        origin_zone=FieldZone(FieldThird.ATTACKING, FieldLane.RIGHT),
+        destination_zone=FieldZone(FieldThird.ATTACKING, FieldLane.LEFT),
+    )
+    advance = advance_pass_scene(
+        state,
+        event,
+        shape=CollectiveShape(
+            forward_only=True,
+            defending_retreat_ratio=0.3,
+            defender_line_ratio=0.5,
+            defender_min_x=8,
+        ),
+        supporting_destinations={
+            **_fixed(
+                MatchSide.HOME,
+                {
+                    1: (6, 50),
+                    11: (83, 91),   # cruzador acompanha o lance
+                    7: (92, 44),    # segundo pau: recebe o cruzamento
+                    9: (94, 57),    # primeiro pau: puxa o goleiro e a marcação
+                    8: (87, 52),    # ponto penal / bola viva
+                    10: (82, 66),   # entrada da área, lado do cruzamento
+                    5: (80, 30),    # entrada da área, lado oposto
+                },
+            ),
+            **_fixed(
+                MatchSide.AWAY,
+                {
+                    1: (95, 49),
+                    2: (91, 62), 3: (91, 54), 4: (91, 46), 6: (91, 38),
+                },
+            ),
+        },
+        duration_ms=2200,
+    )
+    return _scenario_snapshot(
+        "ball-cross-far-post",
+        "Cruzamento para o segundo pau",
+        description,
+        "ball",
+        "ball",
+        state,
+        (advance,),
+    )
+
+
+def _offside_trap_scenario() -> dict[str, object]:
+    """Linha de impedimento: a zaga sobe junta no momento do passe em profundidade e
+    deixa o centroavante em impedimento."""
+
+    home = {
+        1: (6, 50),
+        2: (40, 18), 3: (40, 40), 4: (40, 60), 6: (40, 82),
+        5: (56, 28), 8: (58, 50), 10: (56, 72),
+        7: (66, 20), 9: (77, 50), 11: (66, 80),
+    }
+    away = {
+        1: (92, 50),
+        2: (78, 82), 3: (78, 60), 4: (78, 40), 6: (78, 18),
+        5: (66, 72), 8: (66, 50), 10: (66, 28),
+        7: (54, 66), 9: (54, 50), 11: (54, 34),
+    }
+    state = _initial_state(holder_id=8, formation=home, away_positions=away)
+    description = (
+        "No passe em profundidade, a zaga visitante sobe junta, em linha, e deixa o "
+        "centroavante em impedimento."
+    )
+    event = _event(
+        1, MatchEventType.PASS, (8, 9), description, outcome="offside"
+    )
+    advance = advance_pass_scene(
+        state,
+        event,
+        shape=INTERLOCKING_BLOCKS,
+        supporting_destinations={
+            **_fixed(
+                MatchSide.HOME,
+                {
+                    1: (6, 50),
+                    9: (78, 50),   # parado: já está além da linha que vai subir
+                    7: (67, 20),
+                    11: (67, 80),  # pontas se mantêm na linha
+                },
+            ),
+            **_fixed(
+                MatchSide.AWAY,
+                {
+                    1: (88, 50),
+                    2: (68, 82), 3: (68, 60), 4: (68, 40), 6: (68, 18),
+                    5: (60, 72), 8: (60, 50), 10: (60, 28),
+                    7: (52, 66), 9: (52, 50), 11: (52, 34),
+                },
+            ),
+        },
+        duration_ms=1600,
+    )
+    return _scenario_snapshot(
+        "movement-offside-trap",
+        "Linha de impedimento",
+        description,
+        "movement",
+        "players",
+        state,
+        (advance,),
+    )
+
+
+def _short_goal_kick_scenario() -> dict[str, object]:
+    """Tiro de meta curto: zagueiros abertos dentro da área, laterais altos e largos,
+    e o adversário pressionando à frente da área."""
+
+    home = {
+        1: (5, 50),
+        3: (11, 32), 4: (11, 68),
+        2: (30, 10), 6: (30, 90),
+        5: (32, 30), 8: (34, 50), 10: (32, 70),
+        7: (46, 18), 9: (50, 50), 11: (46, 82),
+    }
+    away = {
+        1: (94, 50),
+        2: (68, 83), 3: (68, 61), 4: (68, 39), 6: (68, 17),
+        5: (54, 73), 8: (54, 50), 10: (54, 27),
+        7: (27, 62), 9: (25, 50), 11: (27, 38),
+    }
+    state = _initial_state(holder_id=1, formation=home, away_positions=away)
+    description = (
+        "Tiro de meta curto: o goleiro toca para o zagueiro aberto dentro da área "
+        "enquanto o adversário pressiona e os laterais sobem para dar amplitude."
+    )
+    event = replace(
+        _event(1, MatchEventType.PASS, (1, 4), description),
+        origin_zone=FieldZone(FieldThird.DEFENSIVE, FieldLane.CENTER),
+        destination_zone=FieldZone(FieldThird.DEFENSIVE, FieldLane.RIGHT),
+    )
+    advance = advance_pass_scene(
+        state,
+        event,
+        shape=CollectiveShape(
+            forward_only=True,
+            defending_retreat_ratio=0.0,
+            defender_line_ratio=0.5,
+            defender_min_x=8,
+        ),
+        supporting_destinations={
+            **_fixed(MatchSide.HOME, {1: (6, 52), 4: (13, 70)}),
+            # O adversário fecha a linha de passe: pressão sobre o receptor.
+            **_fixed(
+                MatchSide.AWAY,
+                {7: (22, 64), 9: (24, 52), 11: (25, 40)},
+            ),
+        },
+        duration_ms=1400,
+    )
+    return _scenario_snapshot(
+        "ball-goal-kick-short",
+        "Tiro de meta curto",
+        description,
+        "ball",
+        "ball",
+        state,
+        (advance,),
+    )
+
+
+def _one_two_scenario() -> dict[str, object]:
+    """Tabela (parede): o meia toca para o centroavante, corre para além da marcação e
+    recebe de volta em profundidade."""
+
+    state = _initial_state(holder_id=8, formation=INTERLOCKED_HOME_POSITIONS)
+    first_text = "O meia toca para o centroavante, que segura a bola de costas."
+    second_text = "O centroavante devolve de primeira para o meia, que apareceu na frente."
+    first = advance_pass_scene(
+        state,
+        _event(1, MatchEventType.PASS, (8, 9), first_text),
+        shape=INTERLOCKING_BLOCKS,
+        supporting_destinations=_fixed(
+            MatchSide.HOME, {8: (50, 58), 9: (54, 50)}
+        ),
+        duration_ms=1800,
+    )
+    second = advance_pass_scene(
+        first.end_state,
+        _event(2, MatchEventType.PASS, (9, 8), second_text),
+        shape=INTERLOCKING_BLOCKS,
+        supporting_destinations=_fixed(
+            MatchSide.HOME, {8: (62, 60), 9: (55, 50)}
+        ),
+        duration_ms=1800,
+    )
+    return _scenario_snapshot(
+        "ball-one-two",
+        "Tabela com o centroavante",
+        "Troca de passes em um-dois: o meia passa, ultrapassa a marcação e recebe de volta.",
+        "ball",
+        "ball",
+        state,
+        (first, second),
     )
 
 
