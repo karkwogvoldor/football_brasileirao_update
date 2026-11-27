@@ -208,6 +208,8 @@ def advance_pass_scene(
     event: MatchEvent,
     *,
     shape: CollectiveShape = RIGID_BLOCKS,
+    lateral_ratio: float = COLLECTIVE_LATERAL_RATIO,
+    max_lateral: float = MAX_COLLECTIVE_LATERAL,
 ) -> SceneAdvance:
     """Advance the visual ball holder through one confirmed pass event."""
 
@@ -237,6 +239,8 @@ def advance_pass_scene(
         state,
         movement_start=sender_position,
         movement_end=state.position_for(event.team_side, receiver_id),
+        lateral_ratio=lateral_ratio,
+        max_lateral=max_lateral,
         attacking_side=event.team_side,
         shape=shape,
     )

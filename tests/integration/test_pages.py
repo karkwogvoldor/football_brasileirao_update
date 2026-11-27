@@ -214,7 +214,7 @@ def test_developer_scene_catalog_is_grouped_and_deterministic(client):
         if scenario["category"] == "movement"
     }
     assert movement_ids == {
-        "movement-collective-shift-right",
+        "movement-switch-of-play",
         "movement-goalkeeper-adjustment",
         "movement-interception-attempt",
     }
@@ -301,18 +301,39 @@ def test_revised_scenes_apply_review_feedback(client):
             if player["side"] == side and player["player_id"] == player_id
         )
 
-    for scenario_id in ("carry-right-channel", "movement-collective-shift-right"):
-        scenario = scenarios[scenario_id]
-        assert scenario["version"] == 2
-        assert 4 <= final(scenario, "home", 1)["x"] <= 10
-        assert 90 <= final(scenario, "away", 1)["x"] <= 96
-        assert all(final(scenario, "away", pid)["x"] <= 83 for pid in (2, 3, 4, 6))
-
     carry = scenarios["carry-right-channel"]
+    assert carry["version"] == 3
+    assert 4 <= final(carry, "home", 1)["x"] <= 10
+    assert 90 <= final(carry, "away", 1)["x"] <= 96
+    assert all(final(carry, "away", pid)["x"] <= 83 for pid in (2, 3, 4, 6))
+
     assert final(carry, "home", 7)["y"] < 20  # ponta esquerda abre o campo
+    assert final(carry, "home", 11)["y"] > 80  # ponta direita repete a abertura, espelhada
+    assert final(carry, "home", 11)["x"] == final(carry, "home", 7)["x"]  # mesmo avanço
     assert final(carry, "home", 9)["x"] > 42  # centroavante ataca o espaço
-    shift = scenarios["movement-collective-shift-right"]
-    assert final(shift, "home", 2)["y"] > 17  # bloco desloca para a direita
+    assert "movement-collective-shift-right" not in scenarios  # cena excluída na revisão
+
+
+# A inversão de jogo lança do lateral direito ao esquerdo e desloca os blocos para o outro lado.
+def test_switch_of_play_moves_blocks_from_right_to_left(client):
+    scenario = next(
+        item
+        for item in client.get("/api/v1/dev/presentation-scenes").json()["scenarios"]
+        if item["id"] == "movement-switch-of-play"
+    )
+
+    def mean_y(state, side):
+        ys = [p["y"] for p in state["players"] if p["side"] == side and p["player_id"] != 2]
+        return sum(ys) / len(ys)
+
+    pass_scene = scenario["scenes"][0]
+    assert pass_scene["participant_ids"] == [6, 2]
+    assert scenario["category"] == "movement"
+    initial = {(p["side"], p["player_id"]): p for p in scenario["initial_state"]["players"]}
+    assert initial[("home", 6)]["y"] > 85 and initial[("home", 2)]["y"] < 15  # laterais abertos
+    for side in ("home", "away"):
+        assert mean_y(scenario["initial_state"], side) > 60  # bloco pendendo para a direita
+        assert mean_y(scenario["final_state"], side) < mean_y(scenario["initial_state"], side) - 10
 
 
 # A cena composta avança sem vai e vem, com as linhas encaixadas e a zaga como unidade própria.

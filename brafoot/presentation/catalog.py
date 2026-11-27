@@ -160,7 +160,7 @@ def build_developer_scene_catalog() -> dict[str, object]:
         ),
         _carry_scenario(),
         _shot_scenario(),
-        _collective_shift_scenario(),
+        _switch_of_play_scenario(),
         _goalkeeper_adjustment_scenario(),
         _interception_attempt_scenario(),
         {
@@ -234,6 +234,8 @@ def _carry_scenario() -> dict[str, object]:
             (MatchSide.HOME, 7): NormalizedPoint(49, 12),
             # Centroavante ataca o espaço entre os zagueiros adversários.
             (MatchSide.HOME, 9): NormalizedPoint(52, 50),
+            # Ponta direita repete a abertura do ponta esquerda, pelo lado oposto.
+            (MatchSide.HOME, 11): NormalizedPoint(49, 88),
         },
     )
     return _scenario_snapshot(
@@ -244,7 +246,7 @@ def _carry_scenario() -> dict[str, object]:
         "ball",
         state,
         (advance,),
-        version=2,
+        version=3,
     )
 
 
@@ -275,36 +277,48 @@ def _shot_scenario() -> dict[str, object]:
     )
 
 
-def _collective_shift_scenario() -> dict[str, object]:
-    state = _initial_state(holder_id=8)
+def _switch_of_play_scenario() -> dict[str, object]:
+    """Inversão de jogo: do lateral direito ao esquerdo, com o bloco pendendo para a direita."""
+
+    def shifted_right(y: float) -> float:
+        # Os dois times se comprimem em torno do lado da bola (direita, y alto).
+        return min(95.0, 50 + (y - 50) * 0.6 + 14)
+
+    home = {
+        player_id: (x, shifted_right(y))
+        for player_id, (x, y) in HOME_POSITIONS.items()
+    }
+    # Laterais bem abertos: o direito tem a bola, o esquerdo está livre do outro lado.
+    home[6] = (30, 92)
+    home[2] = (30, 8)
+    away = {
+        player_id: (100 - x, shifted_right(100 - y))
+        for player_id, (x, y) in HOME_POSITIONS.items()
+    }
+    state = _initial_state(holder_id=6, formation=home, away_positions=away)
     description = (
-        "Os dois blocos se deslocam juntos para o lado direito, "
-        "fechando o corredor da bola sem perder a distância entre as linhas."
+        "O lateral direito lança para o lateral esquerdo, aberto do outro lado, "
+        "e o bloco que estava deslocado para a direita passa a jogar pela esquerda."
     )
-    advance = advance_carry_scene(
+    event = replace(
+        _event(1, MatchEventType.PASS, (6, 2), description),
+        origin_zone=FieldZone(FieldThird.MIDDLE, FieldLane.RIGHT),
+        destination_zone=FieldZone(FieldThird.MIDDLE, FieldLane.LEFT),
+    )
+    advance = advance_pass_scene(
         state,
-        _event(
-            1,
-            MatchEventType.CARRY,
-            (8,),
-            description,
-            lane=FieldLane.RIGHT,
-            outcome="progressed",
-        ),
-        NormalizedPoint(41, 62),
-        lateral_ratio=0.4,
-        max_lateral=12,
+        event,
+        lateral_ratio=0.45,
+        max_lateral=18,
     )
     return _scenario_snapshot(
-        "movement-collective-shift-right",
-        "Blocos fechando à direita",
+        "movement-switch-of-play",
+        "Inversão de jogo",
         description,
         "movement",
         "players",
         state,
         (advance,),
-        ball_visible=False,
-        version=2,
     )
 
 
@@ -462,9 +476,11 @@ def _initial_state(
     holder_id: int,
     formation: dict[int, tuple[float, float]] | None = None,
     home_overrides: dict[int, tuple[float, float]] | None = None,
+    away_positions: dict[int, tuple[float, float]] | None = None,
 ) -> PresentationState:
     """Monta o estado inicial: ``formation`` vale para os dois times (o visitante é
-    espelhado) e ``home_overrides`` reposiciona apenas jogadores do time da casa."""
+    espelhado) e ``home_overrides`` reposiciona apenas jogadores do time da casa e
+    ``away_positions`` informa o visitante em coordenadas absolutas."""
 
     base = dict(formation or HOME_POSITIONS)
     home_positions = {**base, **(home_overrides or {})}
@@ -472,13 +488,13 @@ def _initial_state(
         PresentedPlayer(MatchSide.HOME, player_id, NormalizedPoint(x, y))
         for player_id, (x, y) in home_positions.items()
     )
+    if away_positions is None:
+        away_positions = {
+            player_id: (100 - x, 100 - y) for player_id, (x, y) in base.items()
+        }
     away_players = tuple(
-        PresentedPlayer(
-            MatchSide.AWAY,
-            player_id,
-            NormalizedPoint(100 - x, 100 - y),
-        )
-        for player_id, (x, y) in base.items()
+        PresentedPlayer(MatchSide.AWAY, player_id, NormalizedPoint(x, y))
+        for player_id, (x, y) in away_positions.items()
     )
     return PresentationState(
         presentation_version=DEFAULT_PRESENTATION_VERSION,
