@@ -226,6 +226,29 @@ def test_developer_scene_catalog_is_grouped_and_deterministic(client):
     assert len(composite["scenes"]) == 6
 
 
+# Persiste o rascunho enquanto ele é digitado antes de trocar de cenário.
+def test_developer_scene_review_note_is_saved_on_input(client):
+    script = client.get("/static/dev-cenas.js")
+
+    assert script.status_code == 200
+    assert "function saveReviewDraft()" in script.text
+    assert "reviewNote.addEventListener('input', saveReviewDraft);" in script.text
+
+
+# Separa aprovadas e bloqueia feedback somente após salvamento explícito.
+def test_developer_scene_lab_has_review_views_and_feedback_lock(client):
+    page = client.get("/dev/cenas")
+    script = client.get("/static/dev-cenas.js")
+
+    assert 'id="catalogReviewTab"' in page.text
+    assert 'id="catalogApprovedTab"' in page.text
+    assert 'id="saveReviewNote"' in page.text
+    assert 'id="editReviewNote"' in page.text
+    assert "function setCatalogView(view)" in script.text
+    assert "function lockReviewNote()" in script.text
+    assert "function unlockReviewNote()" in script.text
+
+
 # Verifica se todos os escudos exibidos na página inicial existem e são servidos como imagem.
 def test_home_team_badges_are_available(client):
     page = client.get("/")

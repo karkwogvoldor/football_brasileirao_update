@@ -260,6 +260,7 @@ textarea {
 }
 
 .playback-actions,
+.feedback-actions,
 .review-actions {
     display: flex;
     align-items: center;
@@ -348,6 +349,26 @@ button:disabled {
     line-height: 1.4;
 }
 
+.review-panel textarea[readonly] {
+    border-color: rgba(98, 201, 138, 0.35);
+    color: #cdd8cf;
+    background: rgba(98, 201, 138, 0.045);
+    cursor: default;
+}
+
+.feedback-actions {
+    margin-bottom: 10px;
+}
+
+.feedback-actions [hidden] {
+    display: none;
+}
+
+.review-actions {
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+}
+
 .review-actions button:last-child {
     border-color: rgba(98, 201, 138, 0.55);
 }
@@ -377,6 +398,39 @@ button:disabled {
     background: #101713;
 }
 
+.catalog-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line);
+    background: #0c120e;
+}
+
+.catalog-tabs button {
+    min-width: 0;
+    color: var(--muted);
+    background: transparent;
+}
+
+.catalog-tabs button.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(244, 196, 48, 0.07);
+}
+
+.catalog-tabs span {
+    display: inline-grid;
+    min-width: 18px;
+    height: 18px;
+    margin-left: 4px;
+    place-items: center;
+    border-radius: 50%;
+    color: var(--paper);
+    background: rgba(238, 234, 221, 0.1);
+    font-size: 0.5rem;
+}
+
 .catalog-panel h2 {
     margin: 3px 0 6px;
     font-size: 1.55rem;
@@ -391,6 +445,14 @@ button:disabled {
 .catalog-group {
     padding: 14px;
     border-bottom: 1px solid var(--line);
+}
+
+.catalog-empty {
+    padding: 30px 22px;
+    color: var(--muted);
+    font-size: 0.82rem;
+    line-height: 1.45;
+    text-align: center;
 }
 
 .catalog-group h3 {

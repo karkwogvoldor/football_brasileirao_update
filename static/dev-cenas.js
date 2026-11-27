@@ -16,6 +16,10 @@ const playButton = document.getElementById('playScenario');
 const resetButton = document.getElementById('resetScenario');
 const reviewStatus = document.getElementById('reviewStatus');
 const reviewNote = document.getElementById('reviewNote');
+const saveReviewNoteButton = document.getElementById('saveReviewNote');
+const editReviewNoteButton = document.getElementById('editReviewNote');
+const reviewSceneCount = document.getElementById('reviewSceneCount');
+const approvedSceneCount = document.getElementById('approvedSceneCount');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 let catalog = null;
@@ -23,6 +27,7 @@ let activeScenario = null;
 let currentAnimations = [];
 let runToken = 0;
 let reviews = loadReviews();
+let activeCatalogView = 'review';
 
 function loadReviews() {
     try {
@@ -37,19 +42,75 @@ function reviewKey(scenario) {
 }
 
 function currentReview(scenario) {
-    return reviews[reviewKey(scenario)] || { status: 'pending', note: '' };
+    const stored = reviews[reviewKey(scenario)] || {};
+    return {
+        ...stored,
+        status: stored.status || 'pending',
+        note: stored.note || '',
+        draft_note: stored.draft_note ?? stored.note ?? '',
+        note_locked: Boolean(stored.note_locked),
+    };
+}
+
+function persistReviews() {
+    window.localStorage.setItem(REVIEW_STORAGE_KEY, JSON.stringify(reviews));
 }
 
 function saveReview(status) {
     if (!activeScenario) return;
+    saveReviewDraft();
+    const existing = currentReview(activeScenario);
     reviews[reviewKey(activeScenario)] = {
+        ...existing,
         status,
-        note: reviewNote.value.trim(),
         reviewed_at: new Date().toISOString(),
     };
-    window.localStorage.setItem(REVIEW_STORAGE_KEY, JSON.stringify(reviews));
+    persistReviews();
+    activeCatalogView = status === 'approved' ? 'approved' : 'review';
     updateReviewPanel();
+    updateCatalogTabs();
     renderCatalog();
+}
+
+function saveReviewDraft() {
+    if (!activeScenario || reviewNote.readOnly) return;
+    const existing = currentReview(activeScenario);
+    reviews[reviewKey(activeScenario)] = {
+        ...existing,
+        draft_note: reviewNote.value,
+        updated_at: new Date().toISOString(),
+    };
+    persistReviews();
+    saveReviewNoteButton.disabled = !reviewNote.value.trim();
+}
+
+function lockReviewNote() {
+    if (!activeScenario || !reviewNote.value.trim()) return;
+    const existing = currentReview(activeScenario);
+    const note = reviewNote.value.trim();
+    reviews[reviewKey(activeScenario)] = {
+        ...existing,
+        note,
+        draft_note: note,
+        note_locked: true,
+        note_saved_at: new Date().toISOString(),
+    };
+    persistReviews();
+    updateReviewPanel();
+}
+
+function unlockReviewNote() {
+    if (!activeScenario) return;
+    const existing = currentReview(activeScenario);
+    reviews[reviewKey(activeScenario)] = {
+        ...existing,
+        draft_note: existing.note,
+        note_locked: false,
+        updated_at: new Date().toISOString(),
+    };
+    persistReviews();
+    updateReviewPanel();
+    reviewNote.focus();
 }
 
 function statusLabel(status) {
@@ -63,22 +124,60 @@ function updateReviewPanel() {
     const review = currentReview(activeScenario);
     reviewStatus.textContent = statusLabel(review.status);
     reviewStatus.className = `review-status ${review.status}`;
-    reviewNote.value = review.note;
+    reviewNote.value = review.note_locked ? review.note : review.draft_note;
+    reviewNote.readOnly = review.note_locked;
+    saveReviewNoteButton.hidden = review.note_locked;
+    saveReviewNoteButton.disabled = !reviewNote.value.trim();
+    editReviewNoteButton.hidden = !review.note_locked;
+}
+
+function visibleScenarios() {
+    if (!catalog) return [];
+    return catalog.scenarios.filter((scenario) => {
+        const approved = currentReview(scenario).status === 'approved';
+        return activeCatalogView === 'approved' ? approved : !approved;
+    });
+}
+
+function updateCatalogTabs() {
+    if (!catalog) return;
+    const approvedCount = catalog.scenarios.filter(
+        (scenario) => currentReview(scenario).status === 'approved',
+    ).length;
+    reviewSceneCount.textContent = catalog.scenarios.length - approvedCount;
+    approvedSceneCount.textContent = approvedCount;
+    document.querySelectorAll('[data-catalog-view]').forEach((button) => {
+        const active = button.dataset.catalogView === activeCatalogView;
+        button.classList.toggle('active', active);
+        button.setAttribute('aria-selected', String(active));
+    });
+}
+
+function setCatalogView(view) {
+    activeCatalogView = view;
+    updateCatalogTabs();
+    renderCatalog();
+    const visible = visibleScenarios();
+    if (visible.length && !visible.some((scenario) => scenario.id === activeScenario?.id)) {
+        selectScenario(visible[0]);
+    }
 }
 
 function renderCatalog() {
     if (!catalog) return;
     catalogElement.replaceChildren();
+    updateCatalogTabs();
+    const visible = visibleScenarios();
     catalog.groups.forEach((group) => {
+        const scenarios = visible.filter((scenario) => scenario.category === group.id);
+        if (!scenarios.length) return;
         const section = document.createElement('section');
         section.className = 'catalog-group';
         const heading = document.createElement('h3');
         heading.textContent = group.title;
         section.appendChild(heading);
 
-        catalog.scenarios
-            .filter((scenario) => scenario.category === group.id)
-            .forEach((scenario) => {
+        scenarios.forEach((scenario) => {
                 const button = document.createElement('button');
                 button.type = 'button';
                 button.className = 'scenario-card';
@@ -96,6 +195,14 @@ function renderCatalog() {
             });
         catalogElement.appendChild(section);
     });
+    if (!visible.length) {
+        const empty = document.createElement('p');
+        empty.className = 'catalog-empty';
+        empty.textContent = activeCatalogView === 'approved'
+            ? 'Nenhuma cena foi aprovada ainda.'
+            : 'Todas as cenas atuais estão aprovadas.';
+        catalogElement.appendChild(empty);
+    }
 }
 
 function playerElement(side, playerId) {
@@ -242,7 +349,12 @@ async function loadCatalog() {
         catalog = await response.json();
         catalogSummary.textContent = `${catalog.scenarios.length} cenários · versão ${catalog.catalog_version}`;
         renderCatalog();
-        selectScenario(catalog.scenarios[0]);
+        const firstReviewScenario = visibleScenarios()[0];
+        if (firstReviewScenario) {
+            selectScenario(firstReviewScenario);
+        } else {
+            setCatalogView('approved');
+        }
     } catch (error) {
         playbackState.textContent = 'Falha no catálogo';
         narration.textContent = error.message;
@@ -252,8 +364,14 @@ async function loadCatalog() {
 
 playButton.addEventListener('click', playScenario);
 resetButton.addEventListener('click', resetScenario);
-document.querySelectorAll('[data-review]').forEach((button) => {
+reviewNote.addEventListener('input', saveReviewDraft);
+saveReviewNoteButton.addEventListener('click', lockReviewNote);
+editReviewNoteButton.addEventListener('click', unlockReviewNote);
+document.querySelectorAll('.review-actions [data-review]').forEach((button) => {
     button.addEventListener('click', () => saveReview(button.dataset.review));
+});
+document.querySelectorAll('[data-catalog-view]').forEach((button) => {
+    button.addEventListener('click', () => setCatalogView(button.dataset.catalogView));
 });
 
 loadCatalog();

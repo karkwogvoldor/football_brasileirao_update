@@ -82,11 +82,15 @@
           <span class="review-status" id="reviewStatus">Pendente</span>
         </div>
         <textarea id="reviewNote" rows="3" placeholder="Descreva o ajuste necessário para este cenário..."></textarea>
+        <div class="feedback-actions">
+          <button id="saveReviewNote" class="primary-action" type="button">Salvar feedback</button>
+          <button id="editReviewNote" type="button" hidden>Editar feedback</button>
+        </div>
         <div class="review-actions">
           <button type="button" data-review="changes_requested">Precisa de ajustes</button>
           <button type="button" data-review="approved">Aprovar cena</button>
         </div>
-        <small>A revisão fica salva neste navegador e é invalidada quando a versão do cenário muda.</small>
+        <small>Rascunhos são preservados ao trocar de cena. Salvar o feedback bloqueia o texto até uma edição explícita.</small>
       </section>
     </section>
 
@@ -96,6 +100,14 @@
         <h2 id="catalog-title">Cenas disponíveis</h2>
         <p id="catalogSummary">Carregando...</p>
       </header>
+      <div class="catalog-tabs" role="tablist" aria-label="Estado das cenas">
+        <button id="catalogReviewTab" class="active" type="button" role="tab" aria-selected="true" data-catalog-view="review">
+          Em revisão <span id="reviewSceneCount">0</span>
+        </button>
+        <button id="catalogApprovedTab" type="button" role="tab" aria-selected="false" data-catalog-view="approved">
+          Aprovadas <span id="approvedSceneCount">0</span>
+        </button>
+      </div>
       <nav id="sceneCatalog" aria-label="Catálogo de cenas"></nav>
     </aside>
   </main>
