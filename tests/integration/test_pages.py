@@ -200,8 +200,8 @@ def test_developer_scene_catalog_is_grouped_and_deterministic(client):
         "movement",
         "composite",
     ]
-    assert len(catalog["scenarios"]) == 12
-    assert len({scenario["id"] for scenario in catalog["scenarios"]}) == 12
+    assert len(catalog["scenarios"]) == 16
+    assert len({scenario["id"] for scenario in catalog["scenarios"]}) == 16
     assert all(
         len(scenario["initial_state"]["players"]) == 22
         and scenario["scenes"]
@@ -216,6 +216,8 @@ def test_developer_scene_catalog_is_grouped_and_deterministic(client):
     assert movement_ids == {
         "movement-switch-of-play",
         "movement-offside-trap",
+        "movement-offside-trap-success",
+        "movement-high-press",
         "movement-goalkeeper-adjustment",
         "movement-interception-attempt",
     }
@@ -414,6 +416,10 @@ def test_new_and_revised_scenes_keep_human_running_speeds(client):
         "movement-offside-trap",
         "ball-goal-kick-short",
         "ball-one-two",
+        "movement-offside-trap-success",
+        "ball-overlap-fullback",
+        "ball-counter-attack",
+        "movement-high-press",
     )
 
     for scenario_id in reviewed:
@@ -455,17 +461,106 @@ def test_cross_scene_occupies_near_far_post_and_keeps_defense_in_box(client):
     assert 90 <= final[("away", 1)][0] <= 96
 
 
-# Na linha de impedimento a zaga sobe junta, alinhada, e o centroavante fica além dela.
-def test_offside_trap_steps_defensive_line_up_as_one_unit(client):
+# Na linha ineficiente o atacante estava na linha no passe, não é impedimento e ele escapa livre.
+def test_ineffective_offside_line_leaves_striker_onside_and_free(client):
     scenario = _scenarios_by_id(client)["movement-offside-trap"]
     initial = _state_positions(scenario["initial_state"])
     final = _state_positions(scenario["final_state"])
-    line = {final[("away", pid)][0] for pid in (2, 3, 4, 6)}
+    line_at_pass = {initial[("away", pid)][0] for pid in (2, 3, 4, 6)}
 
-    assert scenario["scenes"][0]["narration"].startswith("No passe em profundidade")
-    assert len(line) == 1  # linha reta
-    assert all(final[("away", pid)][0] < initial[("away", pid)][0] for pid in (2, 3, 4, 6))
-    assert final[("home", 9)][0] > line.pop()  # centroavante em impedimento
+    assert scenario["version"] == 2
+    assert scenario["title"] == "Linha de impedimento ineficiente"
+    assert len(line_at_pass) == 1
+    assert initial[("home", 9)][0] < line_at_pass.pop()  # no momento do passe está em jogo
+    assert final[("home", 9)][0] > final[("away", 3)][0]  # termina livre, nas costas da zaga
+    assert "legal" in scenario["scenes"][0]["narration"]
+
+
+# Na linha bem-sucedida a zaga sobe junta e, no momento do passe, o centroavante já está além dela.
+def test_successful_offside_line_catches_striker_beyond_the_line(client):
+    scenario = _scenarios_by_id(client)["movement-offside-trap-success"]
+    rise, offside_pass = scenario["scenes"]
+    line_after_rise = {
+        track["keyframes"][-1]["x"]
+        for track in rise["player_tracks"]
+        if track["side"] == "away" and track["player_id"] in (2, 3, 4, 6)
+    }
+    striker_after_rise = next(
+        track["keyframes"][-1]["x"]
+        for track in rise["player_tracks"]
+        if track["side"] == "home" and track["player_id"] == 9
+    )
+    line_start = {
+        track["keyframes"][0]["x"]
+        for track in rise["player_tracks"]
+        if track["side"] == "away" and track["player_id"] in (2, 3, 4, 6)
+    }
+
+    assert scenario["title"] == "Linha de impedimento bem-sucedida"
+    assert (rise["event_type"], offside_pass["event_type"]) == ("carry", "pass")
+    assert len(line_after_rise) == 1 and len(line_start) == 1  # sobe em linha reta
+    assert line_after_rise.pop() < line_start.pop()
+    assert striker_after_rise > min(
+        track["keyframes"][-1]["x"]
+        for track in rise["player_tracks"]
+        if track["side"] == "away" and track["player_id"] in (2, 3, 4, 6)
+    )  # no momento do passe, além da linha
+    assert "impedimento" in offside_pass["narration"]
+
+
+# Na ultrapassagem o marcador acompanha o ponta para dentro e o lateral recebe por fora, à frente da bola.
+def test_overlap_scene_frees_the_fullback_on_the_outside(client):
+    scenario = _scenarios_by_id(client)["ball-overlap-fullback"]
+    cut, give = scenario["scenes"]
+    initial = _state_positions(scenario["initial_state"])
+    final = _state_positions(scenario["final_state"])
+
+    assert [cut["participant_ids"], give["participant_ids"]] == [[11], [11, 6]]
+    assert final[("home", 6)][0] > initial[("home", 11)][0]  # lateral ultrapassa o ponta
+    assert final[("home", 6)][1] > 85  # por fora, perto da linha lateral
+    cut_end = cut["keyframes"][-1]
+    assert cut_end["y"] < initial[("home", 11)][1]  # ponta corta para dentro
+    away_marker_end = next(
+        track["keyframes"][-1]
+        for track in cut["player_tracks"]
+        if track["side"] == "away" and track["player_id"] == 2
+    )
+    assert away_marker_end["y"] < initial[("away", 2)][1]  # marcador acompanha para dentro
+    ball_end = give["keyframes"][-1]
+    assert (ball_end["x"], ball_end["y"]) == final[("home", 6)]
+
+
+# No contra-ataque a bola sai pelo meio, abre para a ponta e termina em finalização com a área ocupada.
+def test_counter_attack_runs_diagonals_and_finishes_with_box_support(client):
+    scenario = _scenarios_by_id(client)["ball-counter-attack"]
+    passes_and_shot = scenario["scenes"]
+    initial = _state_positions(scenario["initial_state"])
+    final = _state_positions(scenario["final_state"])
+
+    assert [scene["event_type"] for scene in passes_and_shot] == ["pass", "pass", "shot"]
+    assert passes_and_shot[-1]["keyframes"][-1]["x"] >= 98  # chuta ao gol
+    assert final[("home", 9)][0] >= 80 and final[("home", 7)][0] >= 80  # área ocupada
+    assert final[("home", 7)][1] < 50 < final[("home", 11)][1]  # pontas em lados opostos
+    assert final[("away", 3)][0] > initial[("away", 3)][0]  # defesa recua
+    first_ball = passes_and_shot[0]["keyframes"]
+    assert first_ball[-1]["x"] - first_ball[0]["x"] > 10  # passe vertical
+
+
+# Na pressão alta o gatilho é o passe do adversário e a casa sobe junta, com a zaga em linha única.
+def test_high_press_moves_the_team_up_together_after_a_back_pass(client):
+    scenario = _scenarios_by_id(client)["movement-high-press"]
+    initial = _state_positions(scenario["initial_state"])
+    final = _state_positions(scenario["final_state"])
+    scene = scenario["scenes"][0]
+    line_shift = {
+        round(final[("home", pid)][0] - initial[("home", pid)][0], 6) for pid in (2, 3, 4, 6)
+    }
+
+    assert scene["team_side"] == "away" and scene["participant_ids"] == [3, 1]
+    assert len(line_shift) == 1 and line_shift.pop() > 0  # zaga sobe como uma linha
+    assert final[("home", 9)][0] - initial[("home", 9)][0] > 8  # centroavante pressiona o goleiro
+    assert all(final[("home", pid)][0] > initial[("home", pid)][0] for pid in range(2, 12))
+    assert 90 <= final[("away", 1)][0] <= 96
 
 
 # No tiro de meta curto o goleiro toca para o zagueiro aberto na área e o adversário pressiona.

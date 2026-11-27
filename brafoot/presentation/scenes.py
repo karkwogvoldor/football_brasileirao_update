@@ -255,6 +255,7 @@ def build_carry_scene(
     ]
     | None = None,
     presentation_version: str = DEFAULT_PRESENTATION_VERSION,
+    duration_ms: int = CARRY_SCENE_DURATION_MS,
 ) -> PresentationScene:
     """Create matching player and ball tracks for one confirmed carry."""
 
@@ -279,7 +280,7 @@ def build_carry_scene(
     keyframes = tuple(
         SceneKeyframe(at_ms=at_ms, position=point)
         for at_ms, point in zip(
-            (0, CARRY_SCENE_DURATION_MS // 2, CARRY_SCENE_DURATION_MS),
+            (0, duration_ms // 2, duration_ms),
             (start_position, midpoint, destination_position),
         )
     )
@@ -298,11 +299,11 @@ def build_carry_scene(
         event_type=event.event_type,
         team_side=event.team_side,
         participant_ids=event.participant_ids,
-        duration_ms=CARRY_SCENE_DURATION_MS,
+        duration_ms=duration_ms,
         keyframes=keyframes,
         player_tracks=_build_player_tracks(
             movements,
-            CARRY_SCENE_DURATION_MS,
+            duration_ms,
         ),
         narration=event.explanation,
     )
@@ -318,6 +319,7 @@ def build_shot_scene(
     ]
     | None = None,
     presentation_version: str = DEFAULT_PRESENTATION_VERSION,
+    duration_ms: int = SHOT_SCENE_DURATION_MS,
 ) -> PresentationScene:
     """Create the ball track for one confirmed shot toward an exact target."""
 
@@ -345,17 +347,17 @@ def build_shot_scene(
         event_type=event.event_type,
         team_side=event.team_side,
         participant_ids=event.participant_ids,
-        duration_ms=SHOT_SCENE_DURATION_MS,
+        duration_ms=duration_ms,
         keyframes=tuple(
             SceneKeyframe(at_ms=at_ms, position=point)
             for at_ms, point in zip(
-                (0, SHOT_SCENE_DURATION_MS // 2, SHOT_SCENE_DURATION_MS),
+                (0, duration_ms // 2, duration_ms),
                 (start_position, midpoint, target_position),
             )
         ),
         player_tracks=_build_player_tracks(
             player_movements,
-            SHOT_SCENE_DURATION_MS,
+            duration_ms,
         ),
         narration=event.explanation,
     )

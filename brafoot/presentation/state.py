@@ -8,7 +8,9 @@ from dataclasses import dataclass, replace
 from brafoot.engine.events import MatchEvent, MatchEventType
 from brafoot.engine.matches import MatchSide
 from brafoot.presentation.scenes import (
+    CARRY_SCENE_DURATION_MS,
     PASS_SCENE_DURATION_MS,
+    SHOT_SCENE_DURATION_MS,
     NormalizedPoint,
     PresentationScene,
     build_carry_scene,
@@ -289,6 +291,7 @@ def advance_carry_scene(
     lateral_ratio: float = COLLECTIVE_LATERAL_RATIO,
     max_lateral: float = MAX_COLLECTIVE_LATERAL,
     shape: CollectiveShape = RIGID_BLOCKS,
+    duration_ms: int = CARRY_SCENE_DURATION_MS,
 ) -> SceneAdvance:
     """Move the current visual ball holder and ball through a confirmed carry.
 
@@ -343,6 +346,7 @@ def advance_carry_scene(
             primary_identity=carrier_identity,
         ),
         presentation_version=state.presentation_version,
+        duration_ms=duration_ms,
     )
     end_state = replace(
         state,
@@ -359,6 +363,9 @@ def advance_shot_scene(
     target_position: NormalizedPoint,
     *,
     shape: CollectiveShape = RIGID_BLOCKS,
+    supporting_destinations: Mapping[tuple[MatchSide, int], NormalizedPoint]
+    | None = None,
+    duration_ms: int = SHOT_SCENE_DURATION_MS,
 ) -> SceneAdvance:
     """Move the ball toward a confirmed shot target and release its holder."""
 
@@ -389,6 +396,7 @@ def advance_shot_scene(
         state,
         movement_start=start_position,
         movement_end=target_position,
+        fixed_destinations=supporting_destinations,
         attacking_side=event.team_side,
         shape=shape,
     )
@@ -398,6 +406,7 @@ def advance_shot_scene(
         target_position=target_position,
         player_movements=_player_movements(state, player_destinations),
         presentation_version=state.presentation_version,
+        duration_ms=duration_ms,
     )
     end_state = replace(
         state,

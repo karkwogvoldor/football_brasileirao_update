@@ -21,6 +21,31 @@ treinamento, para reduzir rodadas de revisão. Fontes consultadas (pesquisa web,
 - **Escanteio/ocupação da área** (referência de posicionamento defensivo dentro da área):
   [FIFA Training Centre — set plays](https://www.fifatrainingcentre.com/en/game/game-analysis/set-plays/corners/targeting-the-front-post.php).
 
+- **Linha de impedimento ineficiente / bem-sucedida** (`movement-offside-trap`,
+  `movement-offside-trap-success`): o impedimento é julgado no momento do passe; a armadilha só
+  funciona se a linha sobe *antes* do toque. Mesmas fontes da linha de impedimento acima.
+- **Ultrapassagem do lateral** (`ball-overlap-fullback`): o lateral faz a corrida por fora e o
+  ponta decide entre passar, cortar para dentro ou segurar; o marcador precisa escolher entre
+  acompanhar o ponta e cobrir o lateral; o passe vai ao espaço à frente do corredor.
+  [FourFourTwo — the overlap](https://www.fourfourtwo.com/features/football-tactics-overlap),
+  [We Make Footballers — overlapping](https://wemakefootballers.com/news/understanding-overlapping-in-football),
+  [FIFA Training Centre — using wide areas](https://fifatrainingcentre.com/en/game/game-insights/using-wide-areas.php).
+- **Contra-ataque** (`ball-counter-attack`): ponta rápidos esticam a defesa, corredores nos dois
+  corredores e no centro, corridas diagonais, passe central para liberar as pontas.
+  [FIFA Training Centre — the counter-attack](https://www.fifatrainingcentre.com/en/game/game-analysis/transition-to-attacking/the-counter-attack.php),
+  [The FA — spotlight on counter-attacks](https://www.thefa.com/bootroom/resources/coaching/spotlight-on-counter-attacks),
+  [Spielverlagerung](https://spielverlagerung.com/?p=10845).
+- **Pressão alta** (`movement-high-press`): gatilho (passe para trás, goleiro pressionado), time
+  inteiro sobe junto e fecha linhas de passe, compactação, zaga alta.
+  [FIFA Training Centre — high press](https://www.fifatrainingcentre.com/en/game/game-analysis/out-of-possession/high-press.php),
+  [Breaking The Lines — pressing triggers](https://breakingthelines.com/@btl/pressing-triggers-in-elite-football-and-how-they-shape-defensive-strategy).
+- **Tabela** (`ball-one-two`): troca de passes com corrida do passador;
+  [FIFA Training Centre — third-player combinations](https://www.fifatrainingcentre.com/en/game/game-analysis/in-possession/third-player-combinations.php).
+
+Ideias pesquisadas e ainda não implementadas: barreira em falta (9,15 m; a barreira cobre o
+primeiro pau e o goleiro o segundo; exige trajetória curva da bola, hoje só retas) e
+escanteio ([Law 13 — The FA](https://www.thefa.com/football-rules-governance/lawsandrules/laws/football-11-11/law-13---free-kicks)).
+
 As fontes são sites de treinamento, não uma referência única; os números (coordenadas)
 são uma tradução visual dos princípios, não medições.
 

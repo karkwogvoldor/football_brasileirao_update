@@ -164,6 +164,10 @@ def build_developer_scene_catalog() -> dict[str, object]:
         _switch_of_play_scenario(),
         _cross_far_post_scenario(),
         _offside_trap_scenario(),
+        _offside_trap_success_scenario(),
+        _overlap_fullback_scenario(),
+        _counter_attack_scenario(),
+        _high_press_scenario(),
         _short_goal_kick_scenario(),
         _one_two_scenario(),
         _goalkeeper_adjustment_scenario(),
@@ -427,9 +431,24 @@ def _cross_far_post_scenario() -> dict[str, object]:
     )
 
 
+def _hold_all(
+    state: PresentationState,
+    *,
+    except_ids: set[tuple[MatchSide, int]] | None = None,
+) -> dict[tuple[MatchSide, int], NormalizedPoint]:
+    """Mantém parados todos os jogadores do estado, menos os listados em ``except_ids``."""
+
+    skip = except_ids or set()
+    return {
+        (player.side, player.player_id): player.position
+        for player in state.players
+        if (player.side, player.player_id) not in skip
+    }
+
+
 def _offside_trap_scenario() -> dict[str, object]:
-    """Linha de impedimento: a zaga sobe junta no momento do passe em profundidade e
-    deixa o centroavante em impedimento."""
+    """Linha de impedimento ineficiente: a zaga sobe tarde. No momento do passe o
+    centroavante ainda está na linha, portanto em condição legal, e escapa livre."""
 
     home = {
         1: (6, 50),
@@ -445,12 +464,10 @@ def _offside_trap_scenario() -> dict[str, object]:
     }
     state = _initial_state(holder_id=8, formation=home, away_positions=away)
     description = (
-        "No passe em profundidade, a zaga visitante sobe junta, em linha, e deixa o "
-        "centroavante em impedimento."
+        "A zaga visitante sobe tarde: no momento do passe o centroavante ainda está na "
+        "linha, em condição legal, escapa nas suas costas e fica livre."
     )
-    event = _event(
-        1, MatchEventType.PASS, (8, 9), description, outcome="offside"
-    )
+    event = _event(1, MatchEventType.PASS, (8, 9), description)
     advance = advance_pass_scene(
         state,
         event,
@@ -460,10 +477,71 @@ def _offside_trap_scenario() -> dict[str, object]:
                 MatchSide.HOME,
                 {
                     1: (6, 50),
-                    9: (78, 50),   # parado: já está além da linha que vai subir
+                    9: (84, 50),   # parte no momento do passe e recebe além da linha
                     7: (67, 20),
-                    11: (67, 80),  # pontas se mantêm na linha
+                    11: (67, 80),
                 },
+            ),
+            **_fixed(
+                MatchSide.AWAY,
+                {
+                    1: (89, 50),
+                    2: (72, 82), 3: (72, 60), 4: (72, 40), 6: (72, 18),
+                    5: (63, 72), 8: (63, 50), 10: (63, 28),
+                    7: (53, 66), 9: (53, 50), 11: (53, 34),
+                },
+            ),
+        },
+        duration_ms=1600,
+    )
+    return _scenario_snapshot(
+        "movement-offside-trap",
+        "Linha de impedimento ineficiente",
+        description,
+        "movement",
+        "players",
+        state,
+        (advance,),
+        version=2,
+    )
+
+
+def _offside_trap_success_scenario() -> dict[str, object]:
+    """Linha de impedimento bem-sucedida: a zaga sobe junta antes do passe e, no
+    momento em que a bola é tocada, o centroavante já está além da linha."""
+
+    home = {
+        1: (6, 50),
+        2: (40, 18), 3: (40, 40), 4: (40, 60), 6: (40, 82),
+        5: (56, 28), 8: (58, 50), 10: (56, 72),
+        7: (66, 20), 9: (74, 50), 11: (66, 80),
+    }
+    away = {
+        1: (92, 50),
+        2: (78, 82), 3: (78, 60), 4: (78, 40), 6: (78, 18),
+        5: (66, 72), 8: (66, 50), 10: (66, 28),
+        7: (54, 66), 9: (54, 50), 11: (54, 34),
+    }
+    state = _initial_state(holder_id=8, formation=home, away_positions=away)
+    rise_text = (
+        "O meia domina e levanta a cabeça enquanto a zaga visitante sobe junta, em "
+        "linha, e deixa o centroavante para trás."
+    )
+    rise = advance_carry_scene(
+        state,
+        _event(
+            1,
+            MatchEventType.CARRY,
+            (8,),
+            rise_text,
+            outcome="progressed",
+        ),
+        NormalizedPoint(60, 50),
+        shape=INTERLOCKING_BLOCKS,
+        supporting_destinations={
+            **_fixed(
+                MatchSide.HOME,
+                {1: (6, 50), 9: (74, 50), 7: (67, 20), 11: (67, 80)},
             ),
             **_fixed(
                 MatchSide.AWAY,
@@ -475,11 +553,227 @@ def _offside_trap_scenario() -> dict[str, object]:
                 },
             ),
         },
+        duration_ms=1800,
+    )
+    pass_text = (
+        "No momento do passe o centroavante está além da linha da zaga: "
+        "impedimento marcado e a jogada é interrompida."
+    )
+    offside_pass = advance_pass_scene(
+        rise.end_state,
+        _event(2, MatchEventType.PASS, (8, 9), pass_text, outcome="offside"),
+        shape=INTERLOCKING_BLOCKS,
+        supporting_destinations={
+            **_hold_all(rise.end_state, except_ids={(MatchSide.HOME, 9)}),
+            (MatchSide.HOME, 9): NormalizedPoint(76, 50),
+        },
+    )
+    return _scenario_snapshot(
+        "movement-offside-trap-success",
+        "Linha de impedimento bem-sucedida",
+        "A zaga sobe junta antes do passe; quando a bola é tocada, o centroavante está impedido.",
+        "movement",
+        "players",
+        state,
+        (rise, offside_pass),
+    )
+
+
+def _overlap_fullback_scenario() -> dict[str, object]:
+    """Ultrapassagem: o ponta corta para dentro, o lateral passa por fora e recebe
+    o passe no espaço à sua frente."""
+
+    home = {
+        1: (6, 50),
+        3: (30, 40), 4: (30, 60), 2: (44, 18), 6: (58, 88),
+        5: (52, 28), 8: (54, 50), 10: (56, 68),
+        7: (66, 20), 9: (70, 50), 11: (64, 80),
+    }
+    away = {
+        1: (94, 50),
+        2: (76, 80), 3: (80, 60), 4: (80, 40), 6: (76, 18),
+        5: (64, 86), 8: (64, 50), 10: (64, 30),
+        7: (52, 62), 9: (50, 50), 11: (52, 38),
+    }
+    state = _initial_state(holder_id=11, formation=home, away_positions=away)
+    cut_text = (
+        "O ponta direita corta para dentro e leva o lateral adversário junto, "
+        "enquanto o lateral direito passa por fora."
+    )
+    cut = advance_carry_scene(
+        state,
+        _event(
+            1,
+            MatchEventType.CARRY,
+            (11,),
+            cut_text,
+            lane=FieldLane.RIGHT,
+            outcome="progressed",
+        ),
+        NormalizedPoint(72, 68),
+        shape=INTERLOCKING_BLOCKS,
+        supporting_destinations={
+            **_fixed(MatchSide.HOME, {6: (68, 92)}),
+            # O marcador acompanha o ponta para dentro e deixa a ultrapassagem livre.
+            **_fixed(MatchSide.AWAY, {2: (73, 72), 5: (66, 86)}),
+        },
+        duration_ms=1600,
+    )
+    give_text = "O ponta toca no espaço à frente do lateral, que chega em velocidade pelo corredor."
+    give = advance_pass_scene(
+        cut.end_state,
+        replace(
+            _event(2, MatchEventType.PASS, (11, 6), give_text, lane=FieldLane.RIGHT),
+            origin_zone=FieldZone(FieldThird.ATTACKING, FieldLane.RIGHT),
+            destination_zone=FieldZone(FieldThird.ATTACKING, FieldLane.RIGHT),
+        ),
+        shape=INTERLOCKING_BLOCKS,
+        supporting_destinations={
+            **_fixed(MatchSide.HOME, {6: (80, 92)}),
+            **_fixed(MatchSide.AWAY, {2: (73, 72), 5: (74, 89)}),
+        },
         duration_ms=1600,
     )
     return _scenario_snapshot(
-        "movement-offside-trap",
-        "Linha de impedimento",
+        "ball-overlap-fullback",
+        "Ultrapassagem do lateral",
+        "Ponta corta para dentro, lateral ultrapassa por fora e recebe no espaço.",
+        "ball",
+        "ball",
+        state,
+        (cut, give),
+    )
+
+
+def _counter_attack_scenario() -> dict[str, object]:
+    """Contra-ataque: passe vertical pelo centro, pontas em corridas diagonais e
+    finalização em velocidade contra uma defesa desorganizada."""
+
+    home = {
+        1: (6, 50),
+        3: (28, 40), 4: (28, 60), 2: (30, 16), 6: (30, 84),
+        5: (38, 30), 8: (44, 50), 10: (38, 70),
+        7: (50, 20), 9: (52, 50), 11: (50, 80),
+    }
+    away = {
+        1: (92, 50),
+        3: (66, 42), 4: (66, 58), 2: (68, 22), 6: (68, 78),
+        5: (56, 32), 8: (54, 50), 10: (56, 68),
+        7: (42, 66), 9: (38, 48), 11: (42, 34),
+    }
+    state = _initial_state(holder_id=8, formation=home, away_positions=away)
+    shape = CollectiveShape(
+        forward_only=True,
+        defending_retreat_ratio=1.0,
+        defender_line_ratio=0.7,
+        defender_min_x=8,
+    )
+    first_text = "Após a recuperação, o meia acha o centroavante pelo meio, em velocidade."
+    first = advance_pass_scene(
+        state,
+        _event(1, MatchEventType.PASS, (8, 9), first_text),
+        shape=shape,
+        supporting_destinations=_fixed(
+            MatchSide.HOME,
+            {9: (62, 50), 7: (63, 26), 11: (63, 74), 8: (48, 51), 1: (6, 50)},
+        ),
+        duration_ms=2000,
+    )
+    second_text = "O centroavante abre para o ponta direita, que ataca a diagonal."
+    second = advance_pass_scene(
+        first.end_state,
+        replace(
+            _event(2, MatchEventType.PASS, (9, 11), second_text, lane=FieldLane.RIGHT),
+            origin_zone=FieldZone(FieldThird.MIDDLE, FieldLane.CENTER),
+            destination_zone=FieldZone(FieldThird.ATTACKING, FieldLane.RIGHT),
+        ),
+        shape=shape,
+        supporting_destinations=_fixed(
+            MatchSide.HOME,
+            {11: (74, 72), 9: (72, 50), 7: (72, 34), 8: (58, 52), 1: (6, 50)},
+        ),
+        duration_ms=1600,
+    )
+    shot_text = "O ponta finaliza no canto enquanto os companheiros chegam à área."
+    shot = advance_shot_scene(
+        second.end_state,
+        _event(
+            3,
+            MatchEventType.SHOT,
+            (11,),
+            shot_text,
+            lane=FieldLane.RIGHT,
+            outcome="on_target",
+        ),
+        NormalizedPoint(99, 53),
+        shape=shape,
+        supporting_destinations=_fixed(
+            MatchSide.HOME,
+            {9: (84, 52), 7: (83, 40), 8: (70, 52), 1: (6, 50)},
+        ),
+        duration_ms=1600,
+    )
+    return _scenario_snapshot(
+        "ball-counter-attack",
+        "Contra-ataque em velocidade",
+        "Passe vertical, corridas diagonais dos pontas e finalização contra defesa desorganizada.",
+        "ball",
+        "ball",
+        state,
+        (first, second, shot),
+    )
+
+
+def _high_press_scenario() -> dict[str, object]:
+    """Pressão alta: o passe para trás do adversário é o gatilho; o time da casa sobe
+    junto, fecha as linhas de passe e pressiona o goleiro."""
+
+    home = {
+        1: (12, 50),
+        3: (50, 42), 4: (50, 58), 2: (50, 20), 6: (50, 80),
+        5: (60, 32), 8: (60, 50), 10: (60, 68),
+        7: (72, 32), 9: (74, 50), 11: (72, 68),
+    }
+    away = {
+        1: (94, 50),
+        3: (84, 42), 4: (84, 58), 2: (78, 16), 6: (78, 84),
+        5: (70, 30), 8: (70, 50), 10: (70, 70),
+        7: (58, 72), 9: (56, 50), 11: (58, 28),
+    }
+    state = _initial_state(
+        holder_id=3,
+        formation=home,
+        away_positions=away,
+        holder_side=MatchSide.AWAY,
+    )
+    description = (
+        "O passe para trás do zagueiro ao goleiro é o gatilho: o time da casa sobe "
+        "junto, o centroavante pressiona o goleiro e os pontas fecham os zagueiros."
+    )
+    event = replace(
+        _event(1, MatchEventType.PASS, (3, 1), description),
+        team_side=MatchSide.AWAY,
+        origin_zone=FieldZone(FieldThird.DEFENSIVE, FieldLane.CENTER),
+        destination_zone=FieldZone(FieldThird.DEFENSIVE, FieldLane.CENTER),
+    )
+    advance = advance_pass_scene(
+        state,
+        event,
+        shape=CollectiveShape(forward_only=True, defender_min_x=8),
+        supporting_destinations=_fixed(
+            MatchSide.HOME,
+            {
+                1: (22, 50),
+                2: (60, 24), 3: (60, 44), 4: (60, 56), 6: (60, 76),
+                5: (72, 36), 8: (72, 50), 10: (72, 64),
+                7: (82, 38), 9: (88, 50), 11: (82, 62),
+            },
+        ),
+        duration_ms=2000,
+    )
+    return _scenario_snapshot(
+        "movement-high-press",
+        "Pressão alta no passe para trás",
         description,
         "movement",
         "players",
@@ -736,6 +1030,7 @@ def _initial_state(
     formation: dict[int, tuple[float, float]] | None = None,
     home_overrides: dict[int, tuple[float, float]] | None = None,
     away_positions: dict[int, tuple[float, float]] | None = None,
+    holder_side: MatchSide = MatchSide.HOME,
 ) -> PresentationState:
     """Monta o estado inicial: ``formation`` vale para os dois times (o visitante é
     espelhado) e ``home_overrides`` reposiciona apenas jogadores do time da casa e
@@ -758,8 +1053,14 @@ def _initial_state(
     return PresentationState(
         presentation_version=DEFAULT_PRESENTATION_VERSION,
         players=home_players + away_players,
-        ball_position=NormalizedPoint(*home_positions[holder_id]),
-        ball_holder_side=MatchSide.HOME,
+        ball_position=NormalizedPoint(
+            *(
+                home_positions[holder_id]
+                if holder_side is MatchSide.HOME
+                else away_positions[holder_id]
+            )
+        ),
+        ball_holder_side=holder_side,
         ball_holder_id=holder_id,
         last_event_sequence=None,
     )
