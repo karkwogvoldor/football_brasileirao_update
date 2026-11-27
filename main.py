@@ -21,17 +21,9 @@ from brafoot.gameplay.sessions import (
     create_browser_session,
     find_browser_session,
 )
-from brafoot.engine.clock import MatchClock, MatchPeriod
-from brafoot.engine.events import MatchEvent, MatchEventType
-from brafoot.engine.matches import MatchSide
-from brafoot.engine.zones import FieldLane, FieldThird, FieldZone
-from brafoot.presentation.scenes import NormalizedPoint
-from brafoot.presentation.state import (
-    PresentationState,
-    PresentedPlayer,
-    advance_carry_scene,
-    advance_pass_scene,
-    advance_shot_scene,
+from brafoot.presentation.catalog import (
+    build_demo_sequence_snapshot,
+    build_developer_scene_catalog,
 )
 
 cloudinary.config(
@@ -70,121 +62,19 @@ def partida():
     return FileResponse("templates/partida.html")
 
 
+@router.get("/dev/cenas")
+def developer_scenes():
+    return FileResponse("templates/dev-cenas.html")
+
+
 @router.get("/api/v1/presentation/demo-sequence")
 def get_demo_presentation_sequence():
-    home_positions = {
-        1: (6, 50),
-        2: (19, 17),
-        3: (17, 39),
-        4: (17, 61),
-        6: (19, 83),
-        5: (31, 27),
-        8: (33, 50),
-        10: (31, 73),
-        7: (41, 20),
-        9: (42, 50),
-        11: (41, 80),
-    }
-    home_players = tuple(
-        PresentedPlayer(MatchSide.HOME, player_id, NormalizedPoint(x, y))
-        for player_id, (x, y) in home_positions.items()
-    )
-    away_players = tuple(
-        PresentedPlayer(
-            MatchSide.AWAY,
-            player_id,
-            NormalizedPoint(100 - x, 100 - y),
-        )
-        for player_id, (x, y) in home_positions.items()
-    )
-    state = PresentationState(
-        presentation_version="2026.1",
-        players=home_players + away_players,
-        ball_position=NormalizedPoint(*home_positions[8]),
-        ball_holder_side=MatchSide.HOME,
-        ball_holder_id=8,
-        last_event_sequence=None,
-    )
-    initial_state = state
-    scenes = []
-    passes = (
-        (8, 9, "O camisa 8 encontra o centroavante."),
-        (9, 7, "O centroavante abre a jogada para a ponta."),
-        (7, 10, "O ponta devolve a bola ao meio-campista."),
-    )
-    for sequence, (sender_id, receiver_id, explanation) in enumerate(
-        passes, start=1
-    ):
-        event = MatchEvent(
-            sequence=sequence,
-            clock=MatchClock(124 + sequence, MatchPeriod.FIRST_HALF),
-            event_type=MatchEventType.PASS,
-            team_side=MatchSide.HOME,
-            participant_ids=(sender_id, receiver_id),
-            origin_zone=FieldZone(FieldThird.MIDDLE, FieldLane.CENTER),
-            destination_zone=FieldZone(FieldThird.ATTACKING, FieldLane.CENTER),
-            context="open_play",
-            outcome="completed",
-            explanation=explanation,
-        )
-        advance = advance_pass_scene(state, event)
-        scenes.append(advance.scene.to_snapshot())
-        state = advance.end_state
+    return build_demo_sequence_snapshot()
 
-    carry_event = MatchEvent(
-        sequence=4,
-        clock=MatchClock(128, MatchPeriod.FIRST_HALF),
-        event_type=MatchEventType.CARRY,
-        team_side=MatchSide.HOME,
-        participant_ids=(10,),
-        origin_zone=FieldZone(FieldThird.MIDDLE, FieldLane.RIGHT),
-        destination_zone=FieldZone(FieldThird.ATTACKING, FieldLane.RIGHT),
-        context="open_play",
-        outcome="progressed",
-        explanation="O meio-campista conduz a bola antes do passe final.",
-    )
-    carry = advance_carry_scene(state, carry_event, NormalizedPoint(36, 69))
-    scenes.append(carry.scene.to_snapshot())
-    state = carry.end_state
 
-    final_pass_event = MatchEvent(
-        sequence=5,
-        clock=MatchClock(129, MatchPeriod.FIRST_HALF),
-        event_type=MatchEventType.PASS,
-        team_side=MatchSide.HOME,
-        participant_ids=(10, 11),
-        origin_zone=FieldZone(FieldThird.MIDDLE, FieldLane.RIGHT),
-        destination_zone=FieldZone(FieldThird.ATTACKING, FieldLane.RIGHT),
-        context="open_play",
-        outcome="completed",
-        explanation="Após conduzir, o meio-campista encontra o ponta.",
-    )
-    final_pass = advance_pass_scene(state, final_pass_event)
-    scenes.append(final_pass.scene.to_snapshot())
-    state = final_pass.end_state
-
-    shot_event = MatchEvent(
-        sequence=6,
-        clock=MatchClock(130, MatchPeriod.FIRST_HALF),
-        event_type=MatchEventType.SHOT,
-        team_side=MatchSide.HOME,
-        participant_ids=(11,),
-        origin_zone=FieldZone(FieldThird.ATTACKING, FieldLane.RIGHT),
-        destination_zone=FieldZone(FieldThird.ATTACKING, FieldLane.CENTER),
-        context="open_play",
-        outcome="on_target",
-        explanation="O ponta domina e finaliza em direção ao gol.",
-    )
-    shot = advance_shot_scene(state, shot_event, NormalizedPoint(98, 55))
-    scenes.append(shot.scene.to_snapshot())
-    state = shot.end_state
-
-    return {
-        "presentation_version": initial_state.presentation_version,
-        "initial_state": initial_state.to_snapshot(),
-        "scenes": scenes,
-        "final_state": state.to_snapshot(),
-    }
+@router.get("/api/v1/dev/presentation-scenes")
+def get_developer_scene_catalog():
+    return build_developer_scene_catalog()
 
 
 @router.post("/jogadores/", response_model=schemas.Jogador)

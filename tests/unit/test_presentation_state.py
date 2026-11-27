@@ -157,14 +157,22 @@ def test_pass_advance_returns_scene_and_new_visual_state():
     assert advance.scene.keyframes[0].position == state.position_for(
         MatchSide.HOME, 8
     )
-    assert advance.scene.keyframes[-1].position == state.position_for(
+    assert len(advance.scene.player_tracks) == 22
+    assert advance.scene.keyframes[-1].position == advance.end_state.position_for(
         MatchSide.HOME, 9
     )
-    assert advance.end_state.ball_position == NormalizedPoint(42, 50)
+    assert advance.end_state.ball_position == NormalizedPoint(46.5, 50)
     assert advance.end_state.ball_holder_side is MatchSide.HOME
     assert advance.end_state.ball_holder_id == 9
     assert advance.end_state.last_event_sequence == 1
     assert state.ball_holder_id == 8
+    for track in advance.scene.player_tracks:
+        assert track.keyframes[0].position == state.position_for(
+            track.side, track.player_id
+        )
+        assert track.keyframes[-1].position == advance.end_state.position_for(
+            track.side, track.player_id
+        )
 
 
 # Encadeia passes usando o fim de uma cena como início exato da seguinte.
@@ -176,36 +184,33 @@ def test_pass_advances_chain_without_ball_teleportation():
     assert first.scene.keyframes[-1].position == second.scene.keyframes[0].position
     assert second.scene.keyframes[-1].position == third.scene.keyframes[0].position
     assert third.end_state.ball_holder_id == 10
-    assert third.end_state.ball_position == NormalizedPoint(31, 73)
+    assert third.end_state.ball_position == third.end_state.position_for(
+        MatchSide.HOME, 10
+    )
+    assert third.end_state.ball_position == NormalizedPoint(30, 67)
 
 
 # Move o portador, a bola e os dois blocos para posições finais consistentes.
 def test_carry_advance_updates_collective_shape_and_ball_together():
-    state = advance_pass_scene(
-        advance_pass_scene(
-            advance_pass_scene(make_state(), make_pass(1, 8, 9)).end_state,
-            make_pass(2, 9, 7),
-        ).end_state,
-        make_pass(3, 7, 10),
-    ).end_state
-    destination = NormalizedPoint(43, 68)
+    state = make_state()
+    destination = NormalizedPoint(45, 55)
 
-    advance = advance_carry_scene(state, make_carry(4, 10), destination)
+    advance = advance_carry_scene(state, make_carry(1, 8), destination)
 
-    assert advance.scene.keyframes[0].position == NormalizedPoint(31, 73)
+    assert advance.scene.keyframes[0].position == NormalizedPoint(33, 50)
     assert advance.scene.keyframes[-1].position == destination
     assert len(advance.scene.player_tracks) == 22
-    assert advance.end_state.position_for(MatchSide.HOME, 10) == destination
-    assert advance.end_state.position_for(MatchSide.HOME, 8) == NormalizedPoint(
-        39, 52.7
+    assert advance.end_state.position_for(MatchSide.HOME, 8) == destination
+    assert advance.end_state.position_for(MatchSide.HOME, 10) == NormalizedPoint(
+        37, 70.3
     )
     assert advance.end_state.position_for(MatchSide.AWAY, 8) == NormalizedPoint(
-        73, 52.7
+        73, 50.75
     )
     assert advance.end_state.ball_position == destination
-    assert advance.end_state.ball_holder_id == 10
-    assert advance.end_state.last_event_sequence == 4
-    assert state.position_for(MatchSide.HOME, 10) == NormalizedPoint(31, 73)
+    assert advance.end_state.ball_holder_id == 8
+    assert advance.end_state.last_event_sequence == 1
+    assert state.position_for(MatchSide.HOME, 8) == NormalizedPoint(33, 50)
     for track in advance.scene.player_tracks:
         assert track.keyframes[0].position == state.position_for(
             track.side, track.player_id
@@ -217,23 +222,16 @@ def test_carry_advance_updates_collective_shape_and_ball_together():
 
 # Faz o passe posterior começar exatamente no destino final da condução.
 def test_carry_then_pass_chain_starts_from_updated_player_position():
-    state = advance_pass_scene(
-        advance_pass_scene(
-            advance_pass_scene(make_state(), make_pass(1, 8, 9)).end_state,
-            make_pass(2, 9, 7),
-        ).end_state,
-        make_pass(3, 7, 10),
-    ).end_state
     carry = advance_carry_scene(
-        state,
-        make_carry(4, 10),
-        NormalizedPoint(43, 68),
+        make_state(),
+        make_carry(1, 8),
+        NormalizedPoint(45, 55),
     )
 
-    following_pass = advance_pass_scene(carry.end_state, make_pass(5, 10, 11))
+    following_pass = advance_pass_scene(carry.end_state, make_pass(2, 8, 9))
 
     assert carry.scene.keyframes[-1].position == following_pass.scene.keyframes[0].position
-    assert following_pass.end_state.ball_holder_id == 11
+    assert following_pass.end_state.ball_holder_id == 9
 
 
 # Rejeita condução solicitada por jogador que não possui a bola.
@@ -261,12 +259,23 @@ def test_shot_advance_moves_ball_to_target_and_releases_holder():
 
     assert advance.scene.keyframes[0].position == start
     assert advance.scene.keyframes[-1].position == target
-    assert advance.end_state.players == state.players
+    assert len(advance.scene.player_tracks) == 22
+    assert advance.end_state.position_for(MatchSide.HOME, 11) == NormalizedPoint(
+        47, 77
+    )
+    assert advance.end_state.players != state.players
     assert advance.end_state.ball_position == target
     assert advance.end_state.ball_holder_side is None
     assert advance.end_state.ball_holder_id is None
     assert advance.end_state.last_event_sequence == 6
     assert state.ball_holder_id == 11
+    for track in advance.scene.player_tracks:
+        assert track.keyframes[0].position == state.position_for(
+            track.side, track.player_id
+        )
+        assert track.keyframes[-1].position == advance.end_state.position_for(
+            track.side, track.player_id
+        )
 
 
 # Rejeita finalização solicitada por jogador que não possui a bola.

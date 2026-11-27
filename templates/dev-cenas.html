@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Laboratório de cenas da apresentação 2D do BRAFOOT" />
+  <title>Laboratório de Cenas | BRAFOOT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/dev-cenas.css" />
+</head>
+<body>
+  <header class="lab-nav">
+    <a href="/partida" class="back-link">BRAFOOT / PARTIDA</a>
+    <div class="environment-label"><span></span> Ferramenta de desenvolvimento</div>
+  </header>
+
+  <main class="lab-shell">
+    <section class="lab-stage" aria-labelledby="lab-title">
+      <header class="stage-heading">
+        <div>
+          <span class="eyebrow">Laboratório visual</span>
+          <h1 id="lab-title">Cenas sob revisão</h1>
+        </div>
+        <p>Selecione um cenário no catálogo. A mesma entrada sempre reproduz os mesmos keyframes.</p>
+      </header>
+
+      <div class="scenario-meta">
+        <div>
+          <span id="scenarioCategory">Carregando catálogo</span>
+          <h2 id="scenarioTitle">Preparando campo...</h2>
+        </div>
+        <span class="scene-counter" id="sceneCounter">0 / 0</span>
+      </div>
+
+      <div class="match-pitch" id="scenePitch">
+        <svg class="match-pitch-lines" viewBox="0 0 100 64" preserveAspectRatio="none" role="img" aria-label="Campo para prévia das cenas" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1.5" y="1.5" width="97" height="61" rx="0.5" />
+          <line x1="50" y1="1.5" x2="50" y2="62.5" />
+          <circle cx="50" cy="32" r="9" />
+          <circle class="pitch-fill" cx="50" cy="32" r="0.65" />
+          <rect x="1.5" y="14" width="16" height="36" />
+          <rect x="1.5" y="23" width="6" height="18" />
+          <circle class="pitch-fill" cx="12" cy="32" r="0.55" />
+          <path d="M17.5 25 A9 9 0 0 1 17.5 39" />
+          <rect x="82.5" y="14" width="16" height="36" />
+          <rect x="92.5" y="23" width="6" height="18" />
+          <circle class="pitch-fill" cx="88" cy="32" r="0.55" />
+          <path d="M82.5 25 A9 9 0 0 0 82.5 39" />
+          <rect class="goal" x="0" y="26" width="1.5" height="12" />
+          <rect class="goal" x="98.5" y="26" width="1.5" height="12" />
+        </svg>
+        <span class="scene-ball" id="sceneBall" hidden aria-hidden="true"></span>
+        <div id="playerLayer"></div>
+      </div>
+
+      <section class="playback-console" aria-label="Controles da reprodução">
+        <div class="narration-block">
+          <span id="playbackState">Aguardando cenário</span>
+          <p id="sceneNarration" aria-live="polite">O catálogo será carregado automaticamente.</p>
+        </div>
+        <div class="playback-actions">
+          <label for="playbackSpeed">Velocidade</label>
+          <select id="playbackSpeed">
+            <option value="0.5">0,5x</option>
+            <option value="1" selected>1x</option>
+            <option value="1.5">1,5x</option>
+            <option value="2">2x</option>
+          </select>
+          <button id="resetScenario" type="button" disabled>Reiniciar</button>
+          <button id="playScenario" class="primary-action" type="button" disabled>Reproduzir</button>
+        </div>
+      </section>
+
+      <section class="review-panel" aria-labelledby="review-title">
+        <div class="review-heading">
+          <div>
+            <span class="eyebrow">Checkpoint local</span>
+            <h2 id="review-title">Revisão do cenário</h2>
+          </div>
+          <span class="review-status" id="reviewStatus">Pendente</span>
+        </div>
+        <textarea id="reviewNote" rows="3" placeholder="Descreva o ajuste necessário para este cenário..."></textarea>
+        <div class="review-actions">
+          <button type="button" data-review="changes_requested">Precisa de ajustes</button>
+          <button type="button" data-review="approved">Aprovar cena</button>
+        </div>
+        <small>A revisão fica salva neste navegador e é invalidada quando a versão do cenário muda.</small>
+      </section>
+    </section>
+
+    <aside class="catalog-panel" aria-labelledby="catalog-title">
+      <header>
+        <span class="eyebrow">Catálogo versionado</span>
+        <h2 id="catalog-title">Cenas disponíveis</h2>
+        <p id="catalogSummary">Carregando...</p>
+      </header>
+      <nav id="sceneCatalog" aria-label="Catálogo de cenas"></nav>
+    </aside>
+  </main>
+
+  <script src="/static/dev-cenas.js"></script>
+</body>
+</html>

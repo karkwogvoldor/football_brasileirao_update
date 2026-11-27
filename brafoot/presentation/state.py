@@ -15,10 +15,10 @@ from brafoot.presentation.scenes import (
     build_shot_scene,
 )
 
-CARRY_BLOCK_PROGRESS_RATIO = 0.5
-CARRY_BLOCK_LATERAL_RATIO = 0.15
-MAX_CARRY_BLOCK_PROGRESS = 6
-MAX_CARRY_BLOCK_LATERAL = 3
+COLLECTIVE_PROGRESS_RATIO = 0.5
+COLLECTIVE_LATERAL_RATIO = 0.15
+MAX_COLLECTIVE_PROGRESS = 6
+MAX_COLLECTIVE_LATERAL = 3
 
 
 @dataclass(frozen=True, slots=True)
@@ -199,17 +199,26 @@ def advance_pass_scene(
     ):
         raise ValueError("A sequência dos eventos visuais deve avançar de um em um.")
 
+    sender_position = state.position_for(event.team_side, sender_id)
+    receiver_identity = (event.team_side, receiver_id)
+    player_destinations = _derive_collective_destinations(
+        state,
+        movement_start=sender_position,
+        movement_end=state.position_for(event.team_side, receiver_id),
+    )
     participant_positions = {
-        sender_id: state.position_for(event.team_side, sender_id),
-        receiver_id: state.position_for(event.team_side, receiver_id),
+        sender_id: sender_position,
+        receiver_id: player_destinations[receiver_identity],
     }
     scene = build_pass_scene(
         event,
         participant_positions=participant_positions,
+        player_movements=_player_movements(state, player_destinations),
         presentation_version=state.presentation_version,
     )
     end_state = replace(
         state,
+        players=_move_players(state, player_destinations),
         ball_position=participant_positions[receiver_id],
         ball_holder_side=event.team_side,
         ball_holder_id=receiver_id,
@@ -248,61 +257,27 @@ def advance_carry_scene(
         raise ValueError("A sequência dos eventos visuais deve avançar de um em um.")
 
     start_position = state.position_for(event.team_side, player_id)
-    progress = _clamp(
-        (destination_position.x - start_position.x) * CARRY_BLOCK_PROGRESS_RATIO,
-        -MAX_CARRY_BLOCK_PROGRESS,
-        MAX_CARRY_BLOCK_PROGRESS,
-    )
-    player_destinations = {
-        (player.side, player.player_id): (
-            destination_position
-            if player.side is event.team_side and player.player_id == player_id
-            else NormalizedPoint(
-                x=_clamp(player.position.x + progress, 0, 100),
-                y=_clamp(
-                    player.position.y
-                    + _clamp(
-                        (destination_position.y - player.position.y)
-                        * CARRY_BLOCK_LATERAL_RATIO,
-                        -MAX_CARRY_BLOCK_LATERAL,
-                        MAX_CARRY_BLOCK_LATERAL,
-                    ),
-                    0,
-                    100,
-                ),
-            )
-        )
-        for player in state.players
-    }
     carrier_identity = (event.team_side, player_id)
-    player_movements = {
-        carrier_identity: (start_position, destination_position),
-        **{
-            (player.side, player.player_id): (
-                player.position,
-                player_destinations[(player.side, player.player_id)],
-            )
-            for player in state.players
-            if (player.side, player.player_id) != carrier_identity
-        },
-    }
+    player_destinations = _derive_collective_destinations(
+        state,
+        movement_start=start_position,
+        movement_end=destination_position,
+        fixed_destinations={carrier_identity: destination_position},
+    )
     scene = build_carry_scene(
         event,
         start_position=start_position,
         destination_position=destination_position,
-        player_movements=player_movements,
+        player_movements=_player_movements(
+            state,
+            player_destinations,
+            primary_identity=carrier_identity,
+        ),
         presentation_version=state.presentation_version,
-    )
-    moved_players = tuple(
-        replace(
-            player,
-            position=player_destinations[(player.side, player.player_id)],
-        )
-        for player in state.players
     )
     end_state = replace(
         state,
-        players=moved_players,
+        players=_move_players(state, player_destinations),
         ball_position=destination_position,
         last_event_sequence=event.sequence,
     )
@@ -338,14 +313,22 @@ def advance_shot_scene(
     ):
         raise ValueError("A sequência dos eventos visuais deve avançar de um em um.")
 
+    start_position = state.position_for(event.team_side, player_id)
+    player_destinations = _derive_collective_destinations(
+        state,
+        movement_start=start_position,
+        movement_end=target_position,
+    )
     scene = build_shot_scene(
         event,
-        start_position=state.position_for(event.team_side, player_id),
+        start_position=start_position,
         target_position=target_position,
+        player_movements=_player_movements(state, player_destinations),
         presentation_version=state.presentation_version,
     )
     end_state = replace(
         state,
+        players=_move_players(state, player_destinations),
         ball_position=target_position,
         ball_holder_side=None,
         ball_holder_id=None,
@@ -361,6 +344,75 @@ def _player_from_snapshot(snapshot: object) -> PresentedPlayer:
         side=MatchSide(snapshot["side"]),
         player_id=snapshot["player_id"],
         position=NormalizedPoint(x=snapshot["x"], y=snapshot["y"]),
+    )
+
+
+def _derive_collective_destinations(
+    state: PresentationState,
+    *,
+    movement_start: NormalizedPoint,
+    movement_end: NormalizedPoint,
+    fixed_destinations: Mapping[
+        tuple[MatchSide, int], NormalizedPoint
+    ]
+    | None = None,
+) -> dict[tuple[MatchSide, int], NormalizedPoint]:
+    progress = _clamp(
+        (movement_end.x - movement_start.x) * COLLECTIVE_PROGRESS_RATIO,
+        -MAX_COLLECTIVE_PROGRESS,
+        MAX_COLLECTIVE_PROGRESS,
+    )
+    destinations = {
+        (player.side, player.player_id): NormalizedPoint(
+            x=_clamp(player.position.x + progress, 0, 100),
+            y=_clamp(
+                player.position.y
+                + _clamp(
+                    (movement_end.y - player.position.y)
+                    * COLLECTIVE_LATERAL_RATIO,
+                    -MAX_COLLECTIVE_LATERAL,
+                    MAX_COLLECTIVE_LATERAL,
+                ),
+                0,
+                100,
+            ),
+        )
+        for player in state.players
+    }
+    if fixed_destinations:
+        destinations.update(fixed_destinations)
+    return destinations
+
+
+def _player_movements(
+    state: PresentationState,
+    destinations: Mapping[tuple[MatchSide, int], NormalizedPoint],
+    *,
+    primary_identity: tuple[MatchSide, int] | None = None,
+) -> dict[tuple[MatchSide, int], tuple[NormalizedPoint, NormalizedPoint]]:
+    movements = {
+        (player.side, player.player_id): (
+            player.position,
+            destinations[(player.side, player.player_id)],
+        )
+        for player in state.players
+    }
+    if primary_identity is None:
+        return movements
+    primary_movement = movements.pop(primary_identity)
+    return {primary_identity: primary_movement, **movements}
+
+
+def _move_players(
+    state: PresentationState,
+    destinations: Mapping[tuple[MatchSide, int], NormalizedPoint],
+) -> tuple[PresentedPlayer, ...]:
+    return tuple(
+        replace(
+            player,
+            position=destinations[(player.side, player.player_id)],
+        )
+        for player in state.players
     )
 
 

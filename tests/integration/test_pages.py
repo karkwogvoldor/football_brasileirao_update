@@ -135,6 +135,7 @@ def test_demo_presentation_sequence_endpoint_is_deterministic(client):
     assert sequence["scenes"][3]["player_tracks"][0]["keyframes"] == sequence[
         "scenes"
     ][3]["keyframes"]
+    assert all(len(scene["player_tracks"]) == 22 for scene in sequence["scenes"])
     assert sequence["initial_state"]["ball_holder_id"] == 8
     assert sequence["final_state"]["ball_holder_id"] is None
     assert sequence["final_state"]["ball_position"] == {"x": 98, "y": 55}
@@ -170,6 +171,59 @@ def test_presentation_script_reads_flat_player_snapshot(client):
     }
     assert "positionPlayer(player.side, player.player_id, player);" in script
     assert "player.position" not in script
+
+
+# Serve o laboratório de cenas com seus recursos dedicados de apresentação.
+def test_developer_scene_lab_is_available(client):
+    response = client.get("/dev/cenas")
+    parser = MatchPageParser()
+    parser.feed(response.text)
+
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/html")
+    assert "/static/dev-cenas.css" in parser.stylesheets
+    assert "/static/dev-cenas.js" in parser.scripts
+    assert client.get("/static/dev-cenas.css").status_code == 200
+    assert client.get("/static/dev-cenas.js").status_code == 200
+
+
+# Expõe cenários versionados, agrupados e determinísticos para revisão visual.
+def test_developer_scene_catalog_is_grouped_and_deterministic(client):
+    first = client.get("/api/v1/dev/presentation-scenes")
+    second = client.get("/api/v1/dev/presentation-scenes")
+    catalog = first.json()
+
+    assert first.status_code == 200
+    assert second.json() == catalog
+    assert [group["id"] for group in catalog["groups"]] == [
+        "ball",
+        "movement",
+        "composite",
+    ]
+    assert len(catalog["scenarios"]) == 8
+    assert len({scenario["id"] for scenario in catalog["scenarios"]}) == 8
+    assert all(
+        len(scenario["initial_state"]["players"]) == 22
+        and scenario["scenes"]
+        and scenario["status"] == "pending"
+        for scenario in catalog["scenarios"]
+    )
+    movement_ids = {
+        scenario["id"]
+        for scenario in catalog["scenarios"]
+        if scenario["category"] == "movement"
+    }
+    assert movement_ids == {
+        "movement-collective-shift-right",
+        "movement-goalkeeper-adjustment",
+        "movement-interception-attempt",
+    }
+    composite = next(
+        scenario
+        for scenario in catalog["scenarios"]
+        if scenario["id"] == "composite-attacking-sequence"
+    )
+    assert len(composite["scenes"]) == 6
 
 
 # Verifica se todos os escudos exibidos na página inicial existem e são servidos como imagem.

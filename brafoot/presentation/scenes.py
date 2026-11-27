@@ -187,6 +187,10 @@ def build_pass_scene(
     event: MatchEvent,
     *,
     participant_positions: Mapping[int, NormalizedPoint],
+    player_movements: Mapping[
+        tuple[MatchSide, int], tuple[NormalizedPoint, NormalizedPoint]
+    ]
+    | None = None,
     presentation_version: str = DEFAULT_PRESENTATION_VERSION,
 ) -> PresentationScene:
     """Create deterministic ball keyframes from one confirmed pass event."""
@@ -230,7 +234,10 @@ def build_pass_scene(
                 (start, midpoint, end),
             )
         ),
-        player_tracks=(),
+        player_tracks=_build_player_tracks(
+            player_movements,
+            PASS_SCENE_DURATION_MS,
+        ),
         narration=event.explanation,
     )
 
@@ -282,40 +289,6 @@ def build_carry_scene(
         destination_position,
     ):
         raise ValueError("Os movimentos coletivos devem incluir a condução do portador.")
-    player_tracks = []
-    for identity, positions in movements.items():
-        if (
-            not isinstance(identity, tuple)
-            or len(identity) != 2
-            or not isinstance(identity[0], MatchSide)
-            or not _is_positive_int(identity[1])
-            or not isinstance(positions, tuple)
-            or len(positions) != 2
-            or not all(isinstance(point, NormalizedPoint) for point in positions)
-        ):
-            raise ValueError("Os movimentos coletivos da condução não são válidos.")
-        movement_start, movement_end = positions
-        movement_midpoint = NormalizedPoint(
-            x=(movement_start.x + movement_end.x) / 2,
-            y=(movement_start.y + movement_end.y) / 2,
-        )
-        player_tracks.append(
-            PlayerTrack(
-                side=identity[0],
-                player_id=identity[1],
-                keyframes=tuple(
-                    SceneKeyframe(at_ms=at_ms, position=point)
-                    for at_ms, point in zip(
-                        (
-                            0,
-                            CARRY_SCENE_DURATION_MS // 2,
-                            CARRY_SCENE_DURATION_MS,
-                        ),
-                        (movement_start, movement_midpoint, movement_end),
-                    )
-                ),
-            )
-        )
     return PresentationScene(
         presentation_version=presentation_version,
         event_sequence=event.sequence,
@@ -324,7 +297,10 @@ def build_carry_scene(
         participant_ids=event.participant_ids,
         duration_ms=CARRY_SCENE_DURATION_MS,
         keyframes=keyframes,
-        player_tracks=tuple(player_tracks),
+        player_tracks=_build_player_tracks(
+            movements,
+            CARRY_SCENE_DURATION_MS,
+        ),
         narration=event.explanation,
     )
 
@@ -334,6 +310,10 @@ def build_shot_scene(
     *,
     start_position: NormalizedPoint,
     target_position: NormalizedPoint,
+    player_movements: Mapping[
+        tuple[MatchSide, int], tuple[NormalizedPoint, NormalizedPoint]
+    ]
+    | None = None,
     presentation_version: str = DEFAULT_PRESENTATION_VERSION,
 ) -> PresentationScene:
     """Create the ball track for one confirmed shot toward an exact target."""
@@ -370,7 +350,10 @@ def build_shot_scene(
                 (start_position, midpoint, target_position),
             )
         ),
-        player_tracks=(),
+        player_tracks=_build_player_tracks(
+            player_movements,
+            SHOT_SCENE_DURATION_MS,
+        ),
         narration=event.explanation,
     )
 
@@ -409,6 +392,51 @@ def _validate_keyframes(keyframes: object) -> None:
         for previous, current in zip(keyframes, keyframes[1:])
     ):
         raise ValueError("Os keyframes devem estar em ordem estritamente crescente.")
+
+
+def _build_player_tracks(
+    movements: Mapping[
+        tuple[MatchSide, int], tuple[NormalizedPoint, NormalizedPoint]
+    ]
+    | None,
+    duration_ms: int,
+) -> tuple[PlayerTrack, ...]:
+    if movements is None:
+        return ()
+    if not isinstance(movements, Mapping):
+        raise ValueError("Os movimentos coletivos da cena não são válidos.")
+
+    tracks = []
+    for identity, positions in movements.items():
+        if (
+            not isinstance(identity, tuple)
+            or len(identity) != 2
+            or not isinstance(identity[0], MatchSide)
+            or not _is_positive_int(identity[1])
+            or not isinstance(positions, tuple)
+            or len(positions) != 2
+            or not all(isinstance(point, NormalizedPoint) for point in positions)
+        ):
+            raise ValueError("Os movimentos coletivos da cena não são válidos.")
+        start, end = positions
+        midpoint = NormalizedPoint(
+            x=(start.x + end.x) / 2,
+            y=(start.y + end.y) / 2,
+        )
+        tracks.append(
+            PlayerTrack(
+                side=identity[0],
+                player_id=identity[1],
+                keyframes=tuple(
+                    SceneKeyframe(at_ms=at_ms, position=point)
+                    for at_ms, point in zip(
+                        (0, duration_ms // 2, duration_ms),
+                        (start, midpoint, end),
+                    )
+                ),
+            )
+        )
+    return tuple(tracks)
 
 
 def _is_normalized_number(value: object) -> bool:
