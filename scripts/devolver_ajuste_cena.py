@@ -1,4 +1,4 @@
-"""Registra o retorno de um ajuste de cena para nova revisão no laboratório.
+r"""Registra o retorno de um ajuste de cena para nova revisão no laboratório.
 
 Uso: venv\Scripts\python.exe scripts\devolver_ajuste_cena.py ID DE PARA "resumo"
 """
