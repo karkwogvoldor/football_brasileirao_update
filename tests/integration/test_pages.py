@@ -106,21 +106,27 @@ def test_match_page_has_available_dedicated_stylesheet(client):
     assert stylesheet.headers["content-type"].startswith("text/css")
 
 
-# Expõe uma cena de passe determinística sem consultar banco ou alterar a partida.
-def test_demo_pass_scene_endpoint_is_deterministic(client):
-    first_response = client.get("/api/v1/presentation/demo-pass")
-    second_response = client.get("/api/v1/presentation/demo-pass")
-    scene = first_response.json()
+# Expõe passes encadeados determinísticos sem consultar banco ou alterar a partida.
+def test_demo_pass_sequence_endpoint_is_deterministic(client):
+    first_response = client.get("/api/v1/presentation/demo-sequence")
+    second_response = client.get("/api/v1/presentation/demo-sequence")
+    sequence = first_response.json()
 
     assert first_response.status_code == 200
-    assert second_response.json() == scene
-    assert scene["presentation_version"] == "2026.1"
-    assert scene["event_type"] == "pass"
-    assert scene["team_side"] == "home"
-    assert scene["participant_ids"] == [8, 9]
-    assert scene["duration_ms"] == 1200
-    assert scene["keyframes"][0] == {"at_ms": 0, "x": 33, "y": 50}
-    assert scene["keyframes"][-1] == {"at_ms": 1200, "x": 42, "y": 50}
+    assert second_response.json() == sequence
+    assert sequence["presentation_version"] == "2026.1"
+    assert [scene["participant_ids"] for scene in sequence["scenes"]] == [
+        [8, 9],
+        [9, 7],
+        [7, 10],
+    ]
+    assert sequence["initial_state"]["ball_holder_id"] == 8
+    assert sequence["final_state"]["ball_holder_id"] == 10
+    for current, following in zip(sequence["scenes"], sequence["scenes"][1:]):
+        assert current["keyframes"][-1] == {
+            **following["keyframes"][0],
+            "at_ms": current["duration_ms"],
+        }
 
 
 # Carrega o reprodutor dedicado da cena sem reutilizar o editor legado.
@@ -132,7 +138,7 @@ def test_match_page_has_available_presentation_script(client):
     assert "/static/partida.js" in parser.scripts
     script = client.get("/static/partida.js")
     assert script.status_code == 200
-    assert "demo-pass" in script.text
+    assert "demo-sequence" in script.text
 
 
 # Verifica se todos os escudos exibidos na página inicial existem e são servidos como imagem.

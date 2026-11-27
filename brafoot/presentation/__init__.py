@@ -7,6 +7,12 @@ from brafoot.presentation.scenes import (
     SceneKeyframe,
     build_pass_scene,
 )
+from brafoot.presentation.state import (
+    PresentationState,
+    PresentedPlayer,
+    SceneAdvance,
+    advance_pass_scene,
+)
 
 __all__ = [
     "DEFAULT_PRESENTATION_VERSION",
@@ -14,4 +20,8 @@ __all__ = [
     "PresentationScene",
     "SceneKeyframe",
     "build_pass_scene",
+    "PresentationState",
+    "PresentedPlayer",
+    "SceneAdvance",
+    "advance_pass_scene",
 ]

@@ -121,6 +121,8 @@ O primeiro protótipo dessa página existe em `/partida`: campo SVG horizontal r
 
 A primeira derivação visual implementada transforma um passe semântico confirmado em uma `PresentationScene` versionada. A cena recebe as posições normalizadas do passador e do receptor: a bola parte exatamente do jogador A, percorre uma linha reta e termina exatamente no jogador B, enquanto as zonas 3×3 continuam descrevendo apenas o contexto semântico do lance. Keyframes determinísticos descrevem somente o trajeto visual da bola. A página consome uma cena demonstrativa por API e pode repeti-la sem alterar placar, relógio, evento ou qualquer estado da engine.
 
+As cenas são encadeadas por um `PresentationState` persistível com os 22 jogadores, bola, portador e última sequência visualizada. Cada `SceneAdvance` recebe esse checkpoint e um evento confirmado, devolvendo a cena e o checkpoint seguinte. A primeira sequência demonstrativa contém três passes consecutivos; cada receptor torna-se o passador elegível do próximo lance, impedindo teletransporte ou reordenação visual da bola.
+
 ## 9. Fases e critérios de conclusão
 
 | Fase | Entrega | Critério de aceite |

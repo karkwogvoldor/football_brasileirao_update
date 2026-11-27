@@ -83,6 +83,8 @@ A primeira fatia do visualizador está disponível em `/partida`. Ela usa uma p�
 
 A primeira cena dinâmica cobre somente `MatchEventType.PASS`. A camada Python `brafoot.presentation` recebe as posições normalizadas dos dois participantes e produz uma `PresentationScene` imutável com versão, duração e keyframes persistíveis. O primeiro keyframe coincide com o jogador que executa o passe, o intermediário permanece na reta entre os participantes e o último coincide com o receptor; as zonas semânticas permanecem contexto do lance e não substituem essas posições exatas. O endpoint demonstrativo entrega esse snapshot à página, e o JavaScript limita-se a mover a bola pelos keyframes recebidos, com alternativa sem animação para preferência de movimento reduzido. Repetir a cena não recalcula nem altera o evento esportivo.
 
+O `PresentationState` é o checkpoint visual entre cenas. Ele registra versão, posições normalizadas dos 22 jogadores, posição e portador atual da bola e última sequência confirmada. Um `SceneAdvance` reúne estado inicial, cena e estado final; para passes, somente a bola e seu portador avançam. O passe seguinte só é aceito quando seu autor coincide com o portador atual e sua sequência sucede a anterior. A demonstração em `/partida` encadeia três passes com essa regra, de modo que o fim de uma cena seja exatamente o início da próxima.
+
 Velocidade de reprodução é uma preferência visual. O relógio oficial, a fadiga e os eventos avançam apenas pelo estado da engine.
 
 ## Substituições e decisões durante o jogo
