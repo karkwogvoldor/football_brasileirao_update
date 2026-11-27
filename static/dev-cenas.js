@@ -20,6 +20,7 @@ const saveReviewNoteButton = document.getElementById('saveReviewNote');
 const editReviewNoteButton = document.getElementById('editReviewNote');
 const reviewSceneCount = document.getElementById('reviewSceneCount');
 const approvedSceneCount = document.getElementById('approvedSceneCount');
+const exportSceneReviewsButton = document.getElementById('exportSceneReviews');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 let catalog = null;
@@ -45,7 +46,7 @@ function currentReview(scenario) {
     const stored = reviews[reviewKey(scenario)] || {};
     return {
         ...stored,
-        status: stored.status || 'pending',
+        status: stored.status || scenario.status || 'pending',
         note: stored.note || '',
         draft_note: stored.draft_note ?? stored.note ?? '',
         note_locked: Boolean(stored.note_locked),
@@ -116,7 +117,40 @@ function unlockReviewNote() {
 function statusLabel(status) {
     if (status === 'approved') return 'Aprovada';
     if (status === 'changes_requested') return 'Precisa de ajustes';
+    if (status === 'ready_for_review') return 'Pronta para nova revisão';
     return 'Pendente';
+}
+
+function exportSceneReviews() {
+    if (!catalog) return;
+    const exportedReviews = catalog.scenarios
+        .map((scenario) => ({
+            scenario_id: scenario.id,
+            scenario_title: scenario.title,
+            scenario_version: scenario.version,
+            ...currentReview(scenario),
+        }))
+        .filter((review) => (
+            review.status !== 'pending'
+            || review.note
+            || review.draft_note
+        ));
+    const payload = {
+        catalog_version: catalog.catalog_version,
+        exported_at: new Date().toISOString(),
+        reviews: exportedReviews,
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {
+        type: 'application/json',
+    });
+    const downloadUrl = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = `brafoot-revisoes-cenas-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(downloadUrl);
 }
 
 function updateReviewPanel() {
@@ -367,6 +401,7 @@ resetButton.addEventListener('click', resetScenario);
 reviewNote.addEventListener('input', saveReviewDraft);
 saveReviewNoteButton.addEventListener('click', lockReviewNote);
 editReviewNoteButton.addEventListener('click', unlockReviewNote);
+exportSceneReviewsButton.addEventListener('click', exportSceneReviews);
 document.querySelectorAll('.review-actions [data-review]').forEach((button) => {
     button.addEventListener('click', () => saveReview(button.dataset.review));
 });

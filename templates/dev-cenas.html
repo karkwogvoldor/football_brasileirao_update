@@ -88,6 +88,7 @@
         </div>
         <div class="review-actions">
           <button type="button" data-review="changes_requested">Precisa de ajustes</button>
+          <button type="button" data-review="ready_for_review">Pronta para nova revisão</button>
           <button type="button" data-review="approved">Aprovar cena</button>
         </div>
         <small>Rascunhos são preservados ao trocar de cena. Salvar o feedback bloqueia o texto até uma edição explícita.</small>
@@ -99,6 +100,7 @@
         <span class="eyebrow">Catálogo versionado</span>
         <h2 id="catalog-title">Cenas disponíveis</h2>
         <p id="catalogSummary">Carregando...</p>
+        <button id="exportSceneReviews" class="export-action" type="button">Exportar revisões JSON</button>
       </header>
       <div class="catalog-tabs" role="tablist" aria-label="Estado das cenas">
         <button id="catalogReviewTab" class="active" type="button" role="tab" aria-selected="true" data-catalog-view="review">

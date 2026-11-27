@@ -19,6 +19,7 @@
     --away: #d9e6ec;
     --approved: #62c98a;
     --changes: #ed806d;
+    --ready: #65aef2;
 }
 
 body {
@@ -337,6 +338,11 @@ button:disabled {
     color: var(--changes);
 }
 
+.review-status.ready_for_review {
+    border-color: rgba(101, 174, 242, 0.55);
+    color: var(--ready);
+}
+
 .review-panel textarea {
     width: 100%;
     margin: 12px 0;
@@ -365,6 +371,7 @@ button:disabled {
 }
 
 .review-actions {
+    flex-wrap: wrap;
     padding-top: 10px;
     border-top: 1px solid var(--line);
 }
@@ -442,6 +449,13 @@ button:disabled {
     font-size: 0.78rem;
 }
 
+.export-action {
+    width: 100%;
+    margin-top: 12px;
+    border-color: rgba(101, 174, 242, 0.45);
+    color: var(--ready);
+}
+
 .catalog-group {
     padding: 14px;
     border-bottom: 1px solid var(--line);
@@ -500,7 +514,8 @@ button:disabled {
 }
 
 .scenario-card[data-review="approved"]::after,
-.scenario-card[data-review="changes_requested"]::after {
+.scenario-card[data-review="changes_requested"]::after,
+.scenario-card[data-review="ready_for_review"]::after {
     display: block;
     margin-top: 7px;
     font-family: "IBM Plex Mono", monospace;
@@ -517,6 +532,11 @@ button:disabled {
 .scenario-card[data-review="changes_requested"]::after {
     content: "Precisa de ajustes";
     color: var(--changes);
+}
+
+.scenario-card[data-review="ready_for_review"]::after {
+    content: "Pronta para nova revisão";
+    color: var(--ready);
 }
 
 @media (max-width: 1050px) {

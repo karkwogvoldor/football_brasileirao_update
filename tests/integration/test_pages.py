@@ -249,6 +249,17 @@ def test_developer_scene_lab_has_review_views_and_feedback_lock(client):
     assert "function unlockReviewNote()" in script.text
 
 
+# Exporta revisões locais e destaca cenas modificadas que aguardam nova análise.
+def test_developer_scene_lab_exports_reviews_and_marks_ready_scenes(client):
+    page = client.get("/dev/cenas")
+    script = client.get("/static/dev-cenas.js")
+
+    assert 'id="exportSceneReviews"' in page.text
+    assert 'data-review="ready_for_review"' in page.text
+    assert "function exportSceneReviews()" in script.text
+    assert "ready_for_review" in script.text
+
+
 # Verifica se todos os escudos exibidos na página inicial existem e são servidos como imagem.
 def test_home_team_badges_are_available(client):
     page = client.get("/")
