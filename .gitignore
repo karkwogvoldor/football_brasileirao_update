@@ -189,3 +189,6 @@ pip-selfcheck.json
 
 # Firecrawl research cache
 .firecrawl/
+
+# Revisões locais do laboratório de cenas
+data/dev/

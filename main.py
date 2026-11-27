@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 import mimetypes
 from datetime import timedelta
 
-from fastapi import APIRouter, FastAPI, Depends, HTTPException, UploadFile, File, Form, Request, Response
+from fastapi import APIRouter, Body, FastAPI, Depends, HTTPException, UploadFile, File, Form, Request, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -21,6 +21,7 @@ from brafoot.gameplay.sessions import (
     create_browser_session,
     find_browser_session,
 )
+from brafoot.presentation.review_store import load_scene_reviews, save_scene_reviews
 from brafoot.presentation.catalog import (
     build_demo_sequence_snapshot,
     build_developer_scene_catalog,
@@ -75,6 +76,20 @@ def get_demo_presentation_sequence():
 @router.get("/api/v1/dev/presentation-scenes")
 def get_developer_scene_catalog():
     return build_developer_scene_catalog()
+
+
+@router.get("/api/v1/dev/scene-reviews")
+def get_developer_scene_reviews():
+    return load_scene_reviews()
+
+
+@router.put("/api/v1/dev/scene-reviews")
+def put_developer_scene_reviews(payload: dict = Body(...)):
+    reviews = payload.get("reviews")
+    if not isinstance(reviews, dict):
+        raise HTTPException(status_code=422, detail="reviews deve ser um objeto")
+    save_scene_reviews(reviews)
+    return {"saved": len(reviews)}
 
 
 @router.post("/jogadores/", response_model=schemas.Jogador)
