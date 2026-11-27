@@ -81,11 +81,13 @@ from brafoot.engine.matches import (
     require_valid_match,
     validate_match,
 )
+from brafoot.engine.randomness import DeterministicStream
 from brafoot.engine.rulesets import (
     DEFAULT_MAX_SUBSTITUTIONS,
     DEFAULT_MAX_SUBSTITUTION_WINDOWS,
     DEFAULT_SEGMENT_DURATION_SECONDS,
     SimulationRuleset,
+    SimulationTuning,
 )
 from brafoot.engine.sectors import (
     ATTACK_POSITIONS,
@@ -105,6 +107,15 @@ from brafoot.engine.segments import (
     SegmentAdvance,
     SegmentStopReason,
     advance_match_segment,
+)
+from brafoot.engine.simulation import (
+    MatchSimulation,
+    SegmentSimulation,
+    SimulatedTeam,
+    TeamRatings,
+    build_simulated_team,
+    simulate_match,
+    simulate_match_segment,
 )
 from brafoot.engine.state import KICKOFF_ZONE, MatchCheckpoint, MatchState
 from brafoot.engine.zones import (
@@ -184,7 +195,9 @@ __all__ = [
     "DEFAULT_MAX_SUBSTITUTIONS",
     "DEFAULT_MAX_SUBSTITUTION_WINDOWS",
     "DEFAULT_SEGMENT_DURATION_SECONDS",
+    "DeterministicStream",
     "SimulationRuleset",
+    "SimulationTuning",
     "ATTACK_POSITIONS",
     "DEFENSIVE_POSITIONS",
     "MIDFIELD_POSITIONS",
@@ -200,6 +213,13 @@ __all__ = [
     "SegmentAdvance",
     "SegmentStopReason",
     "advance_match_segment",
+    "MatchSimulation",
+    "SegmentSimulation",
+    "SimulatedTeam",
+    "TeamRatings",
+    "build_simulated_team",
+    "simulate_match",
+    "simulate_match_segment",
     "KICKOFF_ZONE",
     "MatchCheckpoint",
     "MatchState",

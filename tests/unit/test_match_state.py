@@ -101,6 +101,7 @@ def test_match_state_snapshot_round_trip_is_lossless():
         possession=MatchSide.AWAY,
         ball_zone=FieldZone(FieldThird.ATTACKING, FieldLane.RIGHT),
         random_step=17,
+        ball_holder_id=42,
     )
 
     snapshot = state.to_snapshot()
@@ -115,8 +116,20 @@ def test_match_state_snapshot_round_trip_is_lossless():
         "ruleset_version": "2026.1",
         "random_seed": 12345,
         "random_step": 17,
+        "ball_holder_id": 42,
     }
     assert MatchState.from_snapshot(snapshot) == state
+
+
+# Requisito novo: o estado persiste o portador da bola; snapshots antigos, sem o campo, ainda são lidos.
+def test_match_state_snapshot_without_ball_holder_is_still_restorable():
+    legacy_snapshot = make_state().to_snapshot()
+    del legacy_snapshot["ball_holder_id"]
+
+    restored = MatchState.from_snapshot(legacy_snapshot)
+
+    assert restored.ball_holder_id is None
+    assert restored == make_state()
 
 
 # Associa uma sequência monotônica ao estado preservado pelo checkpoint.

@@ -26,6 +26,7 @@ class MatchState:
     ruleset_version: str
     random_seed: int
     random_step: int
+    ball_holder_id: int | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.clock, MatchClock):
@@ -44,6 +45,10 @@ class MatchState:
             raise ValueError("A semente da simulação deve ser um inteiro não negativo.")
         if not _is_non_negative_int(self.random_step):
             raise ValueError("A posição do gerador deve ser um inteiro não negativo.")
+        if self.ball_holder_id is not None and not _is_positive_int(
+            self.ball_holder_id
+        ):
+            raise ValueError("O jogador com a bola não é válido.")
 
     @classmethod
     def start(
@@ -81,6 +86,7 @@ class MatchState:
             "ruleset_version": self.ruleset_version,
             "random_seed": self.random_seed,
             "random_step": self.random_step,
+            "ball_holder_id": self.ball_holder_id,
         }
 
     @classmethod
@@ -102,6 +108,8 @@ class MatchState:
                 ruleset_version=snapshot["ruleset_version"],
                 random_seed=snapshot["random_seed"],
                 random_step=snapshot["random_step"],
+                # Snapshots anteriores à posse individual não traziam o portador.
+                ball_holder_id=snapshot.get("ball_holder_id"),
             )
         except (KeyError, TypeError, ValueError) as error:
             raise ValueError("O snapshot do estado da partida não é válido.") from error
@@ -148,6 +156,10 @@ class MatchCheckpoint:
 
 def _is_non_negative_int(value: object) -> bool:
     return isinstance(value, int) and not isinstance(value, bool) and value >= 0
+
+
+def _is_positive_int(value: object) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool) and value > 0
 
 
 def _is_canonical_version(value: object) -> bool:
