@@ -31,6 +31,7 @@ from brafoot.presentation.state import (
     PresentedPlayer,
     advance_carry_scene,
     advance_pass_scene,
+    advance_shot_scene,
 )
 
 cloudinary.config(
@@ -70,7 +71,7 @@ def partida():
 
 
 @router.get("/api/v1/presentation/demo-sequence")
-def get_demo_pass_sequence():
+def get_demo_presentation_sequence():
     home_positions = {
         1: (6, 50),
         2: (19, 17),
@@ -161,6 +162,22 @@ def get_demo_pass_sequence():
     final_pass = advance_pass_scene(state, final_pass_event)
     scenes.append(final_pass.scene.to_snapshot())
     state = final_pass.end_state
+
+    shot_event = MatchEvent(
+        sequence=6,
+        clock=MatchClock(130, MatchPeriod.FIRST_HALF),
+        event_type=MatchEventType.SHOT,
+        team_side=MatchSide.HOME,
+        participant_ids=(11,),
+        origin_zone=FieldZone(FieldThird.ATTACKING, FieldLane.RIGHT),
+        destination_zone=FieldZone(FieldThird.ATTACKING, FieldLane.CENTER),
+        context="open_play",
+        outcome="on_target",
+        explanation="O ponta domina e finaliza em direção ao gol.",
+    )
+    shot = advance_shot_scene(state, shot_event, NormalizedPoint(98, 55))
+    scenes.append(shot.scene.to_snapshot())
+    state = shot.end_state
 
     return {
         "presentation_version": initial_state.presentation_version,

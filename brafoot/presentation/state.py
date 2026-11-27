@@ -12,7 +12,13 @@ from brafoot.presentation.scenes import (
     PresentationScene,
     build_carry_scene,
     build_pass_scene,
+    build_shot_scene,
 )
+
+CARRY_BLOCK_PROGRESS_RATIO = 0.5
+CARRY_BLOCK_LATERAL_RATIO = 0.15
+MAX_CARRY_BLOCK_PROGRESS = 6
+MAX_CARRY_BLOCK_LATERAL = 3
 
 
 @dataclass(frozen=True, slots=True)
@@ -242,22 +248,107 @@ def advance_carry_scene(
         raise ValueError("A sequência dos eventos visuais deve avançar de um em um.")
 
     start_position = state.position_for(event.team_side, player_id)
+    progress = _clamp(
+        (destination_position.x - start_position.x) * CARRY_BLOCK_PROGRESS_RATIO,
+        -MAX_CARRY_BLOCK_PROGRESS,
+        MAX_CARRY_BLOCK_PROGRESS,
+    )
+    player_destinations = {
+        (player.side, player.player_id): (
+            destination_position
+            if player.side is event.team_side and player.player_id == player_id
+            else NormalizedPoint(
+                x=_clamp(player.position.x + progress, 0, 100),
+                y=_clamp(
+                    player.position.y
+                    + _clamp(
+                        (destination_position.y - player.position.y)
+                        * CARRY_BLOCK_LATERAL_RATIO,
+                        -MAX_CARRY_BLOCK_LATERAL,
+                        MAX_CARRY_BLOCK_LATERAL,
+                    ),
+                    0,
+                    100,
+                ),
+            )
+        )
+        for player in state.players
+    }
+    carrier_identity = (event.team_side, player_id)
+    player_movements = {
+        carrier_identity: (start_position, destination_position),
+        **{
+            (player.side, player.player_id): (
+                player.position,
+                player_destinations[(player.side, player.player_id)],
+            )
+            for player in state.players
+            if (player.side, player.player_id) != carrier_identity
+        },
+    }
     scene = build_carry_scene(
         event,
         start_position=start_position,
         destination_position=destination_position,
+        player_movements=player_movements,
         presentation_version=state.presentation_version,
     )
     moved_players = tuple(
-        replace(player, position=destination_position)
-        if player.side is event.team_side and player.player_id == player_id
-        else player
+        replace(
+            player,
+            position=player_destinations[(player.side, player.player_id)],
+        )
         for player in state.players
     )
     end_state = replace(
         state,
         players=moved_players,
         ball_position=destination_position,
+        last_event_sequence=event.sequence,
+    )
+    return SceneAdvance(start_state=state, scene=scene, end_state=end_state)
+
+
+def advance_shot_scene(
+    state: PresentationState,
+    event: MatchEvent,
+    target_position: NormalizedPoint,
+) -> SceneAdvance:
+    """Move the ball toward a confirmed shot target and release its holder."""
+
+    if not isinstance(state, PresentationState):
+        raise ValueError("O estado visual da finalização não é válido.")
+    if not isinstance(event, MatchEvent):
+        raise ValueError("O evento visual da finalização não é válido.")
+    if event.event_type is not MatchEventType.SHOT or event.team_side is None:
+        raise ValueError("O avanço exige um evento de finalização válido.")
+    if len(event.participant_ids) != 1:
+        raise ValueError("O avanço de finalização exige exatamente um participante.")
+    if not isinstance(target_position, NormalizedPoint):
+        raise ValueError("O alvo visual da finalização não é válido.")
+    player_id = event.participant_ids[0]
+    if (
+        state.ball_holder_side is not event.team_side
+        or state.ball_holder_id != player_id
+    ):
+        raise ValueError("O autor da finalização não possui a bola no estado visual atual.")
+    if (
+        state.last_event_sequence is not None
+        and event.sequence != state.last_event_sequence + 1
+    ):
+        raise ValueError("A sequência dos eventos visuais deve avançar de um em um.")
+
+    scene = build_shot_scene(
+        event,
+        start_position=state.position_for(event.team_side, player_id),
+        target_position=target_position,
+        presentation_version=state.presentation_version,
+    )
+    end_state = replace(
+        state,
+        ball_position=target_position,
+        ball_holder_side=None,
+        ball_holder_id=None,
         last_event_sequence=event.sequence,
     )
     return SceneAdvance(start_state=state, scene=scene, end_state=end_state)
@@ -275,6 +366,10 @@ def _player_from_snapshot(snapshot: object) -> PresentedPlayer:
 
 def _is_positive_int(value: object) -> bool:
     return isinstance(value, int) and not isinstance(value, bool) and value > 0
+
+
+def _clamp(value: float, minimum: float, maximum: float) -> float:
+    return max(minimum, min(value, maximum))
 
 
 def _is_canonical_code(value: object) -> bool:

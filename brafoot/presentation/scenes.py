@@ -12,6 +12,7 @@ from brafoot.engine.matches import MatchSide
 DEFAULT_PRESENTATION_VERSION = "2026.1"
 PASS_SCENE_DURATION_MS = 1200
 CARRY_SCENE_DURATION_MS = 1400
+SHOT_SCENE_DURATION_MS = 900
 
 
 @dataclass(frozen=True, slots=True)
@@ -239,6 +240,10 @@ def build_carry_scene(
     *,
     start_position: NormalizedPoint,
     destination_position: NormalizedPoint,
+    player_movements: Mapping[
+        tuple[MatchSide, int], tuple[NormalizedPoint, NormalizedPoint]
+    ]
+    | None = None,
     presentation_version: str = DEFAULT_PRESENTATION_VERSION,
 ) -> PresentationScene:
     """Create matching player and ball tracks for one confirmed carry."""
@@ -268,6 +273,49 @@ def build_carry_scene(
             (start_position, midpoint, destination_position),
         )
     )
+    carrier_identity = (event.team_side, event.participant_ids[0])
+    movements = player_movements or {
+        carrier_identity: (start_position, destination_position)
+    }
+    if not isinstance(movements, Mapping) or movements.get(carrier_identity) != (
+        start_position,
+        destination_position,
+    ):
+        raise ValueError("Os movimentos coletivos devem incluir a condução do portador.")
+    player_tracks = []
+    for identity, positions in movements.items():
+        if (
+            not isinstance(identity, tuple)
+            or len(identity) != 2
+            or not isinstance(identity[0], MatchSide)
+            or not _is_positive_int(identity[1])
+            or not isinstance(positions, tuple)
+            or len(positions) != 2
+            or not all(isinstance(point, NormalizedPoint) for point in positions)
+        ):
+            raise ValueError("Os movimentos coletivos da condução não são válidos.")
+        movement_start, movement_end = positions
+        movement_midpoint = NormalizedPoint(
+            x=(movement_start.x + movement_end.x) / 2,
+            y=(movement_start.y + movement_end.y) / 2,
+        )
+        player_tracks.append(
+            PlayerTrack(
+                side=identity[0],
+                player_id=identity[1],
+                keyframes=tuple(
+                    SceneKeyframe(at_ms=at_ms, position=point)
+                    for at_ms, point in zip(
+                        (
+                            0,
+                            CARRY_SCENE_DURATION_MS // 2,
+                            CARRY_SCENE_DURATION_MS,
+                        ),
+                        (movement_start, movement_midpoint, movement_end),
+                    )
+                ),
+            )
+        )
     return PresentationScene(
         presentation_version=presentation_version,
         event_sequence=event.sequence,
@@ -276,13 +324,53 @@ def build_carry_scene(
         participant_ids=event.participant_ids,
         duration_ms=CARRY_SCENE_DURATION_MS,
         keyframes=keyframes,
-        player_tracks=(
-            PlayerTrack(
-                side=event.team_side,
-                player_id=event.participant_ids[0],
-                keyframes=keyframes,
-            ),
+        player_tracks=tuple(player_tracks),
+        narration=event.explanation,
+    )
+
+
+def build_shot_scene(
+    event: MatchEvent,
+    *,
+    start_position: NormalizedPoint,
+    target_position: NormalizedPoint,
+    presentation_version: str = DEFAULT_PRESENTATION_VERSION,
+) -> PresentationScene:
+    """Create the ball track for one confirmed shot toward an exact target."""
+
+    if not isinstance(event, MatchEvent):
+        raise ValueError("O evento da cena de finalização não é válido.")
+    if event.event_type is not MatchEventType.SHOT:
+        raise ValueError("A cena de finalização exige um evento de finalização.")
+    if len(event.participant_ids) != 1:
+        raise ValueError("A cena de finalização exige exatamente um participante.")
+    if event.origin_zone is None or event.destination_zone is None:
+        raise ValueError("A cena de finalização exige zonas de origem e destino.")
+    if not isinstance(start_position, NormalizedPoint) or not isinstance(
+        target_position, NormalizedPoint
+    ):
+        raise ValueError("As posições da finalização não são válidas.")
+    assert event.team_side is not None
+
+    midpoint = NormalizedPoint(
+        x=(start_position.x + target_position.x) / 2,
+        y=(start_position.y + target_position.y) / 2,
+    )
+    return PresentationScene(
+        presentation_version=presentation_version,
+        event_sequence=event.sequence,
+        event_type=event.event_type,
+        team_side=event.team_side,
+        participant_ids=event.participant_ids,
+        duration_ms=SHOT_SCENE_DURATION_MS,
+        keyframes=tuple(
+            SceneKeyframe(at_ms=at_ms, position=point)
+            for at_ms, point in zip(
+                (0, SHOT_SCENE_DURATION_MS // 2, SHOT_SCENE_DURATION_MS),
+                (start_position, midpoint, target_position),
+            )
         ),
+        player_tracks=(),
         narration=event.explanation,
     )
 

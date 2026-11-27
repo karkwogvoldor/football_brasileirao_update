@@ -106,8 +106,8 @@ def test_match_page_has_available_dedicated_stylesheet(client):
     assert stylesheet.headers["content-type"].startswith("text/css")
 
 
-# Expõe passes encadeados determinísticos sem consultar banco ou alterar a partida.
-def test_demo_pass_sequence_endpoint_is_deterministic(client):
+# Expõe eventos visuais encadeados sem consultar banco ou alterar a partida.
+def test_demo_presentation_sequence_endpoint_is_deterministic(client):
     first_response = client.get("/api/v1/presentation/demo-sequence")
     second_response = client.get("/api/v1/presentation/demo-sequence")
     sequence = first_response.json()
@@ -121,6 +121,7 @@ def test_demo_pass_sequence_endpoint_is_deterministic(client):
         [7, 10],
         [10],
         [10, 11],
+        [11],
     ]
     assert [scene["event_type"] for scene in sequence["scenes"]] == [
         "pass",
@@ -128,13 +129,15 @@ def test_demo_pass_sequence_endpoint_is_deterministic(client):
         "pass",
         "carry",
         "pass",
+        "shot",
     ]
     assert sequence["scenes"][3]["player_tracks"][0]["player_id"] == 10
     assert sequence["scenes"][3]["player_tracks"][0]["keyframes"] == sequence[
         "scenes"
     ][3]["keyframes"]
     assert sequence["initial_state"]["ball_holder_id"] == 8
-    assert sequence["final_state"]["ball_holder_id"] == 11
+    assert sequence["final_state"]["ball_holder_id"] is None
+    assert sequence["final_state"]["ball_position"] == {"x": 98, "y": 55}
     for current, following in zip(sequence["scenes"], sequence["scenes"][1:]):
         assert current["keyframes"][-1] == {
             **following["keyframes"][0],

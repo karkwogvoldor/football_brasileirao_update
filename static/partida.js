@@ -48,6 +48,12 @@ function cancelAnimations() {
     currentAnimations = [];
 }
 
+function eventLabel(eventType) {
+    if (eventType === 'carry') return 'Condução';
+    if (eventType === 'shot') return 'Finalização';
+    return 'Passe';
+}
+
 async function animateScene(scene) {
     const finalKeyframe = scene.keyframes.at(-1);
     const playerTracks = scene.player_tracks || [];
@@ -103,8 +109,7 @@ async function playSceneSequence() {
     for (const [index, scene] of sequenceData.scenes.entries()) {
         sceneLabel.textContent = `Cena ${index + 1} / ${sequenceData.scenes.length}`;
         narration.textContent = scene.narration;
-        const eventLabel = scene.event_type === 'carry' ? 'Condução' : 'Passe';
-        phase.textContent = `${eventLabel} ${index + 1} de ${sequenceData.scenes.length}`;
+        phase.textContent = `${eventLabel(scene.event_type)} ${index + 1} de ${sequenceData.scenes.length}`;
         await animateScene(scene);
     }
 
@@ -119,7 +124,7 @@ async function loadScene() {
         if (!response.ok) throw new Error(`Cena indisponível: ${response.status}`);
 
         sequenceData = await response.json();
-        narration.textContent = 'Passes e condução confirmados, reproduzidos em ordem.';
+        narration.textContent = 'Passes, condução e finalização confirmados, reproduzidos em ordem.';
         resetSequence();
         replayButton.disabled = false;
         window.setTimeout(playSceneSequence, 350);

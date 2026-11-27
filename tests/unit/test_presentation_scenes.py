@@ -12,8 +12,10 @@ from brafoot.presentation.scenes import (
     NormalizedPoint,
     PlayerTrack,
     PresentationScene,
+    SHOT_SCENE_DURATION_MS,
     build_carry_scene,
     build_pass_scene,
+    build_shot_scene,
 )
 
 
@@ -46,6 +48,23 @@ def make_carry_event(**overrides) -> MatchEvent:
         "context": "open_play",
         "outcome": "progressed",
         "explanation": "O meio-campista conduz a bola para o ataque.",
+    }
+    values.update(overrides)
+    return MatchEvent(**values)
+
+
+def make_shot_event(**overrides) -> MatchEvent:
+    values = {
+        "sequence": 9,
+        "clock": MatchClock(127, MatchPeriod.FIRST_HALF),
+        "event_type": MatchEventType.SHOT,
+        "team_side": MatchSide.HOME,
+        "participant_ids": (11,),
+        "origin_zone": FieldZone(FieldThird.ATTACKING, FieldLane.RIGHT),
+        "destination_zone": FieldZone(FieldThird.ATTACKING, FieldLane.CENTER),
+        "context": "open_play",
+        "outcome": "on_target",
+        "explanation": "O ponta finaliza em direção ao gol.",
     }
     values.update(overrides)
     return MatchEvent(**values)
@@ -187,6 +206,33 @@ def test_carry_scene_moves_player_and_ball_together():
     )
 
 
+# Inclui movimentos coletivos em ordem estável sem separar portador e bola.
+def test_carry_scene_builds_tracks_for_collective_player_movements():
+    carrier_start = NormalizedPoint(31, 73)
+    carrier_destination = NormalizedPoint(43, 68)
+    teammate_start = NormalizedPoint(41, 80)
+    teammate_destination = NormalizedPoint(47, 78)
+    movements = {
+        (MatchSide.HOME, 10): (carrier_start, carrier_destination),
+        (MatchSide.HOME, 11): (teammate_start, teammate_destination),
+    }
+
+    scene = build_carry_scene(
+        make_carry_event(),
+        start_position=carrier_start,
+        destination_position=carrier_destination,
+        player_movements=movements,
+    )
+
+    assert tuple((track.side, track.player_id) for track in scene.player_tracks) == (
+        (MatchSide.HOME, 10),
+        (MatchSide.HOME, 11),
+    )
+    assert scene.player_tracks[0].keyframes == scene.keyframes
+    assert scene.player_tracks[1].keyframes[0].position == teammate_start
+    assert scene.player_tracks[1].keyframes[-1].position == teammate_destination
+
+
 # Produz uma condução reta e determinística entre as posições informadas.
 def test_carry_scene_uses_straight_deterministic_trajectory():
     arguments = {
@@ -220,6 +266,60 @@ def test_carry_scene_requires_complete_carry_event(overrides, message):
             make_carry_event(**overrides),
             start_position=NormalizedPoint(31, 73),
             destination_position=NormalizedPoint(43, 68),
+        )
+
+
+# Move somente a bola do finalizador até o alvo exato confirmado.
+def test_shot_scene_connects_shooter_to_exact_target():
+    start = NormalizedPoint(41, 80)
+    target = NormalizedPoint(98, 55)
+
+    scene = build_shot_scene(
+        make_shot_event(),
+        start_position=start,
+        target_position=target,
+    )
+
+    assert scene.event_type is MatchEventType.SHOT
+    assert scene.duration_ms == SHOT_SCENE_DURATION_MS
+    assert scene.keyframes[0].position == start
+    assert scene.keyframes[-1].position == target
+    assert scene.player_tracks == ()
+
+
+# Produz a mesma trajetória reta para a mesma finalização confirmada.
+def test_shot_scene_is_straight_and_deterministic():
+    arguments = {
+        "event": make_shot_event(),
+        "start_position": NormalizedPoint(41, 80),
+        "target_position": NormalizedPoint(98, 55),
+    }
+
+    first = build_shot_scene(**arguments)
+    second = build_shot_scene(**arguments)
+    start, midpoint, end = (frame.position for frame in first.keyframes)
+
+    assert first == second
+    assert midpoint.x == (start.x + end.x) / 2
+    assert midpoint.y == (start.y + end.y) / 2
+
+
+# Rejeita eventos que não descrevam uma finalização completa de um jogador.
+@pytest.mark.parametrize(
+    ("overrides", "message"),
+    [
+        ({"event_type": MatchEventType.PASS}, "finalização"),
+        ({"participant_ids": (10, 11)}, "um participante"),
+        ({"origin_zone": None}, "zonas"),
+        ({"destination_zone": None}, "zonas"),
+    ],
+)
+def test_shot_scene_requires_complete_shot_event(overrides, message):
+    with pytest.raises(ValueError, match=message):
+        build_shot_scene(
+            make_shot_event(**overrides),
+            start_position=NormalizedPoint(41, 80),
+            target_position=NormalizedPoint(98, 55),
         )
 
 

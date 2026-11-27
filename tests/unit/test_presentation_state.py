@@ -12,6 +12,7 @@ from brafoot.presentation.state import (
     PresentedPlayer,
     advance_carry_scene,
     advance_pass_scene,
+    advance_shot_scene,
 )
 
 
@@ -100,6 +101,26 @@ def make_carry(
     )
 
 
+def make_shot(
+    sequence: int,
+    player_id: int,
+    *,
+    side: MatchSide = MatchSide.HOME,
+) -> MatchEvent:
+    return MatchEvent(
+        sequence=sequence,
+        clock=MatchClock(120 + sequence, MatchPeriod.FIRST_HALF),
+        event_type=MatchEventType.SHOT,
+        team_side=side,
+        participant_ids=(player_id,),
+        origin_zone=FieldZone(FieldThird.ATTACKING, FieldLane.RIGHT),
+        destination_zone=FieldZone(FieldThird.ATTACKING, FieldLane.CENTER),
+        context="open_play",
+        outcome="on_target",
+        explanation=f"Finalização de {player_id}.",
+    )
+
+
 # Mantém exatamente onze posições distintas para cada lado da apresentação.
 def test_presentation_state_requires_complete_two_team_shape():
     state = make_state()
@@ -158,8 +179,8 @@ def test_pass_advances_chain_without_ball_teleportation():
     assert third.end_state.ball_position == NormalizedPoint(31, 73)
 
 
-# Move somente o portador e a bola para o destino confirmado da condução.
-def test_carry_advance_updates_holder_and_ball_position_together():
+# Move o portador, a bola e os dois blocos para posições finais consistentes.
+def test_carry_advance_updates_collective_shape_and_ball_together():
     state = advance_pass_scene(
         advance_pass_scene(
             advance_pass_scene(make_state(), make_pass(1, 8, 9)).end_state,
@@ -173,20 +194,25 @@ def test_carry_advance_updates_holder_and_ball_position_together():
 
     assert advance.scene.keyframes[0].position == NormalizedPoint(31, 73)
     assert advance.scene.keyframes[-1].position == destination
+    assert len(advance.scene.player_tracks) == 22
     assert advance.end_state.position_for(MatchSide.HOME, 10) == destination
+    assert advance.end_state.position_for(MatchSide.HOME, 8) == NormalizedPoint(
+        39, 52.7
+    )
+    assert advance.end_state.position_for(MatchSide.AWAY, 8) == NormalizedPoint(
+        73, 52.7
+    )
     assert advance.end_state.ball_position == destination
     assert advance.end_state.ball_holder_id == 10
     assert advance.end_state.last_event_sequence == 4
     assert state.position_for(MatchSide.HOME, 10) == NormalizedPoint(31, 73)
-    assert tuple(
-        player
-        for player in advance.end_state.players
-        if (player.side, player.player_id) != (MatchSide.HOME, 10)
-    ) == tuple(
-        player
-        for player in state.players
-        if (player.side, player.player_id) != (MatchSide.HOME, 10)
-    )
+    for track in advance.scene.player_tracks:
+        assert track.keyframes[0].position == state.position_for(
+            track.side, track.player_id
+        )
+        assert track.keyframes[-1].position == advance.end_state.position_for(
+            track.side, track.player_id
+        )
 
 
 # Faz o passe posterior começar exatamente no destino final da condução.
@@ -217,6 +243,39 @@ def test_carry_advance_requires_current_ball_holder():
             make_state(),
             make_carry(1, 10),
             NormalizedPoint(43, 68),
+        )
+
+
+# Leva a bola ao alvo e encerra a posse visual sem mover os jogadores.
+def test_shot_advance_moves_ball_to_target_and_releases_holder():
+    start = NormalizedPoint(*HOME_POSITIONS[11])
+    state = make_state(
+        ball_position=start,
+        ball_holder_side=MatchSide.HOME,
+        ball_holder_id=11,
+        last_event_sequence=5,
+    )
+    target = NormalizedPoint(98, 55)
+
+    advance = advance_shot_scene(state, make_shot(6, 11), target)
+
+    assert advance.scene.keyframes[0].position == start
+    assert advance.scene.keyframes[-1].position == target
+    assert advance.end_state.players == state.players
+    assert advance.end_state.ball_position == target
+    assert advance.end_state.ball_holder_side is None
+    assert advance.end_state.ball_holder_id is None
+    assert advance.end_state.last_event_sequence == 6
+    assert state.ball_holder_id == 11
+
+
+# Rejeita finalização solicitada por jogador que não possui a bola.
+def test_shot_advance_requires_current_ball_holder():
+    with pytest.raises(ValueError, match="possui a bola"):
+        advance_shot_scene(
+            make_state(),
+            make_shot(1, 11),
+            NormalizedPoint(98, 55),
         )
 
 
