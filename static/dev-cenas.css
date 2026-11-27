@@ -343,6 +343,15 @@ button:disabled {
     color: var(--ready);
 }
 
+.return-summary {
+    margin: 12px 0 0;
+    padding: 10px 12px;
+    border: 1px solid rgba(101, 174, 242, 0.55);
+    border-radius: 6px;
+    color: var(--ready);
+    font-size: 0.86rem;
+}
+
 .review-panel textarea {
     width: 100%;
     margin: 12px 0;

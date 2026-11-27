@@ -1,5 +1,6 @@
 const CATALOG_ENDPOINT = '/api/v1/dev/presentation-scenes';
 const REVIEW_STORAGE_KEY = 'brafoot.presentationSceneReviews.v1';
+const REVIEWS_ENDPOINT = '/api/v1/dev/scene-reviews';
 
 const pitch = document.getElementById('scenePitch');
 const playerLayer = document.getElementById('playerLayer');
@@ -20,6 +21,7 @@ const saveReviewNoteButton = document.getElementById('saveReviewNote');
 const editReviewNoteButton = document.getElementById('editReviewNote');
 const reviewSceneCount = document.getElementById('reviewSceneCount');
 const approvedSceneCount = document.getElementById('approvedSceneCount');
+const returnSummary = document.getElementById('returnSummary');
 const exportSceneReviewsButton = document.getElementById('exportSceneReviews');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -28,6 +30,9 @@ let activeScenario = null;
 let currentAnimations = [];
 let runToken = 0;
 let reviews = loadReviews();
+let sceneReturns = {};
+let reviewsSynced = false;
+let syncTimer = null;
 let activeCatalogView = 'review';
 
 function loadReviews() {
@@ -44,17 +49,67 @@ function reviewKey(scenario) {
 
 function currentReview(scenario) {
     const stored = reviews[reviewKey(scenario)] || {};
+    const returned = returnedAdjustment(scenario, stored);
     return {
         ...stored,
-        status: stored.status || scenario.status || 'pending',
+        status: stored.status || (returned ? 'ready_for_review' : scenario.status) || 'pending',
+        return_summary: returned?.summary || '',
         note: stored.note || '',
         draft_note: stored.draft_note ?? stored.note ?? '',
         note_locked: Boolean(stored.note_locked),
     };
 }
 
+// Um ajuste devolvido só vale para a versão nova da cena, ainda sem nova avaliação,
+// e somente se a versão anterior realmente estava com "Precisa de ajustes".
+function returnedAdjustment(scenario, stored) {
+    const returned = sceneReturns[scenario.id];
+    if (!returned || stored.status || returned.to_version !== scenario.version) return null;
+    const previous = reviews[`${scenario.id}@${returned.from_version}`];
+    return previous?.status === 'changes_requested' ? returned : null;
+}
+
 function persistReviews() {
-    window.localStorage.setItem(REVIEW_STORAGE_KEY, JSON.stringify(reviews));
+    try {
+        window.localStorage.setItem(REVIEW_STORAGE_KEY, JSON.stringify(reviews));
+    } catch (error) {
+        console.error(error);
+    }
+    scheduleReviewSync();
+}
+
+function scheduleReviewSync() {
+    if (!reviewsSynced) return;
+    window.clearTimeout(syncTimer);
+    syncTimer = window.setTimeout(syncReviewsToServer, 300);
+}
+
+async function syncReviewsToServer() {
+    try {
+        await fetch(REVIEWS_ENDPOINT, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ reviews }),
+        });
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+// O navegador é a fonte da verdade; o servidor só preenche revisões ausentes
+// (por exemplo, após limpar o localStorage) e entrega os retornos de ajuste.
+async function loadServerReviews() {
+    try {
+        const response = await fetch(REVIEWS_ENDPOINT);
+        if (!response.ok) return;
+        const data = await response.json();
+        reviews = { ...(data.reviews || {}), ...reviews };
+        sceneReturns = data.returns || {};
+        reviewsSynced = true;
+        persistReviews();
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 function saveReview(status) {
@@ -163,6 +218,10 @@ function updateReviewPanel() {
     saveReviewNoteButton.hidden = review.note_locked;
     saveReviewNoteButton.disabled = !reviewNote.value.trim();
     editReviewNoteButton.hidden = !review.note_locked;
+    returnSummary.hidden = !review.return_summary;
+    returnSummary.textContent = review.return_summary
+        ? `Ajuste aplicado: ${review.return_summary}`
+        : '';
 }
 
 function visibleScenarios() {
@@ -381,6 +440,7 @@ async function loadCatalog() {
         const response = await fetch(CATALOG_ENDPOINT);
         if (!response.ok) throw new Error(`Catálogo indisponível: ${response.status}`);
         catalog = await response.json();
+        await loadServerReviews();
         catalogSummary.textContent = `${catalog.scenarios.length} cenários · versão ${catalog.catalog_version}`;
         renderCatalog();
         const firstReviewScenario = visibleScenarios()[0];
