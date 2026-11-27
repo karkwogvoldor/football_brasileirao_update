@@ -16,6 +16,7 @@ from brafoot.presentation.scenes import (
     SceneKeyframe,
 )
 from brafoot.presentation.state import (
+    INTERLOCKING_BLOCKS,
     PresentationState,
     PresentedPlayer,
     SceneAdvance,
@@ -41,10 +42,27 @@ HOME_POSITIONS = {
 }
 
 
+# Formação compacta: as linhas dos dois times ficam próximas, para que avancem e recuem
+# encaixadas (espelhadas) em vez de isoladas, com a zaga mais alta que a entrada da área.
+INTERLOCKED_HOME_POSITIONS = {
+    1: (7, 50),
+    2: (26, 17),
+    3: (24, 39),
+    4: (24, 61),
+    6: (26, 83),
+    5: (36, 27),
+    8: (38, 50),
+    10: (36, 73),
+    7: (48, 20),
+    9: (50, 50),
+    11: (48, 80),
+}
+
+
 def build_demo_sequence_snapshot() -> dict[str, object]:
     """Return the main deterministic presentation sequence used by /partida."""
 
-    state = _initial_state(holder_id=8)
+    state = _initial_state(holder_id=8, formation=INTERLOCKED_HOME_POSITIONS)
     initial_state = state
     scenes = []
     passes = (
@@ -63,6 +81,7 @@ def build_demo_sequence_snapshot() -> dict[str, object]:
                 (sender_id, receiver_id),
                 explanation,
             ),
+            shape=INTERLOCKING_BLOCKS,
         )
         scenes.append(advance.scene.to_snapshot())
         state = advance.end_state
@@ -77,7 +96,8 @@ def build_demo_sequence_snapshot() -> dict[str, object]:
             lane=FieldLane.RIGHT,
             outcome="progressed",
         ),
-        NormalizedPoint(36, 69),
+        NormalizedPoint(42, 70),
+        shape=INTERLOCKING_BLOCKS,
     )
     scenes.append(carry.scene.to_snapshot())
     state = carry.end_state
@@ -91,6 +111,7 @@ def build_demo_sequence_snapshot() -> dict[str, object]:
             "Após conduzir, o meio-campista encontra o ponta.",
             lane=FieldLane.RIGHT,
         ),
+        shape=INTERLOCKING_BLOCKS,
     )
     scenes.append(final_pass.scene.to_snapshot())
     state = final_pass.end_state
@@ -106,6 +127,7 @@ def build_demo_sequence_snapshot() -> dict[str, object]:
             outcome="on_target",
         ),
         NormalizedPoint(98, 55),
+        shape=INTERLOCKING_BLOCKS,
     )
     scenes.append(shot.scene.to_snapshot())
     state = shot.end_state
@@ -143,7 +165,7 @@ def build_developer_scene_catalog() -> dict[str, object]:
         _interception_attempt_scenario(),
         {
             "id": "composite-attacking-sequence",
-            "version": 1,
+            "version": 2,
             "category": "composite",
             "title": "Ataque completo",
             "description": "Passes, condução e finalização encadeados sem teletransporte.",
@@ -206,7 +228,13 @@ def _carry_scenario() -> dict[str, object]:
             lane=FieldLane.RIGHT,
             outcome="progressed",
         ),
-        NormalizedPoint(53, 68),
+        NormalizedPoint(42, 71),
+        supporting_destinations={
+            # Ponta esquerda abre o campo e oferece linha de passe.
+            (MatchSide.HOME, 7): NormalizedPoint(49, 12),
+            # Centroavante ataca o espaço entre os zagueiros adversários.
+            (MatchSide.HOME, 9): NormalizedPoint(52, 50),
+        },
     )
     return _scenario_snapshot(
         "carry-right-channel",
@@ -216,6 +244,7 @@ def _carry_scenario() -> dict[str, object]:
         "ball",
         state,
         (advance,),
+        version=2,
     )
 
 
@@ -242,12 +271,16 @@ def _shot_scenario() -> dict[str, object]:
         "ball",
         state,
         (advance,),
+        version=2,
     )
 
 
 def _collective_shift_scenario() -> dict[str, object]:
     state = _initial_state(holder_id=8)
-    description = "Blocos avançam e fecham o corredor direito durante a progressão."
+    description = (
+        "Os dois blocos se deslocam juntos para o lado direito, "
+        "fechando o corredor da bola sem perder a distância entre as linhas."
+    )
     advance = advance_carry_scene(
         state,
         _event(
@@ -258,7 +291,9 @@ def _collective_shift_scenario() -> dict[str, object]:
             lane=FieldLane.RIGHT,
             outcome="progressed",
         ),
-        NormalizedPoint(46, 68),
+        NormalizedPoint(41, 62),
+        lateral_ratio=0.4,
+        max_lateral=12,
     )
     return _scenario_snapshot(
         "movement-collective-shift-right",
@@ -269,6 +304,7 @@ def _collective_shift_scenario() -> dict[str, object]:
         state,
         (advance,),
         ball_visible=False,
+        version=2,
     )
 
 
@@ -376,6 +412,7 @@ def _scenario_snapshot(
     advances: tuple[SceneAdvance, ...],
     *,
     ball_visible: bool = True,
+    version: int = 1,
 ) -> dict[str, object]:
     return _scenario_snapshot_from_scenes(
         scenario_id,
@@ -387,6 +424,7 @@ def _scenario_snapshot(
         tuple(advance.scene for advance in advances),
         advances[-1].end_state,
         ball_visible=ball_visible,
+        version=version,
     )
 
 
@@ -401,10 +439,11 @@ def _scenario_snapshot_from_scenes(
     final_state: PresentationState,
     *,
     ball_visible: bool = True,
+    version: int = 1,
 ) -> dict[str, object]:
     return {
         "id": scenario_id,
-        "version": 1,
+        "version": version,
         "category": category,
         "title": title,
         "description": description,
@@ -421,14 +460,17 @@ def _scenario_snapshot_from_scenes(
 def _initial_state(
     *,
     holder_id: int,
+    formation: dict[int, tuple[float, float]] | None = None,
     home_overrides: dict[int, tuple[float, float]] | None = None,
 ) -> PresentationState:
-    positions = dict(HOME_POSITIONS)
-    if home_overrides:
-        positions.update(home_overrides)
+    """Monta o estado inicial: ``formation`` vale para os dois times (o visitante é
+    espelhado) e ``home_overrides`` reposiciona apenas jogadores do time da casa."""
+
+    base = dict(formation or HOME_POSITIONS)
+    home_positions = {**base, **(home_overrides or {})}
     home_players = tuple(
         PresentedPlayer(MatchSide.HOME, player_id, NormalizedPoint(x, y))
-        for player_id, (x, y) in positions.items()
+        for player_id, (x, y) in home_positions.items()
     )
     away_players = tuple(
         PresentedPlayer(
@@ -436,13 +478,12 @@ def _initial_state(
             player_id,
             NormalizedPoint(100 - x, 100 - y),
         )
-        for player_id, (x, y) in positions.items()
+        for player_id, (x, y) in base.items()
     )
-    holder_position = dict(home_overrides or {}).get(holder_id, HOME_POSITIONS[holder_id])
     return PresentationState(
         presentation_version=DEFAULT_PRESENTATION_VERSION,
         players=home_players + away_players,
-        ball_position=NormalizedPoint(*holder_position),
+        ball_position=NormalizedPoint(*home_positions[holder_id]),
         ball_holder_side=MatchSide.HOME,
         ball_holder_id=holder_id,
         last_event_sequence=None,

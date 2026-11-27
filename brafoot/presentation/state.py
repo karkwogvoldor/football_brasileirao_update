@@ -19,6 +19,12 @@ COLLECTIVE_PROGRESS_RATIO = 0.5
 COLLECTIVE_LATERAL_RATIO = 0.15
 MAX_COLLECTIVE_PROGRESS = 6
 MAX_COLLECTIVE_LATERAL = 3
+# Posições (slots) da formação visual usada pelo catálogo: goleiro e linha defensiva.
+GOALKEEPER_SLOT = 1
+DEFENDER_SLOTS = frozenset({2, 3, 4, 6})
+# Limites no referencial do próprio time (x=0 é o gol que ele defende).
+GOALKEEPER_X_RANGE = (4.0, 10.0)
+DEFENDER_MIN_X = 17.0  # entrada da grande área
 
 
 @dataclass(frozen=True, slots=True)
@@ -153,6 +159,30 @@ class PresentationState:
 
 
 @dataclass(frozen=True, slots=True)
+class CollectiveShape:
+    """Como os blocos se movem em resposta a uma ação do time com a bola.
+
+    O padrão preserva o comportamento original (bloco rígido que acompanha a bola).
+    ``forward_only`` impede o vai e vem: só a progressão do ataque move as linhas.
+    ``defending_retreat_ratio`` faz o time sem a bola recuar menos do que o atacante
+    avança, o que encaixa as linhas dos dois times. ``defender_line_ratio`` torna a linha
+    de zaga mais contida, movendo-se como unidade.
+    """
+
+    forward_only: bool = False
+    defending_retreat_ratio: float = 1.0
+    defender_line_ratio: float = 1.0
+
+
+RIGID_BLOCKS = CollectiveShape()
+INTERLOCKING_BLOCKS = CollectiveShape(
+    forward_only=True,
+    defending_retreat_ratio=0.6,
+    defender_line_ratio=0.5,
+)
+
+
+@dataclass(frozen=True, slots=True)
 class SceneAdvance:
     """One visual scene together with its immutable state boundaries."""
 
@@ -176,6 +206,8 @@ class SceneAdvance:
 def advance_pass_scene(
     state: PresentationState,
     event: MatchEvent,
+    *,
+    shape: CollectiveShape = RIGID_BLOCKS,
 ) -> SceneAdvance:
     """Advance the visual ball holder through one confirmed pass event."""
 
@@ -205,6 +237,8 @@ def advance_pass_scene(
         state,
         movement_start=sender_position,
         movement_end=state.position_for(event.team_side, receiver_id),
+        attacking_side=event.team_side,
+        shape=shape,
     )
     participant_positions = {
         sender_id: sender_position,
@@ -231,8 +265,18 @@ def advance_carry_scene(
     state: PresentationState,
     event: MatchEvent,
     destination_position: NormalizedPoint,
+    *,
+    supporting_destinations: Mapping[tuple[MatchSide, int], NormalizedPoint]
+    | None = None,
+    lateral_ratio: float = COLLECTIVE_LATERAL_RATIO,
+    max_lateral: float = MAX_COLLECTIVE_LATERAL,
+    shape: CollectiveShape = RIGID_BLOCKS,
 ) -> SceneAdvance:
-    """Move the current visual ball holder and ball through a confirmed carry."""
+    """Move the current visual ball holder and ball through a confirmed carry.
+
+    ``supporting_destinations`` fixa o destino de companheiros que fazem uma corrida
+    própria; ``lateral_ratio``/``max_lateral`` controlam o deslocamento lateral dos blocos.
+    """
 
     if not isinstance(state, PresentationState):
         raise ValueError("O estado visual da condução não é válido.")
@@ -262,7 +306,14 @@ def advance_carry_scene(
         state,
         movement_start=start_position,
         movement_end=destination_position,
-        fixed_destinations={carrier_identity: destination_position},
+        fixed_destinations={
+            **dict(supporting_destinations or {}),
+            carrier_identity: destination_position,
+        },
+        lateral_ratio=lateral_ratio,
+        max_lateral=max_lateral,
+        attacking_side=event.team_side,
+        shape=shape,
     )
     scene = build_carry_scene(
         event,
@@ -288,6 +339,8 @@ def advance_shot_scene(
     state: PresentationState,
     event: MatchEvent,
     target_position: NormalizedPoint,
+    *,
+    shape: CollectiveShape = RIGID_BLOCKS,
 ) -> SceneAdvance:
     """Move the ball toward a confirmed shot target and release its holder."""
 
@@ -318,6 +371,8 @@ def advance_shot_scene(
         state,
         movement_start=start_position,
         movement_end=target_position,
+        attacking_side=event.team_side,
+        shape=shape,
     )
     scene = build_shot_scene(
         event,
@@ -356,22 +411,38 @@ def _derive_collective_destinations(
         tuple[MatchSide, int], NormalizedPoint
     ]
     | None = None,
+    lateral_ratio: float = COLLECTIVE_LATERAL_RATIO,
+    max_lateral: float = MAX_COLLECTIVE_LATERAL,
+    attacking_side: MatchSide = MatchSide.HOME,
+    shape: CollectiveShape = RIGID_BLOCKS,
 ) -> dict[tuple[MatchSide, int], NormalizedPoint]:
+    delta_x = movement_end.x - movement_start.x
+    if shape.forward_only:
+        direction = 1 if attacking_side is MatchSide.HOME else -1
+        delta_x = max(0.0, delta_x * direction) * direction
     progress = _clamp(
-        (movement_end.x - movement_start.x) * COLLECTIVE_PROGRESS_RATIO,
+        delta_x * COLLECTIVE_PROGRESS_RATIO,
         -MAX_COLLECTIVE_PROGRESS,
         MAX_COLLECTIVE_PROGRESS,
     )
+    shifts = _line_shifts(state, progress, attacking_side, shape)
+    lateral_scale = {
+        identity: shape.defender_line_ratio
+        if identity[1] in DEFENDER_SLOTS
+        else 1.0
+        for identity in shifts
+    }
     destinations = {
         (player.side, player.player_id): NormalizedPoint(
-            x=_clamp(player.position.x + progress, 0, 100),
+            x=_clamp(player.position.x + shifts[(player.side, player.player_id)], 0, 100),
             y=_clamp(
                 player.position.y
                 + _clamp(
                     (movement_end.y - player.position.y)
-                    * COLLECTIVE_LATERAL_RATIO,
-                    -MAX_COLLECTIVE_LATERAL,
-                    MAX_COLLECTIVE_LATERAL,
+                    * lateral_ratio
+                    * lateral_scale[(player.side, player.player_id)],
+                    -max_lateral,
+                    max_lateral,
                 ),
                 0,
                 100,
@@ -379,9 +450,67 @@ def _derive_collective_destinations(
         )
         for player in state.players
     }
+    destinations = {
+        identity: _limit_to_role(identity, point)
+        for identity, point in destinations.items()
+    }
     if fixed_destinations:
         destinations.update(fixed_destinations)
     return destinations
+
+
+def _line_shifts(
+    state: PresentationState,
+    progress: float,
+    attacking_side: MatchSide,
+    shape: CollectiveShape,
+) -> dict[tuple[MatchSide, int], float]:
+    """Deslocamento em x de cada jogador; a zaga de cada time se move como uma só linha."""
+
+    shifts: dict[tuple[MatchSide, int], float] = {}
+    for side in (MatchSide.HOME, MatchSide.AWAY):
+        side_shift = progress
+        if side is not attacking_side:
+            side_shift *= shape.defending_retreat_ratio
+        line_shift = side_shift * shape.defender_line_ratio
+        defenders = [
+            player
+            for player in state.players
+            if player.side is side and player.player_id in DEFENDER_SLOTS
+        ]
+        if defenders:
+            mirrored = side is MatchSide.AWAY
+            lowest_x = min(
+                (100 - player.position.x) if mirrored else player.position.x
+                for player in defenders
+            )
+            own_shift = -line_shift if mirrored else line_shift
+            # A linha recua no máximo até a entrada da área, sem desalinhar os zagueiros.
+            own_shift = max(own_shift, DEFENDER_MIN_X - lowest_x)
+            line_shift = -own_shift if mirrored else own_shift
+        for player in state.players:
+            if player.side is side:
+                shifts[(side, player.player_id)] = (
+                    line_shift if player.player_id in DEFENDER_SLOTS else side_shift
+                )
+    return shifts
+
+
+def _limit_to_role(
+    identity: tuple[MatchSide, int],
+    point: NormalizedPoint,
+) -> NormalizedPoint:
+    """Keep goalkeepers off the goal line and defenders out of the penalty area."""
+
+    side, player_id = identity
+    mirrored = side is MatchSide.AWAY
+    own_x = 100 - point.x if mirrored else point.x
+    if player_id == GOALKEEPER_SLOT:
+        own_x = _clamp(own_x, *GOALKEEPER_X_RANGE)
+    elif player_id in DEFENDER_SLOTS:
+        own_x = max(own_x, DEFENDER_MIN_X)
+    x = 100 - own_x if mirrored else own_x
+    return NormalizedPoint(x=x, y=point.y)
 
 
 def _player_movements(

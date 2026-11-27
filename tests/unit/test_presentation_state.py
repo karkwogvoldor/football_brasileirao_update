@@ -9,6 +9,7 @@ from brafoot.engine.zones import FieldLane, FieldThird, FieldZone
 from brafoot.presentation.scenes import NormalizedPoint
 from brafoot.presentation.state import (
     PresentationState,
+    INTERLOCKING_BLOCKS,
     PresentedPlayer,
     advance_carry_scene,
     advance_pass_scene,
@@ -314,3 +315,90 @@ def test_pass_advance_requires_contiguous_event_sequence():
 def test_presentation_state_rejects_incomplete_formation():
     with pytest.raises(ValueError, match="11 jogadores"):
         make_state(players=make_players()[:-1])
+
+
+# Goleiros ficam fora da linha do gol e zagueiros não recuam além da entrada da área.
+def test_collective_advance_keeps_goalkeepers_and_defenders_out_of_deep_areas():
+    state = make_state()
+
+    advance = advance_carry_scene(state, make_carry(1, 8), NormalizedPoint(45, 55))
+
+    assert 4 <= advance.end_state.position_for(MatchSide.HOME, 1).x <= 10
+    assert 90 <= advance.end_state.position_for(MatchSide.AWAY, 1).x <= 96
+    for defender_id in (2, 3, 4, 6):
+        assert advance.end_state.position_for(MatchSide.HOME, defender_id).x >= 17
+        assert advance.end_state.position_for(MatchSide.AWAY, defender_id).x <= 83
+
+
+# Companheiros com corrida própria vão ao destino informado, e o deslocamento lateral é configurável.
+def test_carry_supports_runner_destinations_and_stronger_lateral_shift():
+    state = make_state()
+    runner = (MatchSide.HOME, 9)
+    runner_destination = NormalizedPoint(52, 50)
+
+    default = advance_carry_scene(state, make_carry(1, 8), NormalizedPoint(41, 62))
+    shifted = advance_carry_scene(
+        state,
+        make_carry(1, 8),
+        NormalizedPoint(41, 62),
+        supporting_destinations={runner: runner_destination},
+        lateral_ratio=0.4,
+        max_lateral=12,
+    )
+
+    assert shifted.end_state.position_for(*runner) == runner_destination
+    assert (
+        shifted.end_state.position_for(MatchSide.HOME, 2).y
+        - state.position_for(MatchSide.HOME, 2).y
+    ) > (
+        default.end_state.position_for(MatchSide.HOME, 2).y
+        - state.position_for(MatchSide.HOME, 2).y
+    )
+
+
+# Com blocos encaixados, um passe para trás não recua as linhas (sem vai e vem).
+def test_interlocking_blocks_do_not_move_backward_on_a_backward_pass():
+    state = make_state(ball_holder_id=9, ball_position=NormalizedPoint(42, 50))
+
+    advance = advance_pass_scene(
+        state, make_pass(1, 9, 8), shape=INTERLOCKING_BLOCKS
+    )
+
+    assert all(
+        advance.end_state.position_for(MatchSide.HOME, pid).x
+        >= state.position_for(MatchSide.HOME, pid).x
+        for pid in HOME_POSITIONS
+    )
+    assert all(
+        advance.end_state.position_for(MatchSide.AWAY, pid).x
+        >= state.position_for(MatchSide.AWAY, pid).x
+        for pid in HOME_POSITIONS
+    )
+
+
+# O time sem a bola recua menos do que o atacante avança e a zaga se move como uma linha única.
+def test_interlocking_blocks_retreat_less_and_move_defenders_as_one_line():
+    state = make_state()
+
+    advance = advance_carry_scene(
+        state, make_carry(1, 8), NormalizedPoint(45, 55), shape=INTERLOCKING_BLOCKS
+    )
+
+    attack_gain = (
+        advance.end_state.position_for(MatchSide.HOME, 5).x
+        - state.position_for(MatchSide.HOME, 5).x
+    )
+    retreat = (
+        advance.end_state.position_for(MatchSide.AWAY, 5).x
+        - state.position_for(MatchSide.AWAY, 5).x
+    )
+    assert 0 < retreat < attack_gain
+    home_line = {
+        round(
+            advance.end_state.position_for(MatchSide.HOME, pid).x
+            - state.position_for(MatchSide.HOME, pid).x,
+            6,
+        )
+        for pid in (2, 3, 4, 6)
+    }
+    assert len(home_line) == 1

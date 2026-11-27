@@ -285,3 +285,85 @@ def test_default_application_startup_does_not_create_database_schema(tmp_path):
 
     assert inspect(engine).get_table_names() == []
     engine.dispose()
+
+
+# As duas cenas corrigidas sobem de versão e respeitam goleiro, zagueiros e corridas pedidas na revisão.
+def test_revised_scenes_apply_review_feedback(client):
+    scenarios = {
+        scenario["id"]: scenario
+        for scenario in client.get("/api/v1/dev/presentation-scenes").json()["scenarios"]
+    }
+
+    def final(scenario, side, player_id):
+        return next(
+            player
+            for player in scenario["final_state"]["players"]
+            if player["side"] == side and player["player_id"] == player_id
+        )
+
+    for scenario_id in ("carry-right-channel", "movement-collective-shift-right"):
+        scenario = scenarios[scenario_id]
+        assert scenario["version"] == 2
+        assert 4 <= final(scenario, "home", 1)["x"] <= 10
+        assert 90 <= final(scenario, "away", 1)["x"] <= 96
+        assert all(final(scenario, "away", pid)["x"] <= 83 for pid in (2, 3, 4, 6))
+
+    carry = scenarios["carry-right-channel"]
+    assert final(carry, "home", 7)["y"] < 20  # ponta esquerda abre o campo
+    assert final(carry, "home", 9)["x"] > 42  # centroavante ataca o espaço
+    shift = scenarios["movement-collective-shift-right"]
+    assert final(shift, "home", 2)["y"] > 17  # bloco desloca para a direita
+
+
+# A cena composta avança sem vai e vem, com as linhas encaixadas e a zaga como unidade própria.
+def test_composite_scene_interlocks_lines_without_backward_drift(client):
+    scenarios = {
+        scenario["id"]: scenario
+        for scenario in client.get("/api/v1/dev/presentation-scenes").json()["scenarios"]
+    }
+    composite = scenarios["composite-attacking-sequence"]
+    assert composite["version"] == 2
+
+    def positions(state):
+        return {
+            (player["side"], player["player_id"]): player["x"]
+            for player in state["players"]
+        }
+
+    initial, final = positions(composite["initial_state"]), positions(composite["final_state"])
+    previous = initial
+    for scene in composite["scenes"]:
+        current = {
+            (track["side"], track["player_id"]): track["keyframes"][-1]["x"]
+            for track in scene["player_tracks"]
+        }
+        assert all(current[key] >= previous[key] for key in current)  # sem vai e vem
+        previous = current
+    assert final[("home", 9)] > final[("away", 9)]  # linhas dos times se encaixam
+    assert 4 <= final[("home", 1)] <= 10 and 90 <= final[("away", 1)] <= 96
+    home_line = {round(final[("home", pid)] - initial[("home", pid)], 6) for pid in (2, 3, 4, 6)}
+    assert len(home_line) == 1  # zaga move-se como uma linha única
+    assert all(final[("away", pid)] <= 83 for pid in (2, 3, 4, 6))
+
+
+# Na finalização o goleiro visitante fica fora do gol e o visitante 11 não é espelhado do artilheiro.
+def test_shot_scene_keeps_goalkeeper_out_of_goal(client):
+    shot = next(
+        scenario
+        for scenario in client.get("/api/v1/dev/presentation-scenes").json()["scenarios"]
+        if scenario["id"] == "shot-near-area"
+    )
+    final = {
+        (player["side"], player["player_id"]): player
+        for player in shot["final_state"]["players"]
+    }
+
+    assert shot["version"] == 2
+    assert 90 <= final[("away", 1)]["x"] <= 96
+    assert 4 <= final[("home", 1)]["x"] <= 10
+    initial_away_11 = next(
+        player
+        for player in shot["initial_state"]["players"]
+        if player["side"] == "away" and player["player_id"] == 11
+    )
+    assert initial_away_11["x"] > 50  # fica no campo de ataque do time da casa, não em (24,28)
