@@ -29,6 +29,7 @@ from brafoot.presentation.scenes import NormalizedPoint
 from brafoot.presentation.state import (
     PresentationState,
     PresentedPlayer,
+    advance_carry_scene,
     advance_pass_scene,
 )
 
@@ -128,6 +129,38 @@ def get_demo_pass_sequence():
         advance = advance_pass_scene(state, event)
         scenes.append(advance.scene.to_snapshot())
         state = advance.end_state
+
+    carry_event = MatchEvent(
+        sequence=4,
+        clock=MatchClock(128, MatchPeriod.FIRST_HALF),
+        event_type=MatchEventType.CARRY,
+        team_side=MatchSide.HOME,
+        participant_ids=(10,),
+        origin_zone=FieldZone(FieldThird.MIDDLE, FieldLane.RIGHT),
+        destination_zone=FieldZone(FieldThird.ATTACKING, FieldLane.RIGHT),
+        context="open_play",
+        outcome="progressed",
+        explanation="O meio-campista conduz a bola antes do passe final.",
+    )
+    carry = advance_carry_scene(state, carry_event, NormalizedPoint(36, 69))
+    scenes.append(carry.scene.to_snapshot())
+    state = carry.end_state
+
+    final_pass_event = MatchEvent(
+        sequence=5,
+        clock=MatchClock(129, MatchPeriod.FIRST_HALF),
+        event_type=MatchEventType.PASS,
+        team_side=MatchSide.HOME,
+        participant_ids=(10, 11),
+        origin_zone=FieldZone(FieldThird.MIDDLE, FieldLane.RIGHT),
+        destination_zone=FieldZone(FieldThird.ATTACKING, FieldLane.RIGHT),
+        context="open_play",
+        outcome="completed",
+        explanation="Após conduzir, o meio-campista encontra o ponta.",
+    )
+    final_pass = advance_pass_scene(state, final_pass_event)
+    scenes.append(final_pass.scene.to_snapshot())
+    state = final_pass.end_state
 
     return {
         "presentation_version": initial_state.presentation_version,

@@ -10,6 +10,7 @@ from brafoot.engine.matches import MatchSide
 from brafoot.presentation.scenes import (
     NormalizedPoint,
     PresentationScene,
+    build_carry_scene,
     build_pass_scene,
 )
 
@@ -206,6 +207,57 @@ def advance_pass_scene(
         ball_position=participant_positions[receiver_id],
         ball_holder_side=event.team_side,
         ball_holder_id=receiver_id,
+        last_event_sequence=event.sequence,
+    )
+    return SceneAdvance(start_state=state, scene=scene, end_state=end_state)
+
+
+def advance_carry_scene(
+    state: PresentationState,
+    event: MatchEvent,
+    destination_position: NormalizedPoint,
+) -> SceneAdvance:
+    """Move the current visual ball holder and ball through a confirmed carry."""
+
+    if not isinstance(state, PresentationState):
+        raise ValueError("O estado visual da condução não é válido.")
+    if not isinstance(event, MatchEvent):
+        raise ValueError("O evento visual da condução não é válido.")
+    if event.event_type is not MatchEventType.CARRY or event.team_side is None:
+        raise ValueError("O avanço de condução exige um evento de condução válido.")
+    if len(event.participant_ids) != 1:
+        raise ValueError("O avanço de condução exige exatamente um participante.")
+    if not isinstance(destination_position, NormalizedPoint):
+        raise ValueError("O destino visual da condução não é válido.")
+    player_id = event.participant_ids[0]
+    if (
+        state.ball_holder_side is not event.team_side
+        or state.ball_holder_id != player_id
+    ):
+        raise ValueError("O autor da condução não possui a bola no estado visual atual.")
+    if (
+        state.last_event_sequence is not None
+        and event.sequence != state.last_event_sequence + 1
+    ):
+        raise ValueError("A sequência dos eventos visuais deve avançar de um em um.")
+
+    start_position = state.position_for(event.team_side, player_id)
+    scene = build_carry_scene(
+        event,
+        start_position=start_position,
+        destination_position=destination_position,
+        presentation_version=state.presentation_version,
+    )
+    moved_players = tuple(
+        replace(player, position=destination_position)
+        if player.side is event.team_side and player.player_id == player_id
+        else player
+        for player in state.players
+    )
+    end_state = replace(
+        state,
+        players=moved_players,
+        ball_position=destination_position,
         last_event_sequence=event.sequence,
     )
     return SceneAdvance(start_state=state, scene=scene, end_state=end_state)

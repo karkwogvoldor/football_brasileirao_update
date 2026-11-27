@@ -11,6 +11,7 @@ from brafoot.engine.matches import MatchSide
 
 DEFAULT_PRESENTATION_VERSION = "2026.1"
 PASS_SCENE_DURATION_MS = 1200
+CARRY_SCENE_DURATION_MS = 1400
 
 
 @dataclass(frozen=True, slots=True)
@@ -27,7 +28,7 @@ class NormalizedPoint:
 
 @dataclass(frozen=True, slots=True)
 class SceneKeyframe:
-    """The ball position at one deterministic instant of a visual scene."""
+    """One entity position at a deterministic instant of a visual scene."""
 
     at_ms: int
     position: NormalizedPoint
@@ -37,6 +38,22 @@ class SceneKeyframe:
             raise ValueError("O instante do keyframe deve ser um inteiro não negativo.")
         if not isinstance(self.position, NormalizedPoint):
             raise ValueError("A posição do keyframe não é válida.")
+
+
+@dataclass(frozen=True, slots=True)
+class PlayerTrack:
+    """One player's complete movement during a visual scene."""
+
+    side: MatchSide
+    player_id: int
+    keyframes: tuple[SceneKeyframe, ...]
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.side, MatchSide):
+            raise ValueError("O lado da trilha do jogador não é válido.")
+        if not _is_positive_int(self.player_id):
+            raise ValueError("O jogador da trilha não é válido.")
+        _validate_keyframes(self.keyframes)
 
 
 @dataclass(frozen=True, slots=True)
@@ -50,6 +67,7 @@ class PresentationScene:
     participant_ids: tuple[int, ...]
     duration_ms: int
     keyframes: tuple[SceneKeyframe, ...]
+    player_tracks: tuple[PlayerTrack, ...]
     narration: str
 
     def __post_init__(self) -> None:
@@ -70,19 +88,24 @@ class PresentationScene:
             raise ValueError("Os participantes da cena não são válidos.")
         if not _is_positive_int(self.duration_ms):
             raise ValueError("A duração da cena deve ser um inteiro positivo.")
-        if (
-            not isinstance(self.keyframes, tuple)
-            or len(self.keyframes) < 2
-            or not all(isinstance(frame, SceneKeyframe) for frame in self.keyframes)
-        ):
-            raise ValueError("A cena deve conter keyframes válidos.")
+        _validate_keyframes(self.keyframes)
         if self.keyframes[0].at_ms != 0 or self.keyframes[-1].at_ms != self.duration_ms:
             raise ValueError("Os keyframes devem cobrir toda a duração da cena.")
-        if any(
-            current.at_ms <= previous.at_ms
-            for previous, current in zip(self.keyframes, self.keyframes[1:])
+        if not isinstance(self.player_tracks, tuple) or not all(
+            isinstance(track, PlayerTrack) for track in self.player_tracks
         ):
-            raise ValueError("Os keyframes devem estar em ordem estritamente crescente.")
+            raise ValueError("As trilhas dos jogadores não são válidas.")
+        track_identities = tuple(
+            (track.side, track.player_id) for track in self.player_tracks
+        )
+        if len(set(track_identities)) != len(track_identities):
+            raise ValueError("As trilhas dos jogadores devem ser únicas.")
+        if any(
+            track.keyframes[0].at_ms != 0
+            or track.keyframes[-1].at_ms != self.duration_ms
+            for track in self.player_tracks
+        ):
+            raise ValueError("As trilhas devem cobrir toda a duração da cena.")
         if (
             not isinstance(self.narration, str)
             or not self.narration
@@ -108,6 +131,21 @@ class PresentationScene:
                 }
                 for frame in self.keyframes
             ],
+            "player_tracks": [
+                {
+                    "side": track.side.value,
+                    "player_id": track.player_id,
+                    "keyframes": [
+                        {
+                            "at_ms": frame.at_ms,
+                            "x": frame.position.x,
+                            "y": frame.position.y,
+                        }
+                        for frame in track.keyframes
+                    ],
+                }
+                for track in self.player_tracks
+            ],
             "narration": self.narration,
         }
 
@@ -120,7 +158,12 @@ class PresentationScene:
         try:
             participant_ids = snapshot["participant_ids"]
             keyframes = snapshot["keyframes"]
-            if not isinstance(participant_ids, list) or not isinstance(keyframes, list):
+            player_tracks = snapshot["player_tracks"]
+            if (
+                not isinstance(participant_ids, list)
+                or not isinstance(keyframes, list)
+                or not isinstance(player_tracks, list)
+            ):
                 raise ValueError
             return cls(
                 presentation_version=snapshot["presentation_version"],
@@ -130,6 +173,9 @@ class PresentationScene:
                 participant_ids=tuple(participant_ids),
                 duration_ms=snapshot["duration_ms"],
                 keyframes=tuple(_keyframe_from_snapshot(frame) for frame in keyframes),
+                player_tracks=tuple(
+                    _player_track_from_snapshot(track) for track in player_tracks
+                ),
                 narration=snapshot["narration"],
             )
         except (KeyError, TypeError, ValueError) as error:
@@ -183,6 +229,60 @@ def build_pass_scene(
                 (start, midpoint, end),
             )
         ),
+        player_tracks=(),
+        narration=event.explanation,
+    )
+
+
+def build_carry_scene(
+    event: MatchEvent,
+    *,
+    start_position: NormalizedPoint,
+    destination_position: NormalizedPoint,
+    presentation_version: str = DEFAULT_PRESENTATION_VERSION,
+) -> PresentationScene:
+    """Create matching player and ball tracks for one confirmed carry."""
+
+    if not isinstance(event, MatchEvent):
+        raise ValueError("O evento da cena de condução não é válido.")
+    if event.event_type is not MatchEventType.CARRY:
+        raise ValueError("A cena de condução exige um evento do tipo condução.")
+    if len(event.participant_ids) != 1:
+        raise ValueError("A cena de condução exige exatamente um participante.")
+    if event.origin_zone is None or event.destination_zone is None:
+        raise ValueError("A cena de condução exige zonas de origem e destino.")
+    if not isinstance(start_position, NormalizedPoint) or not isinstance(
+        destination_position, NormalizedPoint
+    ):
+        raise ValueError("As posições da condução não são válidas.")
+    assert event.team_side is not None
+
+    midpoint = NormalizedPoint(
+        x=(start_position.x + destination_position.x) / 2,
+        y=(start_position.y + destination_position.y) / 2,
+    )
+    keyframes = tuple(
+        SceneKeyframe(at_ms=at_ms, position=point)
+        for at_ms, point in zip(
+            (0, CARRY_SCENE_DURATION_MS // 2, CARRY_SCENE_DURATION_MS),
+            (start_position, midpoint, destination_position),
+        )
+    )
+    return PresentationScene(
+        presentation_version=presentation_version,
+        event_sequence=event.sequence,
+        event_type=event.event_type,
+        team_side=event.team_side,
+        participant_ids=event.participant_ids,
+        duration_ms=CARRY_SCENE_DURATION_MS,
+        keyframes=keyframes,
+        player_tracks=(
+            PlayerTrack(
+                side=event.team_side,
+                player_id=event.participant_ids[0],
+                keyframes=keyframes,
+            ),
+        ),
         narration=event.explanation,
     )
 
@@ -194,6 +294,33 @@ def _keyframe_from_snapshot(snapshot: object) -> SceneKeyframe:
         at_ms=snapshot["at_ms"],
         position=NormalizedPoint(x=snapshot["x"], y=snapshot["y"]),
     )
+
+
+def _player_track_from_snapshot(snapshot: object) -> PlayerTrack:
+    if not isinstance(snapshot, Mapping):
+        raise ValueError
+    keyframes = snapshot["keyframes"]
+    if not isinstance(keyframes, list):
+        raise ValueError
+    return PlayerTrack(
+        side=MatchSide(snapshot["side"]),
+        player_id=snapshot["player_id"],
+        keyframes=tuple(_keyframe_from_snapshot(frame) for frame in keyframes),
+    )
+
+
+def _validate_keyframes(keyframes: object) -> None:
+    if (
+        not isinstance(keyframes, tuple)
+        or len(keyframes) < 2
+        or not all(isinstance(frame, SceneKeyframe) for frame in keyframes)
+    ):
+        raise ValueError("A cena deve conter keyframes válidos.")
+    if any(
+        current.at_ms <= previous.at_ms
+        for previous, current in zip(keyframes, keyframes[1:])
+    ):
+        raise ValueError("Os keyframes devem estar em ordem estritamente crescente.")
 
 
 def _is_normalized_number(value: object) -> bool:

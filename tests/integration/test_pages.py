@@ -119,9 +119,22 @@ def test_demo_pass_sequence_endpoint_is_deterministic(client):
         [8, 9],
         [9, 7],
         [7, 10],
+        [10],
+        [10, 11],
     ]
+    assert [scene["event_type"] for scene in sequence["scenes"]] == [
+        "pass",
+        "pass",
+        "pass",
+        "carry",
+        "pass",
+    ]
+    assert sequence["scenes"][3]["player_tracks"][0]["player_id"] == 10
+    assert sequence["scenes"][3]["player_tracks"][0]["keyframes"] == sequence[
+        "scenes"
+    ][3]["keyframes"]
     assert sequence["initial_state"]["ball_holder_id"] == 8
-    assert sequence["final_state"]["ball_holder_id"] == 10
+    assert sequence["final_state"]["ball_holder_id"] == 11
     for current, following in zip(sequence["scenes"], sequence["scenes"][1:]):
         assert current["keyframes"][-1] == {
             **following["keyframes"][0],
@@ -139,6 +152,21 @@ def test_match_page_has_available_presentation_script(client):
     script = client.get("/static/partida.js")
     assert script.status_code == 200
     assert "demo-sequence" in script.text
+
+
+# Consome as coordenadas planas dos jogadores exatamente como o snapshot as entrega.
+def test_presentation_script_reads_flat_player_snapshot(client):
+    sequence = client.get("/api/v1/presentation/demo-sequence").json()
+    script = client.get("/static/partida.js").text
+
+    assert set(sequence["initial_state"]["players"][0]) == {
+        "side",
+        "player_id",
+        "x",
+        "y",
+    }
+    assert "positionPlayer(player.side, player.player_id, player);" in script
+    assert "player.position" not in script
 
 
 # Verifica se todos os escudos exibidos na página inicial existem e são servidos como imagem.

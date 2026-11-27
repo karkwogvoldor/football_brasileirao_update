@@ -7,9 +7,12 @@ from brafoot.engine.events import MatchEvent, MatchEventType
 from brafoot.engine.matches import MatchSide
 from brafoot.engine.zones import FieldLane, FieldThird, FieldZone
 from brafoot.presentation.scenes import (
+    CARRY_SCENE_DURATION_MS,
     DEFAULT_PRESENTATION_VERSION,
     NormalizedPoint,
+    PlayerTrack,
     PresentationScene,
+    build_carry_scene,
     build_pass_scene,
 )
 
@@ -26,6 +29,23 @@ def make_pass_event(**overrides) -> MatchEvent:
         "context": "open_play",
         "outcome": "completed",
         "explanation": "O passe avançou da faixa central para o ataque.",
+    }
+    values.update(overrides)
+    return MatchEvent(**values)
+
+
+def make_carry_event(**overrides) -> MatchEvent:
+    values = {
+        "sequence": 8,
+        "clock": MatchClock(126, MatchPeriod.FIRST_HALF),
+        "event_type": MatchEventType.CARRY,
+        "team_side": MatchSide.HOME,
+        "participant_ids": (10,),
+        "origin_zone": FieldZone(FieldThird.MIDDLE, FieldLane.RIGHT),
+        "destination_zone": FieldZone(FieldThird.ATTACKING, FieldLane.RIGHT),
+        "context": "open_play",
+        "outcome": "progressed",
+        "explanation": "O meio-campista conduz a bola para o ataque.",
     }
     values.update(overrides)
     return MatchEvent(**values)
@@ -143,9 +163,73 @@ def test_pass_scene_requires_both_participant_positions():
         )
 
 
+# Move jogador e bola pelos mesmos keyframes durante uma condução confirmada.
+def test_carry_scene_moves_player_and_ball_together():
+    start = NormalizedPoint(31, 73)
+    destination = NormalizedPoint(43, 68)
+
+    scene = build_carry_scene(
+        make_carry_event(),
+        start_position=start,
+        destination_position=destination,
+    )
+
+    assert scene.event_type is MatchEventType.CARRY
+    assert scene.duration_ms == CARRY_SCENE_DURATION_MS
+    assert scene.keyframes[0].position == start
+    assert scene.keyframes[-1].position == destination
+    assert scene.player_tracks == (
+        PlayerTrack(
+            side=MatchSide.HOME,
+            player_id=10,
+            keyframes=scene.keyframes,
+        ),
+    )
+
+
+# Produz uma condução reta e determinística entre as posições informadas.
+def test_carry_scene_uses_straight_deterministic_trajectory():
+    arguments = {
+        "event": make_carry_event(),
+        "start_position": NormalizedPoint(31, 73),
+        "destination_position": NormalizedPoint(43, 68),
+    }
+
+    first = build_carry_scene(**arguments)
+    second = build_carry_scene(**arguments)
+    start, midpoint, end = (frame.position for frame in first.keyframes)
+
+    assert first == second
+    assert midpoint.x == (start.x + end.x) / 2
+    assert midpoint.y == (start.y + end.y) / 2
+
+
+# Rejeita eventos que não descrevam uma condução completa de um jogador.
+@pytest.mark.parametrize(
+    ("overrides", "message"),
+    [
+        ({"event_type": MatchEventType.PASS}, "condução"),
+        ({"participant_ids": (10, 11)}, "um participante"),
+        ({"origin_zone": None}, "zonas"),
+        ({"destination_zone": None}, "zonas"),
+    ],
+)
+def test_carry_scene_requires_complete_carry_event(overrides, message):
+    with pytest.raises(ValueError, match=message):
+        build_carry_scene(
+            make_carry_event(**overrides),
+            start_position=NormalizedPoint(31, 73),
+            destination_position=NormalizedPoint(43, 68),
+        )
+
+
 # Persiste, restaura e mantém a cena confirmada imutável.
 def test_presentation_scene_snapshot_round_trip_is_lossless_and_immutable():
-    scene = build_scene(make_pass_event())
+    scene = build_carry_scene(
+        make_carry_event(),
+        start_position=NormalizedPoint(31, 73),
+        destination_position=NormalizedPoint(43, 68),
+    )
 
     assert PresentationScene.from_snapshot(scene.to_snapshot()) == scene
     with pytest.raises(FrozenInstanceError):

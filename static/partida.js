@@ -7,53 +7,104 @@ const replayButton = document.getElementById('replayScene');
 const phase = document.querySelector('.match-phase');
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-let scenes = [];
-let currentAnimation = null;
+let sequenceData = null;
+let currentAnimations = [];
 
 function positionBall(keyframe) {
     ball.style.left = `${keyframe.x}%`;
     ball.style.top = `${keyframe.y}%`;
 }
 
+function playerElement(side, playerId) {
+    return document.querySelector(
+        `.match-player[data-team="${side}"][data-player-id="${playerId}"]`,
+    );
+}
+
+function positionPlayer(side, playerId, keyframe) {
+    const player = playerElement(side, playerId);
+    if (!player) return;
+    player.style.setProperty('--x', keyframe.x);
+    player.style.setProperty('--y', keyframe.y);
+}
+
+function positionState(state) {
+    positionBall(state.ball_position);
+    state.players.forEach((player) => {
+        positionPlayer(player.side, player.player_id, player);
+    });
+}
+
+function animationFrames(keyframes, durationMs) {
+    return keyframes.map((keyframe) => ({
+        left: `${keyframe.x}%`,
+        top: `${keyframe.y}%`,
+        offset: keyframe.at_ms / durationMs,
+    }));
+}
+
+function cancelAnimations() {
+    currentAnimations.forEach((animation) => animation.cancel());
+    currentAnimations = [];
+}
+
 async function animateScene(scene) {
-    const finalKeyframe = scene.keyframes[scene.keyframes.length - 1];
+    const finalKeyframe = scene.keyframes.at(-1);
+    const playerTracks = scene.player_tracks || [];
 
     if (prefersReducedMotion.matches || typeof ball.animate !== 'function') {
         positionBall(finalKeyframe);
+        playerTracks.forEach((track) => {
+            positionPlayer(track.side, track.player_id, track.keyframes.at(-1));
+        });
         return;
     }
 
-    currentAnimation = ball.animate(
-        scene.keyframes.map(keyframe => ({
-            left: `${keyframe.x}%`,
-            top: `${keyframe.y}%`,
-            offset: keyframe.at_ms / scene.duration_ms,
-        })),
-        {
+    currentAnimations = [
+        ball.animate(animationFrames(scene.keyframes, scene.duration_ms), {
             duration: scene.duration_ms,
             easing: 'linear',
             fill: 'forwards',
-        },
+        }),
+        ...playerTracks.map((track) => {
+            const player = playerElement(track.side, track.player_id);
+            return player?.animate(animationFrames(track.keyframes, scene.duration_ms), {
+                duration: scene.duration_ms,
+                easing: 'linear',
+                fill: 'forwards',
+            });
+        }).filter(Boolean),
+    ];
+    await Promise.all(
+        currentAnimations.map((animation) => animation.finished.catch(() => {})),
     );
-    await currentAnimation.finished.catch(() => {});
+    cancelAnimations();
     positionBall(finalKeyframe);
-    currentAnimation.cancel();
-    currentAnimation = null;
+    playerTracks.forEach((track) => {
+        positionPlayer(track.side, track.player_id, track.keyframes.at(-1));
+    });
+}
+
+function resetSequence() {
+    cancelAnimations();
+    if (!sequenceData) return;
+    positionState(sequenceData.initial_state);
+    positionBall(sequenceData.scenes[0].keyframes[0]);
 }
 
 async function playSceneSequence() {
-    if (!scenes.length) return;
+    if (!sequenceData?.scenes.length) return;
 
-    if (currentAnimation) currentAnimation.cancel();
+    resetSequence();
     ball.hidden = false;
     replayButton.disabled = true;
     replayButton.textContent = 'Sequência em curso';
-    positionBall(scenes[0].keyframes[0]);
 
-    for (const [index, scene] of scenes.entries()) {
-        sceneLabel.textContent = `Cena ${index + 1} / ${scenes.length}`;
+    for (const [index, scene] of sequenceData.scenes.entries()) {
+        sceneLabel.textContent = `Cena ${index + 1} / ${sequenceData.scenes.length}`;
         narration.textContent = scene.narration;
-        phase.textContent = `Passe ${index + 1} de ${scenes.length}`;
+        const eventLabel = scene.event_type === 'carry' ? 'Condução' : 'Passe';
+        phase.textContent = `${eventLabel} ${index + 1} de ${sequenceData.scenes.length}`;
         await animateScene(scene);
     }
 
@@ -67,10 +118,9 @@ async function loadScene() {
         const response = await fetch(SCENE_ENDPOINT);
         if (!response.ok) throw new Error(`Cena indisponível: ${response.status}`);
 
-        const sequence = await response.json();
-        scenes = sequence.scenes;
-        narration.textContent = 'Três passes confirmados, reproduzidos em ordem.';
-        positionBall(scenes[0].keyframes[0]);
+        sequenceData = await response.json();
+        narration.textContent = 'Passes e condução confirmados, reproduzidos em ordem.';
+        resetSequence();
         replayButton.disabled = false;
         window.setTimeout(playSceneSequence, 350);
     } catch (error) {
